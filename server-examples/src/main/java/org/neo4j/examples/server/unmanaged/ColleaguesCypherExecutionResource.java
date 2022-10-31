@@ -21,19 +21,14 @@ package org.neo4j.examples.server.unmanaged;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -43,58 +38,46 @@ import org.neo4j.internal.helpers.collection.MapUtil;
 
 // tag::ColleaguesCypherExecutionResource[]
 @Path("/colleagues-cypher-execution")
-public class ColleaguesCypherExecutionResource
-{
+public class ColleaguesCypherExecutionResource {
     private final ObjectMapper objectMapper;
-    private DatabaseManagementService dbms;
+    private final DatabaseManagementService dbms;
 
-    public ColleaguesCypherExecutionResource( @Context DatabaseManagementService dbms )
-    {
+    public ColleaguesCypherExecutionResource(@Context DatabaseManagementService dbms) {
         this.dbms = dbms;
         this.objectMapper = new ObjectMapper();
     }
 
+    private static final String COLLEAGUES_QUERY =
+            "MATCH (p:Person {name: $personName })-[:ACTED_IN]->()<-[:ACTED_IN]-(colleague) RETURN colleague";
+
     @GET
     @Path("/{personName}")
-    public Response findColleagues( @PathParam("personName") final String personName )
-    {
-        final Map<String, Object> params = MapUtil.map( "personName", personName );
+    public Response findColleagues(@PathParam("personName") final String personName) {
+        final Map<String,Object> params = MapUtil.map("personName", personName);
 
-        StreamingOutput stream = new StreamingOutput()
-        {
-            @Override
-            public void write( OutputStream os ) throws IOException, WebApplicationException
-            {
-                JsonGenerator jg = objectMapper.getJsonFactory().createJsonGenerator( os, JsonEncoding.UTF8 );
-                jg.writeStartObject();
-                jg.writeFieldName( "colleagues" );
-                jg.writeStartArray();
+        StreamingOutput stream = os -> {
+            JsonGenerator jg = objectMapper.getFactory().createGenerator(os, JsonEncoding.UTF8);
+            jg.writeStartObject();
+            jg.writeFieldName("colleagues");
+            jg.writeStartArray();
 
-                final GraphDatabaseService graphDb = dbms.database( "neo4j" );
-                try ( Transaction tx = graphDb.beginTx();
-                      Result result = tx.execute( colleaguesQuery(), params ) )
-                {
-                    while ( result.hasNext() )
-                    {
-                        Map<String,Object> row = result.next();
-                        jg.writeString( ((Node) row.get( "colleague" )).getProperty( "name" ).toString() );
-                    }
-                    tx.commit();
+            final GraphDatabaseService graphDb = dbms.database("neo4j");
+            try (Transaction tx = graphDb.beginTx();
+                    Result result = tx.execute(COLLEAGUES_QUERY, params)) {
+                while (result.hasNext()) {
+                    Map<String,Object> row = result.next();
+                    jg.writeString(((Node) row.get("colleague")).getProperty("name").toString());
                 }
-
-                jg.writeEndArray();
-                jg.writeEndObject();
-                jg.flush();
-                jg.close();
+                tx.commit();
             }
+
+            jg.writeEndArray();
+            jg.writeEndObject();
+            jg.flush();
+            jg.close();
         };
 
-        return Response.ok().entity( stream ).type( MediaType.APPLICATION_JSON ).build();
-    }
-
-    private String colleaguesQuery()
-    {
-        return "MATCH (p:Person {name: $personName })-[:ACTED_IN]->()<-[:ACTED_IN]-(colleague) RETURN colleague";
+        return Response.ok().entity(stream).type(MediaType.APPLICATION_JSON).build();
     }
 }
 // end::ColleaguesCypherExecutionResource[]

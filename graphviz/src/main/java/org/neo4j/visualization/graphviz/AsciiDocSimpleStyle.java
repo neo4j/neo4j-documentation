@@ -28,154 +28,129 @@ import org.neo4j.visualization.graphviz.color.SimpleNodeColorMapper;
 import org.neo4j.visualization.graphviz.color.SimpleRelationshipTypeColorMapper;
 
 /**
- * Simplified style with no node labels and no property type names in the
- * output. Look at {@link SimpleNodeColorMapper} and
- * {@link SimpleRelationshipTypeColorMapper} for easy ways to add predefined
- * colors, consumable by static factory methods of this class. For more control,
+ * Simplified style with no node labels and no property type names in the output. Look at {@link SimpleNodeColorMapper} and
+ * {@link SimpleRelationshipTypeColorMapper} for easy ways to add predefined colors, consumable by static factory methods of this class. For more control,
  * provide {@link NodeStyle} and {@link RelationshipStyle} implementations.
  *
  * @author anders
  */
-public class AsciiDocSimpleStyle extends AsciiDocStyle
-{
-    private AsciiDocSimpleStyle()
-    {
-        this( false, true );
+public class AsciiDocSimpleStyle extends AsciiDocStyle {
+    private AsciiDocSimpleStyle() {
+        this(false, true);
     }
 
-    private AsciiDocSimpleStyle( NodeStyle nodeStyle,
-            RelationshipStyle edgeStyle )
-    {
-        super( nodeStyle, edgeStyle );
+    private AsciiDocSimpleStyle(NodeStyle nodeStyle,
+            RelationshipStyle edgeStyle) {
+        super(nodeStyle, edgeStyle);
     }
 
-    private AsciiDocSimpleStyle( boolean autoColoredNodes,
-            boolean autoColoredRelationships )
-    {
-        super( new SimpleNodeStyle( defaultNodeConfig( autoColoredNodes ) ),
+    private AsciiDocSimpleStyle(boolean autoColoredNodes,
+            boolean autoColoredRelationships) {
+        super(new SimpleNodeStyle(defaultNodeConfig(autoColoredNodes)),
                 new DefaultRelationshipStyle(
-                        defaultRelationshipConfig( autoColoredRelationships ) ) );
+                        defaultRelationshipConfig(autoColoredRelationships)));
     }
 
     private AsciiDocSimpleStyle(
             ColorMapper<RelationshipType> relationshipTypeColors,
-            boolean autoColoredNodes )
-    {
+            boolean autoColoredNodes) {
         super(
-                new SimpleNodeStyle( defaultNodeConfig( autoColoredNodes ) ),
+                new SimpleNodeStyle(defaultNodeConfig(autoColoredNodes)),
                 new DefaultRelationshipStyle(
                         new DefaultStyleConfiguration(
                                 AsciiDocStyle.SIMPLE_PROPERTY_STYLE,
                                 new AutoRelationshipTypeColor(
-                                        relationshipTypeColors ) ) ) );
+                                        relationshipTypeColors))));
     }
 
-    private AsciiDocSimpleStyle( boolean autoColoredRelationships,
-            ColorMapper<Node> nodeColors )
-    {
-        super( new SimpleNodeStyle( new DefaultStyleConfiguration(
-                new AutoNodeColor( nodeColors ) ) ),
+    private AsciiDocSimpleStyle(boolean autoColoredRelationships,
+            ColorMapper<Node> nodeColors) {
+        super(new SimpleNodeStyle(new DefaultStyleConfiguration(
+                        new AutoNodeColor(nodeColors))),
                 new DefaultRelationshipStyle(
-                        defaultRelationshipConfig( autoColoredRelationships ) ) );
+                        defaultRelationshipConfig(autoColoredRelationships)));
     }
 
-    private AsciiDocSimpleStyle( ColorMapper<Node> nodeColors,
-            ColorMapper<RelationshipType> relationshipTypeColors )
-    {
+    private AsciiDocSimpleStyle(ColorMapper<Node> nodeColors,
+            ColorMapper<RelationshipType> relationshipTypeColors) {
         super(
-                new SimpleNodeStyle( new DefaultStyleConfiguration(
-                        new AutoNodeColor( nodeColors ) ) ),
+                new SimpleNodeStyle(new DefaultStyleConfiguration(
+                        new AutoNodeColor(nodeColors))),
                 new DefaultRelationshipStyle(
                         new DefaultStyleConfiguration(
                                 AsciiDocStyle.SIMPLE_PROPERTY_STYLE,
                                 new AutoRelationshipTypeColor(
-                                        relationshipTypeColors ) ) ) );
+                                        relationshipTypeColors))));
     }
 
     private static DefaultStyleConfiguration defaultRelationshipConfig(
-            boolean autoColoredRelationships )
-    {
-        if ( autoColoredRelationships )
-        {
+            boolean autoColoredRelationships) {
+        if (autoColoredRelationships) {
             return new DefaultStyleConfiguration(
                     AsciiDocStyle.SIMPLE_PROPERTY_STYLE,
-                    new AutoRelationshipTypeColor() );
+                    new AutoRelationshipTypeColor());
         }
-        else
-        {
+        else {
             return AsciiDocStyle.PLAIN_STYLE;
         }
     }
 
     private static DefaultStyleConfiguration defaultNodeConfig(
-            boolean autoColoredNodes )
-    {
-        if ( autoColoredNodes )
-        {
+            boolean autoColoredNodes) {
+        if (autoColoredNodes) {
             return new DefaultStyleConfiguration(
                     AsciiDocStyle.SIMPLE_PROPERTY_STYLE,
-                    new AutoNodeColor() );
+                    new AutoNodeColor());
         }
-        else
-        {
+        else {
             return AsciiDocStyle.PLAIN_STYLE;
         }
     }
 
-    public static AsciiDocSimpleStyle withoutColors()
-    {
-        return new AsciiDocSimpleStyle( false, false );
+    public static AsciiDocSimpleStyle withoutColors() {
+        return new AsciiDocSimpleStyle(false, false);
     }
 
-    public static AsciiDocSimpleStyle withAutomaticRelationshipTypeColors()
-    {
-        return new AsciiDocSimpleStyle( false, true );
+    public static AsciiDocSimpleStyle withAutomaticRelationshipTypeColors() {
+        return new AsciiDocSimpleStyle(false, true);
     }
 
-    public static AsciiDocSimpleStyle withAutomaticNodeColors()
-    {
-        return new AsciiDocSimpleStyle( true, false );
+    public static AsciiDocSimpleStyle withAutomaticNodeColors() {
+        return new AsciiDocSimpleStyle(true, false);
     }
 
-    public static AsciiDocSimpleStyle withAutomaticNodeAndRelationshipTypeColors()
-    {
-        return new AsciiDocSimpleStyle( true, true );
+    public static AsciiDocSimpleStyle withAutomaticNodeAndRelationshipTypeColors() {
+        return new AsciiDocSimpleStyle(true, true);
     }
 
     public static AsciiDocSimpleStyle withPredefinedRelationshipTypeColors(
-            ColorMapper<RelationshipType> relationshipTypeColors )
-    {
-        return new AsciiDocSimpleStyle( relationshipTypeColors, false );
+            ColorMapper<RelationshipType> relationshipTypeColors) {
+        return new AsciiDocSimpleStyle(relationshipTypeColors, false);
     }
 
     public static AsciiDocSimpleStyle withAudomaticNodeAndPredefinedRelationshipTypeColors(
-            ColorMapper<RelationshipType> relationshipTypeColors )
-    {
-        return new AsciiDocSimpleStyle( relationshipTypeColors, true );
+            ColorMapper<RelationshipType> relationshipTypeColors) {
+        return new AsciiDocSimpleStyle(relationshipTypeColors, true);
     }
 
     public static AsciiDocSimpleStyle withPredefinedNodeColors(
-            ColorMapper<Node> nodeColors )
-    {
-        return new AsciiDocSimpleStyle( false, nodeColors );
+            ColorMapper<Node> nodeColors) {
+        return new AsciiDocSimpleStyle(false, nodeColors);
     }
 
     public static AsciiDocSimpleStyle withPredefinedNodeColorsAndAutomaticRelationshipTypeColors(
-            ColorMapper<Node> nodeColors )
-    {
-        return new AsciiDocSimpleStyle( true, nodeColors );
+            ColorMapper<Node> nodeColors) {
+        return new AsciiDocSimpleStyle(true, nodeColors);
     }
 
     public static AsciiDocSimpleStyle withPredefinedNodeAndRelationshipTypeColors(
             ColorMapper<Node> nodeColors,
-            ColorMapper<RelationshipType> relationshipTypeColors )
-    {
-        return new AsciiDocSimpleStyle( nodeColors, relationshipTypeColors );
+            ColorMapper<RelationshipType> relationshipTypeColors) {
+        return new AsciiDocSimpleStyle(nodeColors, relationshipTypeColors);
     }
 
     public static AsciiDocSimpleStyle withPredefinedNodeAndRelationshipStyles(
-            NodeStyle nodeStyle, RelationshipStyle edgeStyle )
-    {
-        return new AsciiDocSimpleStyle( nodeStyle, edgeStyle );
+            NodeStyle nodeStyle, RelationshipStyle edgeStyle) {
+        return new AsciiDocSimpleStyle(nodeStyle, edgeStyle);
     }
 }

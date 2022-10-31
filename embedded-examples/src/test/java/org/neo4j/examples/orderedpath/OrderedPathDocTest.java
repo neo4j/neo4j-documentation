@@ -18,13 +18,18 @@
  */
 package org.neo4j.examples.orderedpath;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+import static org.neo4j.internal.helpers.collection.Iterables.count;
+import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
 import java.io.IOException;
 import java.nio.file.Files;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.tools.JavaDocsGenerator;
@@ -35,54 +40,41 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.internal.helpers.collection.Iterables.count;
-import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
-
-public class OrderedPathDocTest
-{
+public class OrderedPathDocTest {
     private static OrderedPath orderedPath;
     private static JavaDocsGenerator gen;
     private static GraphDatabaseService db;
 
-    @BeforeClass
-    public static void setUp() throws IOException
-    {
-        if ( Files.exists( OrderedPath.databaseDirectory ) )
-        {
-            FileUtils.deleteDirectory( OrderedPath.databaseDirectory );
+    @BeforeAll
+    public static void setUp() throws IOException {
+        if (Files.exists(OrderedPath.databaseDirectory)) {
+            FileUtils.deleteDirectory(OrderedPath.databaseDirectory);
         }
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( OrderedPath.databaseDirectory ).build();
-        db = managementService.database( DEFAULT_DATABASE_NAME );
-        orderedPath = new OrderedPath( managementService, OrderedPathDocTest.db );
-        gen = new JavaDocsGenerator( "ordered-path-java", "dev" );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(OrderedPath.databaseDirectory).build();
+        db = managementService.database(DEFAULT_DATABASE_NAME);
+        orderedPath = new OrderedPath(managementService, OrderedPathDocTest.db);
+        gen = new JavaDocsGenerator("ordered-path-java", "dev");
     }
 
-    @AfterClass
-    public static void tearDown()
-    {
+    @AfterAll
+    public static void tearDown() {
         orderedPath.shutdownGraph();
     }
 
     @Test
-    public void testPath()
-    {
+    void testPath() {
         Node A = orderedPath.createTheGraph();
         String output;
-        try ( Transaction tx = db.beginTx() )
-        {
-            TraversalDescription traversalDescription = orderedPath.findPaths( tx );
-            assertEquals( 1, count( traversalDescription.traverse( tx.getNodeById( A.getId() ) ) ) );
-            output = orderedPath.printPaths( tx, traversalDescription, A );
-            assertTrue( output.contains( "(A)--[REL1]-->(B)--[REL2]-->(C)--[REL3]-->(D)" ) );
+        try (Transaction tx = db.beginTx()) {
+            TraversalDescription traversalDescription = orderedPath.findPaths(tx);
+            assertEquals(1, count(traversalDescription.traverse(tx.getNodeByElementId(A.getElementId()))));
+            output = orderedPath.printPaths(tx, traversalDescription, A);
+            assertTrue(output.contains("(A)--[REL1]-->(B)--[REL2]-->(C)--[REL3]-->(D)"));
         }
         String graph = AsciidocHelper.createGraphVizDeletingReferenceNode(
-                "Ordered Path Graph", orderedPath.db, "java" );
-        assertFalse( graph.isEmpty() );
-        gen.saveToFile( "graph", graph );
-        gen.saveToFile( "output", createOutputSnippet( output ) );
+                "Ordered Path Graph", orderedPath.db, "java");
+        assertFalse(graph.isEmpty());
+        gen.saveToFile("graph", graph);
+        gen.saveToFile("output", createOutputSnippet(output));
     }
 }

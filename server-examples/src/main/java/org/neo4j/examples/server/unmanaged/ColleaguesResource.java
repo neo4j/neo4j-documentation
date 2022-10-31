@@ -18,21 +18,19 @@
  */
 package org.neo4j.examples.server.unmanaged;
 
+import static org.neo4j.graphdb.Direction.INCOMING;
+import static org.neo4j.graphdb.Direction.OUTGOING;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -42,70 +40,54 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 
-import static org.neo4j.graphdb.Direction.INCOMING;
-import static org.neo4j.graphdb.Direction.OUTGOING;
-
 // tag::ColleaguesResource[]
 @Path("/colleagues")
-public class ColleaguesResource
-{
-    private DatabaseManagementService dbms;
+public class ColleaguesResource {
+    private final DatabaseManagementService dbms;
     private final ObjectMapper objectMapper;
 
-    private static final RelationshipType ACTED_IN = RelationshipType.withName( "ACTED_IN" );
-    private static final Label PERSON = Label.label( "Person" );
+    private static final RelationshipType ACTED_IN = RelationshipType.withName("ACTED_IN");
+    private static final Label PERSON = Label.label("Person");
 
-    public ColleaguesResource( @Context DatabaseManagementService dbms )
-    {
+    public ColleaguesResource(@Context DatabaseManagementService dbms) {
         this.dbms = dbms;
         this.objectMapper = new ObjectMapper();
     }
 
     @GET
     @Path("/{personName}")
-    public Response findColleagues( @PathParam("personName") final String personName )
-    {
-        StreamingOutput stream = new StreamingOutput()
-        {
-            @Override
-            public void write( OutputStream os ) throws IOException, WebApplicationException
-            {
-                JsonGenerator jg = objectMapper.getJsonFactory().createJsonGenerator( os, JsonEncoding.UTF8 );
-                jg.writeStartObject();
-                jg.writeFieldName( "colleagues" );
-                jg.writeStartArray();
+    public Response findColleagues(@PathParam("personName") final String personName) {
+        StreamingOutput stream = os -> {
+            JsonGenerator jg = objectMapper.getFactory().createGenerator(os, JsonEncoding.UTF8);
+            jg.writeStartObject();
+            jg.writeFieldName("colleagues");
+            jg.writeStartArray();
 
-                final GraphDatabaseService graphDb = dbms.database( "neo4j" );
-                try ( Transaction tx = graphDb.beginTx();
-                      ResourceIterator<Node> persons = tx.findNodes( PERSON, "name", personName ) )
-                {
-                    while ( persons.hasNext() )
-                    {
-                        Node person = persons.next();
-                        for ( Relationship actedIn : person.getRelationships( OUTGOING, ACTED_IN ) )
-                        {
-                            Node endNode = actedIn.getEndNode();
-                            for ( Relationship colleagueActedIn : endNode.getRelationships( INCOMING, ACTED_IN ) )
-                            {
-                                Node colleague = colleagueActedIn.getStartNode();
-                                if ( !colleague.equals( person ) )
-                                {
-                                    jg.writeString( colleague.getProperty( "name" ).toString() );
-                                }
+            final GraphDatabaseService graphDb = dbms.database("neo4j");
+            try (Transaction tx = graphDb.beginTx();
+                    ResourceIterator<Node> persons = tx.findNodes(PERSON, "name", personName)) {
+                while (persons.hasNext()) {
+                    Node person = persons.next();
+                    for (Relationship actedIn : person.getRelationships(OUTGOING, ACTED_IN)) {
+                        Node endNode = actedIn.getEndNode();
+                        for (Relationship colleagueActedIn : endNode.getRelationships(INCOMING, ACTED_IN)) {
+                            Node colleague = colleagueActedIn.getStartNode();
+                            if (!colleague.equals(person)) {
+                                jg.writeString(colleague.getProperty("name").toString());
                             }
                         }
                     }
-                    tx.commit();
                 }
-
-                jg.writeEndArray();
-                jg.writeEndObject();
-                jg.flush();
-                jg.close();
+                tx.commit();
             }
+
+            jg.writeEndArray();
+            jg.writeEndObject();
+            jg.flush();
+            jg.close();
         };
 
-        return Response.ok().entity( stream ).type( MediaType.APPLICATION_JSON ).build();
+        return Response.ok().entity(stream).type(MediaType.APPLICATION_JSON).build();
     }
 }
 // end::ColleaguesResource[]

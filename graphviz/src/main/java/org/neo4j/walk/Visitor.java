@@ -22,13 +22,12 @@ package org.neo4j.walk;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
-public interface Visitor<R, E extends Throwable>
-{
-    void visitNode( Node node ) throws E;
+public interface Visitor<R, E extends Throwable> {
+    void visitNode(Node node) throws E;
 
-    void visitRelationship( Relationship relationship ) throws E;
+    void visitRelationship(Relationship relationship) throws E;
 
-    Visitor<R, E> visitSubgraph( String name ) throws E;
+    Visitor<R,E> visitSubgraph(String name) throws E;
 
     R done() throws E;
 }

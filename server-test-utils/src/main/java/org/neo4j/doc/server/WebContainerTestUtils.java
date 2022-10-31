@@ -22,56 +22,53 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.FileVisitResult;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Properties;
-
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.config.Setting;
 
-public final class WebContainerTestUtils
-{
-    private WebContainerTestUtils() {}
+public final class WebContainerTestUtils {
+    private WebContainerTestUtils() {
+    }
 
     public static void recursiveDeleteOnShutdownHook(final Path path) {
         Runtime.getRuntime().addShutdownHook(new Thread(
-            new Runnable() {
-                @Override
-                public void run() {
+                () -> {
                     try {
                         Files.walkFileTree(path,
-                            new SimpleFileVisitor<Path>() {
-                                @Override
-                                public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs) throws IOException {
-                                    Files.delete(file);
-                                    return FileVisitResult.CONTINUE;
-                                }
-
-                                @Override
-                                public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-                                    if (e == null) {
-                                        Files.delete(dir);
+                                new SimpleFileVisitor<>() {
+                                    @Override
+                                    public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs) throws IOException {
+                                        Files.delete(file);
                                         return FileVisitResult.CONTINUE;
                                     }
-                                    // directory iteration failed
-                                    throw e;
+
+                                    @Override
+                                    public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                                        if (e == null) {
+                                            Files.delete(dir);
+                                            return FileVisitResult.CONTINUE;
+                                        }
+                                        // directory iteration failed
+                                        throw e;
+                                    }
                                 }
-                            }
                         );
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to delete temporary files at "+path, e);
                     }
-                }
-            }));
+                    catch (IOException e) {
+                        throw new RuntimeException("Failed to delete temporary files at " + path, e);
+                    }
+                }));
     }
 
     public static Path createTempDir(String name) throws IOException {
-        Path tmpPath = Files.createTempDirectory( name );
-        WebContainerTestUtils.recursiveDeleteOnShutdownHook( tmpPath );
+        Path tmpPath = Files.createTempDirectory(name);
+        WebContainerTestUtils.recursiveDeleteOnShutdownHook(tmpPath);
         return tmpPath;
 
         //The WebContainerTestUtils.recursiveDeleteOnShutdownHook guarantees that the directory will be purged.
@@ -89,27 +86,27 @@ public final class WebContainerTestUtils
         return folder.resolve(setting.defaultValue()).toString();
     }
 
-    public static void addDefaultRelativeProperties(Map<String, String> properties, Path temporaryFolder) {
-        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
-        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
+    public static void addDefaultRelativeProperties(Map<String,String> properties, Path temporaryFolder) {
+        addRelativeProperty(temporaryFolder, properties, GraphDatabaseSettings.data_directory);
+        addRelativeProperty(temporaryFolder, properties, GraphDatabaseSettings.logs_directory);
     }
 
-    private static void addRelativeProperty(Path temporaryFolder, Map<String, String> properties,
-                                            Setting<Path> setting) {
+    private static void addRelativeProperty(Path temporaryFolder, Map<String,String> properties,
+            Setting<Path> setting) {
         properties.put(setting.name(), getRelativePath(temporaryFolder, setting));
     }
 
-    public static void writeConfigToFile(Map<String, String> properties, Path file) {
+    public static void writeConfigToFile(Map<String,String> properties, Path file) {
         Properties props = loadProperties(file);
-        for (Map.Entry<String, String> entry : properties.entrySet()) {
+        for (Map.Entry<String,String> entry : properties.entrySet()) {
             props.setProperty(entry.getKey(), entry.getValue());
         }
         storeProperties(file, props);
     }
 
-    public static String asOneLine(Map<String, String> properties) {
+    public static String asOneLine(Map<String,String> properties) {
         StringBuilder builder = new StringBuilder();
-        for (Map.Entry<String, String> property : properties.entrySet()) {
+        for (Map.Entry<String,String> property : properties.entrySet()) {
             builder.append((builder.length() > 0 ? "," : ""));
             builder.append(property.getKey()).append("=").append(property.getValue());
         }
@@ -121,9 +118,11 @@ public final class WebContainerTestUtils
         try {
             out = Files.newOutputStream(file);
             properties.store(out, "");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
+        }
+        finally {
             safeClose(out);
         }
     }
@@ -133,11 +132,13 @@ public final class WebContainerTestUtils
         if (Files.exists(file)) {
             InputStream in = null;
             try {
-                in = Files.newInputStream( file );
+                in = Files.newInputStream(file);
                 properties.load(in);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 safeClose(in);
             }
         }
@@ -148,7 +149,8 @@ public final class WebContainerTestUtils
         if (closeable != null) {
             try {
                 closeable.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }

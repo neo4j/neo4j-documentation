@@ -19,24 +19,20 @@
 package org.neo4j.examples;
 
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
-
 import java.io.IOException;
 import java.nio.file.Path;
-
 import org.neo4j.io.fs.FileUtils;
 
-public class EmbeddedNeo4jClusterUsingNeo4jConf
-{
-    private static final Path homeDirectory = Path.of( "target/neo4j-home" );
+public class EmbeddedNeo4jClusterUsingNeo4jConf {
+    private static final Path homeDirectory = Path.of("target/neo4j-home");
 
-    public static void main( final String[] args ) throws IOException
-    {
-        System.out.println( "Starting database ..." );
-        FileUtils.deleteDirectory( homeDirectory );
+    public static void main(final String[] args) throws IOException {
+        System.out.println("Starting database ...");
+        FileUtils.deleteDirectory(homeDirectory);
 
         // tag::startCore[]
-        var managementService = new EnterpriseDatabaseManagementServiceBuilder( homeDirectory )
-                .loadPropertiesFromFile( Path.of( "/path/to/neo4j.conf" ) )
+        var managementService = new EnterpriseDatabaseManagementServiceBuilder(homeDirectory)
+                .loadPropertiesFromFile(Path.of("/path/to/neo4j.conf"))
                 .build();
         // end::startCore[]
 

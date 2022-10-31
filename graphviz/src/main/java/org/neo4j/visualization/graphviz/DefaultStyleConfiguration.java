@@ -23,49 +23,44 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-
 import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.visualization.PropertyType;
 
-class DefaultStyleConfiguration implements StyleConfiguration
-{
+class DefaultStyleConfiguration implements StyleConfiguration {
     boolean displayRelationshipLabel = true;
 
-    DefaultStyleConfiguration( StyleParameter... parameters )
-    {
-        this.nodeHeader = new HashMap<>( GraphStyle.header().nodeHeader );
-        this.edgeHeader = new HashMap<>( GraphStyle.header().edgeHeader );
-        this.header = new HashMap<>( GraphStyle.header().graphHeader );
-        for ( StyleParameter parameter : parameters )
-        {
-            parameter.configure( this );
+    DefaultStyleConfiguration(StyleParameter... parameters) {
+        this.nodeHeader = new HashMap<>(GraphStyle.header().nodeHeader);
+        this.edgeHeader = new HashMap<>(GraphStyle.header().edgeHeader);
+        this.header = new HashMap<>(GraphStyle.header().graphHeader);
+        for (StyleParameter parameter : parameters) {
+            parameter.configure(this);
         }
     }
 
-    public String escapeLabel( String label )
-    {
-        label = label.replace( "\\", "\\\\" );
-        label = label.replace( "\"", "\\\"" );
-        label = label.replace( "'", "\\'" );
-        label = label.replace( "\n", "\\n" );
-        label = label.replace( "<", "\\<" );
-        label = label.replace( ">", "\\>" );
-        label = label.replace( "[", "\\[" );
-        label = label.replace( "]", "\\]" );
-        label = label.replace( "{", "\\{" );
-        label = label.replace( "}", "\\}" );
-        label = label.replace( "|", "\\|" );
+    public String escapeLabel(String label) {
+        label = label.replace("\\", "\\\\");
+        label = label.replace("\"", "\\\"");
+        label = label.replace("'", "\\'");
+        label = label.replace("\n", "\\n");
+        label = label.replace("<", "\\<");
+        label = label.replace(">", "\\>");
+        label = label.replace("[", "\\[");
+        label = label.replace("]", "\\]");
+        label = label.replace("{", "\\{");
+        label = label.replace("}", "\\}");
+        label = label.replace("|", "\\|");
 
         return label;
     }
 
-    private final Map<String, String> header;
-    private final Map<String, String> nodeHeader;
-    private final Map<String, String> edgeHeader;
-    private final Map<String, ParameterGetter<? super Node>> nodeParams = new HashMap<>();
-    private final Map<String, ParameterGetter<? super Relationship>> edgeParams = new HashMap<>();
+    private final Map<String,String> header;
+    private final Map<String,String> nodeHeader;
+    private final Map<String,String> edgeHeader;
+    private final Map<String,ParameterGetter<? super Node>> nodeParams = new HashMap<>();
+    private final Map<String,ParameterGetter<? super Relationship>> edgeParams = new HashMap<>();
     private PropertyFilter nodeFilter = null;
     private PropertyFilter edgeFilter = null;
     private TitleGetter<? super Node> nodeTitle = null;
@@ -74,199 +69,159 @@ class DefaultStyleConfiguration implements StyleConfiguration
     private PropertyFormatter edgeFormat = null;
     private Predicate<Relationship> reversedRelationshipOrder = null;
 
-    boolean reverseOrder( Relationship edge )
-    {
-        return reversedRelationshipOrder != null && reversedRelationshipOrder.test( edge );
+    boolean reverseOrder(Relationship edge) {
+        return reversedRelationshipOrder != null && reversedRelationshipOrder.test(edge);
     }
 
-    void emitHeader( Appendable stream ) throws IOException
-    {
-        GraphStyle.emitHeader( stream, header );
+    void emitHeader(Appendable stream) throws IOException {
+        GraphStyle.emitHeader(stream, header);
     }
 
-    void emitHeaderNode( Appendable stream ) throws IOException
-    {
-        GraphStyle.emitHeader( stream, nodeHeader );
+    void emitHeaderNode(Appendable stream) throws IOException {
+        GraphStyle.emitHeader(stream, nodeHeader);
     }
 
-    void emitHeaderEdge( Appendable stream ) throws IOException
-    {
-        GraphStyle.emitHeader( stream, edgeHeader );
+    void emitHeaderEdge(Appendable stream) throws IOException {
+        GraphStyle.emitHeader(stream, edgeHeader);
     }
 
-    void emit( Node node, Appendable stream ) throws IOException
-    {
-        emit( node, nodeParams, stream );
+    void emit(Node node, Appendable stream) throws IOException {
+        emit(node, nodeParams, stream);
     }
 
-    void emit( Relationship edge, Appendable stream ) throws IOException
-    {
-        emit( edge, edgeParams, stream );
+    void emit(Relationship edge, Appendable stream) throws IOException {
+        emit(edge, edgeParams, stream);
     }
 
-    private <C extends Entity> void emit( C container,
-        Map<String, ParameterGetter<? super C>> params, Appendable stream )
-        throws IOException
-    {
-        for ( String key : params.keySet() )
-        {
-            String value = params.get( key ).getParameterValue( container, key );
-            if ( value != null )
-            {
+    private <C extends Entity> void emit(C container,
+            Map<String,ParameterGetter<? super C>> params, Appendable stream)
+            throws IOException {
+        for (String key : params.keySet()) {
+            String value = params.get(key).getParameterValue(container, key);
+            if (value != null) {
                 stream.append("    ").append(key).append(" = \"").append(value).append("\"\n");
             }
         }
     }
 
-    String getTitle( Node node )
-    {
-        if ( nodeTitle != null )
-        {
-            return nodeTitle.getTitle( node );
+    String getTitle(Node node) {
+        if (nodeTitle != null) {
+            return nodeTitle.getTitle(node);
         }
-        else
-        {
+        else {
             return node.toString();
         }
     }
 
-    String getTitle( Relationship edge )
-    {
-        if ( edgeTitle != null )
-        {
-            return edgeTitle.getTitle( edge );
+    String getTitle(Relationship edge) {
+        if (edgeTitle != null) {
+            return edgeTitle.getTitle(edge);
         }
-        else
-        {
+        else {
             return edge.getType().name();
         }
     }
 
-    boolean acceptNodeProperty( String key )
-    {
-        if ( nodeFilter != null )
-        {
-            return nodeFilter.acceptProperty( key );
+    boolean acceptNodeProperty(String key) {
+        if (nodeFilter != null) {
+            return nodeFilter.acceptProperty(key);
         }
-        else
-        {
+        else {
             return true;
         }
     }
 
-    boolean acceptEdgeProperty( String key )
-    {
-        if ( edgeFilter != null )
-        {
-            return edgeFilter.acceptProperty( key );
+    boolean acceptEdgeProperty(String key) {
+        if (edgeFilter != null) {
+            return edgeFilter.acceptProperty(key);
         }
-        else
-        {
+        else {
             return true;
         }
     }
 
-    void emitNodeProperty( Appendable stream, String key, PropertyType type,
-        Object value ) throws IOException
-    {
-        if ( nodeFormat != null )
-        {
+    void emitNodeProperty(Appendable stream, String key, PropertyType type,
+            Object value) throws IOException {
+        if (nodeFormat != null) {
             stream.append(nodeFormat.format(key, type, value)).append("\\l");
         }
-        else
-        {
+        else {
             stream.append(PropertyType.STRING.format(key))
-                  .append(" = ")
-                  .append(PropertyType.format(value))
-                  .append(" : ")
-                  .append(type.typeName)
-                  .append("\\l");
+                    .append(" = ")
+                    .append(PropertyType.format(value))
+                    .append(" : ")
+                    .append(type.typeName)
+                    .append("\\l");
         }
     }
 
-    void emitRelationshipProperty( Appendable stream, String key,
-        PropertyType type, Object value ) throws IOException
-    {
-        if ( edgeFormat != null )
-        {
+    void emitRelationshipProperty(Appendable stream, String key,
+            PropertyType type, Object value) throws IOException {
+        if (edgeFormat != null) {
             stream.append(edgeFormat.format(key, type, value)).append("\\l");
         }
-        else
-        {
+        else {
             stream.append(PropertyType.STRING.format(key))
-                  .append(" = ")
-                  .append(PropertyType.format(value))
-                  .append(" : ")
-                  .append(type.typeName)
-                  .append("\\l");
+                    .append(" = ")
+                    .append(PropertyType.format(value))
+                    .append(" : ")
+                    .append(type.typeName)
+                    .append("\\l");
         }
     }
 
-    public void setRelationshipReverseOrderPredicate( Predicate<Relationship> reversed )
-    {
+    public void setRelationshipReverseOrderPredicate(Predicate<Relationship> reversed) {
         reversedRelationshipOrder = reversed;
     }
 
-    public void setGraphProperty( String property, String value )
-    {
-        header.put( property, value );
+    public void setGraphProperty(String property, String value) {
+        header.put(property, value);
     }
 
-    public void setDefaultNodeProperty( String property, String value )
-    {
-        nodeHeader.put( property, value );
+    public void setDefaultNodeProperty(String property, String value) {
+        nodeHeader.put(property, value);
     }
 
-    public void setDefaultRelationshipProperty( String property, String value )
-    {
-        edgeHeader.put( property, value );
+    public void setDefaultRelationshipProperty(String property, String value) {
+        edgeHeader.put(property, value);
     }
 
-    public void displayRelationshipLabel( boolean on )
-    {
+    public void displayRelationshipLabel(boolean on) {
         displayRelationshipLabel = on;
     }
 
-    public void setNodeParameterGetter( String key,
-        ParameterGetter<? super Node> getter )
-    {
-        nodeParams.put( key, getter );
+    public void setNodeParameterGetter(String key,
+            ParameterGetter<? super Node> getter) {
+        nodeParams.put(key, getter);
     }
 
-    public void setNodePropertyFilter( PropertyFilter filter )
-    {
+    public void setNodePropertyFilter(PropertyFilter filter) {
         nodeFilter = filter;
     }
 
-    public void setNodeTitleGetter( TitleGetter<? super Node> getter )
-    {
+    public void setNodeTitleGetter(TitleGetter<? super Node> getter) {
         nodeTitle = getter;
     }
 
-    public void setRelationshipParameterGetter( String key,
-        ParameterGetter<? super Relationship> getter )
-    {
-        edgeParams.put( key, getter );
+    public void setRelationshipParameterGetter(String key,
+            ParameterGetter<? super Relationship> getter) {
+        edgeParams.put(key, getter);
     }
 
-    public void setRelationshipPropertyFilter( PropertyFilter filter )
-    {
+    public void setRelationshipPropertyFilter(PropertyFilter filter) {
         edgeFilter = filter;
     }
 
     public void setRelationshipTitleGetter(
-        TitleGetter<? super Relationship> getter )
-    {
+            TitleGetter<? super Relationship> getter) {
         edgeTitle = getter;
     }
 
-    public void setNodePropertyFomatter( PropertyFormatter format )
-    {
+    public void setNodePropertyFomatter(PropertyFormatter format) {
         this.nodeFormat = format;
     }
 
-    public void setRelationshipPropertyFomatter( PropertyFormatter format )
-    {
+    public void setRelationshipPropertyFomatter(PropertyFormatter format) {
         this.edgeFormat = format;
     }
 }

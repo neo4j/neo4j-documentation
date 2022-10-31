@@ -19,53 +19,44 @@
  */
 package org.neo4j.doc.server.rest.transactional.error;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static java.util.Arrays.asList;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.junit.Assert.assertThat;
-
-public class ErrorDocumentationGeneratorTest
-{
+class ErrorDocumentationGeneratorTest {
     @Test
-    public void tablesShouldFormatAsAsciiDoc() throws Exception
-    {
+    void tablesShouldFormatAsAsciiDoc() {
         // Given
         ErrorDocumentationGenerator.Table table = new ErrorDocumentationGenerator.Table();
-        table.setCols( "COLS" );
-        table.setHeader( "A", "B" );
-        table.addRow( 1, 2 );
-        table.addRow( 3, 4 );
+        table.setCols("COLS");
+        table.setHeader("A", "B");
+        table.addRow(1, 2);
+        table.addRow(3, 4);
 
         // When
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream( buf, false, StandardCharsets.UTF_8.name() );
-        table.print( out );
+        PrintStream out = new PrintStream(buf, false, StandardCharsets.UTF_8);
+        table.print(out);
         out.flush();
 
         // Then
-        String result = buf.toString( StandardCharsets.UTF_8.name() );
+        String result = buf.toString(StandardCharsets.UTF_8);
         String n = System.lineSeparator();
         String expected =
                 "[options=\"header\", cols=\"COLS\"]" + n +
-                "|===" + n +
-                "|A |B " + n +
-                "|1 |2 " + n +
-                "|3 |4 " + n +
-                "|===" + n;
-        assertThat( result, is(equalTo( expected )) );
+                        "|===" + n +
+                        "|A |B " + n +
+                        "|1 |2 " + n +
+                        "|3 |4 " + n +
+                        "|===" + n;
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    public void shouldGenerateTableOfClassifications() throws Exception
-    {
+    void shouldGenerateTableOfClassifications() {
         // Given
         ErrorDocumentationGenerator gen = new ErrorDocumentationGenerator();
 
@@ -74,16 +65,15 @@ public class ErrorDocumentationGeneratorTest
 
         // Then
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        table.print( new PrintStream( buf, true, StandardCharsets.UTF_8.name() ) );
-        String actual = buf.toString( StandardCharsets.UTF_8.name() );
+        table.print(new PrintStream(buf, true, StandardCharsets.UTF_8));
+        String actual = buf.toString(StandardCharsets.UTF_8);
 
         // More or less randomly chosen bits of text that should be in the output:
-        assertThat( actual, stringContainsInOrder( asList( "DatabaseError", "Rollback" ) ) );
+        assertThat(actual).containsSubsequence("DatabaseError", "Rollback");
     }
 
     @Test
-    public void shouldGenerateTableOfStatusCodes() throws Exception
-    {
+    void shouldGenerateTableOfStatusCodes() {
         // Given
         ErrorDocumentationGenerator gen = new ErrorDocumentationGenerator();
 
@@ -92,10 +82,10 @@ public class ErrorDocumentationGeneratorTest
 
         // Then
         ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        table.print( new PrintStream( buf, true, StandardCharsets.UTF_8.name() ) );
-        String actual = buf.toString( StandardCharsets.UTF_8.name() );
+        table.print(new PrintStream(buf, true, StandardCharsets.UTF_8));
+        String actual = buf.toString(StandardCharsets.UTF_8);
 
         // More or less randomly chosen bits of text that should be in the output:
-        assertThat( actual, stringContainsInOrder( asList( "UnknownError", "An unknown error occurred" ) ) );
+        assertThat(actual).containsSubsequence("UnknownError", "An unknown error occurred");
     }
 }

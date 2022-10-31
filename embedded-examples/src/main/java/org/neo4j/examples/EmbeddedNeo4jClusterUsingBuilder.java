@@ -22,44 +22,40 @@ import com.neo4j.configuration.ClusterSettings;
 import com.neo4j.configuration.DiscoveryType;
 import com.neo4j.configuration.EnterpriseEditionSettings;
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.io.fs.FileUtils;
 
-public class EmbeddedNeo4jClusterUsingBuilder
-{
-    private static final Path homeDirectory = Path.of( "target/neo4j-home" );
+public class EmbeddedNeo4jClusterUsingBuilder {
+    private static final Path homeDirectory = Path.of("target/neo4j-home");
 
-    public static void main( final String[] args ) throws IOException
-    {
-        System.out.println( "Starting database ..." );
-        FileUtils.deleteDirectory( homeDirectory );
+    public static void main(final String[] args) throws IOException {
+        System.out.println("Starting database ...");
+        FileUtils.deleteDirectory(homeDirectory);
 
         // tag::startCore[]
-        var defaultAdvertised = new SocketAddress( "core01.example.com" );
-        var defaultListen = new SocketAddress( "0.0.0.0" );
+        var defaultAdvertised = new SocketAddress("core01.example.com");
+        var defaultListen = new SocketAddress("0.0.0.0");
 
         var initialMembers = List.of(
-                new SocketAddress( "core01.example.com" ),
-                new SocketAddress( "core02.example.com" ),
-                new SocketAddress( "core03.example.com" )
+                new SocketAddress("core01.example.com"),
+                new SocketAddress("core02.example.com"),
+                new SocketAddress("core03.example.com")
         );
 
-        var managementService = new EnterpriseDatabaseManagementServiceBuilder( homeDirectory )
-                .setConfig( GraphDatabaseSettings.default_advertised_address, defaultAdvertised )
-                .setConfig( GraphDatabaseSettings.default_listen_address, defaultListen )
-                .setConfig( ClusterSettings.discovery_type, DiscoveryType.LIST )
-                .setConfig( ClusterSettings.discovery_endpoints, initialMembers )
-                .setConfig( EnterpriseEditionSettings.initial_default_primaries_count, 3 )
-                .setConfig( BoltConnector.enabled, true )
-                .setConfig( HttpConnector.enabled, true )
+        var managementService = new EnterpriseDatabaseManagementServiceBuilder(homeDirectory)
+                .setConfig(GraphDatabaseSettings.default_advertised_address, defaultAdvertised)
+                .setConfig(GraphDatabaseSettings.default_listen_address, defaultListen)
+                .setConfig(ClusterSettings.discovery_type, DiscoveryType.LIST)
+                .setConfig(ClusterSettings.discovery_endpoints, initialMembers)
+                .setConfig(EnterpriseEditionSettings.initial_default_primaries_count, 3)
+                .setConfig(BoltConnector.enabled, true)
+                .setConfig(HttpConnector.enabled, true)
                 .build();
         // end::startCore[]
 

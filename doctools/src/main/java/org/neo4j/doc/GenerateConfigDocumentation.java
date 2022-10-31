@@ -22,49 +22,41 @@ package org.neo4j.doc;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
-
 import org.neo4j.internal.helpers.Args;
 import org.neo4j.io.fs.FileUtils;
 
 /**
  * Generates Asciidoc for the GraphDatabaseSettings class.
  */
-public class GenerateConfigDocumentation
-{
-    public static void main( String[] argv ) throws Exception
-    {
-        Args arguments = Args.parse( argv );
+public class GenerateConfigDocumentation {
+    public static void main(String[] argv) throws Exception {
+        Args arguments = Args.parse(argv);
 
-        Path output = arguments.has( "o" ) ? Path.of(arguments.get("o")) : null;
+        Path output = arguments.has("o") ? Path.of(arguments.get("o")) : null;
         List<String> settingsClasses = arguments.orphans();
-        if(settingsClasses.size() == 0)
-        {
+        if (settingsClasses.size() == 0) {
             System.out.println("Usage: GenerateConfigDocumentation [-o output file] SETTINGS_CLASS..");
             System.exit(0);
         }
 
         String doc = new SettingsDocumenter()
-                .document( settingsClasses.stream().map( classFromString ) );
+                .document(settingsClasses.stream().map(classFromString));
 
-        if(output != null)
-        {
+        if (output != null) {
             System.out.println("Saving docs in '" + output.toAbsolutePath() + "'.");
             FileUtils.writeToFile(output, doc, false);
-        } else
-        {
+        }
+        else {
             System.out.println(doc);
         }
     }
 
-    private static final Function<String,Class<?>> classFromString = ( className ) -> {
-        try
-        {
-            return Class.forName( className );
+    private static final Function<String,Class<?>> classFromString = (className) -> {
+        try {
+            return Class.forName(className);
         }
-        catch ( ClassNotFoundException e )
-        {
-            throw new RuntimeException( e );
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     };
-
 }

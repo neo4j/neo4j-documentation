@@ -21,43 +21,34 @@ package org.neo4j.doc.server.helpers;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 
-public class Transactor
-{
+public class Transactor {
 
     private final UnitOfWork unitOfWork;
     private final GraphDatabaseService graphDb;
     private final int attempts; // how many times to try, if the transaction fails for some reason
 
-    public Transactor( GraphDatabaseService graphDb, UnitOfWork unitOfWork )
-    {
-        this( graphDb, unitOfWork, 1 );
+    public Transactor(GraphDatabaseService graphDb, UnitOfWork unitOfWork) {
+        this(graphDb, unitOfWork, 1);
     }
 
-    public Transactor( GraphDatabaseService graphDb, UnitOfWork unitOfWork, int attempts )
-    {
+    public Transactor(GraphDatabaseService graphDb, UnitOfWork unitOfWork, int attempts) {
         assert attempts > 0 : "The Transactor should make at least one attempt at running the transaction.";
         this.unitOfWork = unitOfWork;
         this.graphDb = graphDb;
         this.attempts = attempts;
     }
 
-    public void execute()
-    {
-        for ( int attemptsLeft = attempts - 1; attemptsLeft >= 0; attemptsLeft-- )
-        {
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                unitOfWork.doWork( tx );
+    public void execute() {
+        for (int attemptsLeft = attempts - 1; attemptsLeft >= 0; attemptsLeft--) {
+            try (Transaction tx = graphDb.beginTx()) {
+                unitOfWork.doWork(tx);
                 tx.commit();
             }
-            catch ( RuntimeException e )
-            {
-                if ( attemptsLeft == 0 )
-                {
+            catch (RuntimeException e) {
+                if (attemptsLeft == 0) {
                     throw e;
                 }
             }
         }
     }
-
 }

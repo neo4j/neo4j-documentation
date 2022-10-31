@@ -20,20 +20,16 @@
 package org.neo4j.visualization.graphviz;
 
 import java.io.IOException;
-
 import org.neo4j.graphdb.Relationship;
 
-interface RelationshipStyle extends PropertyContainerStyle
-{
+interface RelationshipStyle extends PropertyContainerStyle {
     /**
      * Emit the start of a relationship.
-     * @param stream
-     *            the stream to emit the relationship to.
-     * @param relationship
-     *            the relationship to emit.
-     * @throws IOException
-     *             if there is an error on the stream.
+     *
+     * @param stream       the stream to emit the relationship to.
+     * @param relationship the relationship to emit.
+     * @throws IOException if there is an error on the stream.
      */
-    void emitRelationshipStart( Appendable stream, Relationship relationship )
-        throws IOException;
+    void emitRelationshipStart(Appendable stream, Relationship relationship)
+            throws IOException;
 }

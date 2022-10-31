@@ -19,14 +19,16 @@
  */
 package org.neo4j.doc.server;
 
-import org.dummy.doc.web.service.DummyThirdPartyWebService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
 
 import java.io.File;
 import java.net.URI;
-
+import org.dummy.doc.web.service.DummyThirdPartyWebService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.neo4j.doc.server.helpers.CommunityWebContainerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.helpers.TestWebContainer;
@@ -39,83 +41,69 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 
-import static org.junit.Assert.assertEquals;
-import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
-
-public class NeoServerJAXRSDocIT extends ExclusiveWebContainerTestBase
-{
+class NeoServerJAXRSDocIT extends ExclusiveWebContainerTestBase {
     private TestWebContainer webContainer;
 
-    @Before
-    public void cleanTheDatabase()
-    {
-        WebContainerHelper.cleanTheDatabase( webContainer );
+    @BeforeEach
+    public void cleanTheDatabase() {
+        WebContainerHelper.cleanTheDatabase(webContainer);
     }
 
-    @After
-    public void stopServer()
-    {
-        if ( webContainer != null )
-        {
+    @AfterEach
+    public void stopServer() {
+        if (webContainer != null) {
             webContainer.shutdown();
         }
     }
 
     @Test
-    public void shouldMakeJAXRSClassesAvailableViaHTTP() throws Exception
-    {
+    void shouldMakeJAXRSClassesAvailableViaHTTP() throws Exception {
         CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
-        webContainer = WebContainerHelper.createContainer( builder, folder, true );
-        FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper( webContainer );
+        webContainer = WebContainerHelper.createContainer(builder, folder, true);
+        FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper(webContainer);
 
-        JaxRsResponse response = new RestRequest().get( functionalTestHelper.baseUri().toASCIIString() );
-        assertEquals( 200, response.getStatus() );
+        JaxRsResponse response = new RestRequest().get(functionalTestHelper.baseUri().toASCIIString());
+        assertEquals(200, response.getStatus());
     }
 
     @Test
-    public void shouldLoadThirdPartyJaxRsClasses() throws Exception
-    {
+    void shouldLoadThirdPartyJaxRsClasses(TestInfo testInfo) throws Exception {
         webContainer = CommunityWebContainerBuilder.builder()
-                .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
-                        DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT )
-                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
+                .withThirdPartyJaxRsPackage("org.dummy.doc.web.service",
+                        DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT)
+                .usingDataDir(new File(folder, testInfo.getTestMethod().toString()).getAbsolutePath())
                 .onRandomPorts()
                 .build();
 
-        URI thirdPartyServiceUri = new URI( webContainer.getBaseUri()
-                .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT ).normalize();
-        String response = CLIENT.resource( thirdPartyServiceUri.toString() )
-                .get( String.class );
-        assertEquals( "hello", response );
+        URI thirdPartyServiceUri = new URI(webContainer.getBaseUri()
+                .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT).normalize();
+        String response = CLIENT.resource(thirdPartyServiceUri.toString())
+                .get(String.class);
+        assertEquals("hello", response);
 
         // Assert that extensions gets initialized
-        int nodesCreated = createSimpleDatabase( webContainer.getDefaultDatabase() );
-        thirdPartyServiceUri = new URI( webContainer.getBaseUri()
-                .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT + "/inject-test" ).normalize();
-        response = CLIENT.resource( thirdPartyServiceUri.toString() )
-                .get( String.class );
-        assertEquals( String.valueOf( nodesCreated ), response );
+        int nodesCreated = createSimpleDatabase(webContainer.getDefaultDatabase());
+        thirdPartyServiceUri = new URI(webContainer.getBaseUri()
+                .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT + "/inject-test").normalize();
+        response = CLIENT.resource(thirdPartyServiceUri.toString())
+                .get(String.class);
+        assertEquals(String.valueOf(nodesCreated), response);
     }
 
-    private int createSimpleDatabase( final GraphDatabaseAPI graph )
-    {
+    private int createSimpleDatabase(final GraphDatabaseAPI graph) {
         final int numberOfNodes = 10;
-        new Transactor( graph, ( Transaction tx ) -> {
-            for ( int i = 0; i < numberOfNodes; i++ )
-            {
+        new Transactor(graph, (Transaction tx) -> {
+            for (int i = 0; i < numberOfNodes; i++) {
                 tx.createNode();
             }
 
-            for ( Node n1 : tx.getAllNodes() )
-            {
-                for ( Node n2 : tx.getAllNodes() )
-                {
-                    if ( n1.equals( n2 ) )
-                    {
+            for (Node n1 : tx.getAllNodes()) {
+                for (Node n2 : tx.getAllNodes()) {
+                    if (n1.equals(n2)) {
                         continue;
                     }
 
-                    n1.createRelationshipTo( n2, RelationshipType.withName( "REL" ) );
+                    n1.createRelationshipTo(n2, RelationshipType.withName("REL"));
                 }
             }
         }).execute();

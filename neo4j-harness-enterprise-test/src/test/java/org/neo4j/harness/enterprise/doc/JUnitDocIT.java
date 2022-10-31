@@ -18,12 +18,15 @@
  */
 package org.neo4j.harness.enterprise.doc;
 
-import com.neo4j.harness.junit.rule.EnterpriseNeo4jRule;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.neo4j.internal.helpers.collection.Iterables.single;
+import static org.neo4j.internal.helpers.collection.Iterators.count;
 
+import com.neo4j.harness.junit.extension.EnterpriseNeo4jExtension;
 import java.net.URI;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -31,74 +34,62 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
-import org.neo4j.harness.junit.rule.Neo4jRule;
+import org.neo4j.harness.Neo4j;
+import org.neo4j.harness.junit.extension.Neo4jExtension;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.neo4j.internal.helpers.collection.Iterables.single;
-import static org.neo4j.internal.helpers.collection.Iterators.count;
-
-public class JUnitDocIT
-{
+class JUnitDocIT {
     // tag::useEnterpriseJUnitRule[]
-    @Rule
-    public Neo4jRule neo4j = new EnterpriseNeo4jRule()
-            .withFixture( "CREATE (admin:Admin)" )
-            .withFixture( graphDatabaseService ->
+    @RegisterExtension
+    static final Neo4jExtension neo4jExtension = EnterpriseNeo4jExtension.builder()
+            .withFixture("CREATE (admin:Admin)")
+            .withFixture(graphDatabaseService ->
             {
-                try ( Transaction tx = graphDatabaseService.beginTx() )
-                {
-                    tx.createNode( Label.label( "Admin" ) );
+                try (Transaction tx = graphDatabaseService.beginTx()) {
+                    tx.createNode(Label.label("Admin"));
                     tx.commit();
                 }
                 return null;
-            } );
+            }).build();
 
     @Test
-    public void shouldWorkWithServer() throws Exception
-    {
+    void shouldWorkWithServer(Neo4j neo4j) {
         // Given
         URI serverURI = neo4j.httpURI();
 
         // When I access the server
-        HTTP.Response response = HTTP.GET( serverURI.toString() );
+        HTTP.Response response = HTTP.GET(serverURI.toString());
 
         // Then it should reply
-        assertEquals( 200, response.status() );
+        assertEquals(200, response.status());
 
         // and we have access to underlying GraphDatabaseService
-        try ( Transaction tx = neo4j.defaultDatabaseService().beginTx() )
-        {
-            assertEquals( 2, count( tx.findNodes( Label.label( "Admin" ) ) ) );
+        try (Transaction tx = neo4j.defaultDatabaseService().beginTx()) {
+            assertEquals(2, count(tx.findNodes(Label.label("Admin"))));
             tx.commit();
         }
     }
     // end::useEnterpriseJUnitRule[]
 
     @Test
-    public void shouldUserEnterpriseFeatures() throws Exception
-    {
+    void shouldUserEnterpriseFeatures(Neo4j neo4j) {
         // Given
         GraphDatabaseService db = neo4j.defaultDatabaseService();
 
         // When I create property existence constraint
-        try ( Transaction tx = db.beginTx() )
-        {
-            try ( Result result = tx.execute( "CREATE CONSTRAINT FOR (user:User) REQUIRE user.name IS NOT NULL" ) )
-            {
+        try (Transaction tx = db.beginTx()) {
+            try (Result result = tx.execute("CREATE CONSTRAINT FOR (user:User) REQUIRE user.name IS NOT NULL")) {
                 // nothing to-do
             }
             tx.commit();
         }
 
         // Then I can access created constraint
-        try ( Transaction tx = db.beginTx() )
-        {
-            ConstraintDefinition constraint = single( tx.schema().getConstraints() );
+        try (Transaction tx = db.beginTx()) {
+            ConstraintDefinition constraint = single(tx.schema().getConstraints());
 
-            assertTrue( constraint.isConstraintType( ConstraintType.NODE_PROPERTY_EXISTENCE ) );
-            assertEquals( Label.label( "User" ), constraint.getLabel() );
-            assertEquals( "name", single( constraint.getPropertyKeys() ) );
+            assertTrue(constraint.isConstraintType(ConstraintType.NODE_PROPERTY_EXISTENCE));
+            assertEquals(Label.label("User"), constraint.getLabel());
+            assertEquals("name", single(constraint.getPropertyKeys()));
 
             tx.commit();
         }

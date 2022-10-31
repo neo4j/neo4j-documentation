@@ -24,23 +24,20 @@ import java.util.Collection;
 /**
  * Map from entities to colors, and list what colors are used/reserved.
  *
- * @author anders
- *
  * @param <E> the type to map to colors
+ * @author anders
  */
-public interface ColorMapper<E>
-{
+public interface ColorMapper<E> {
     /**
      * Get color for an entity.
      *
      * @param entity entity to get color for
      * @return color for entity
      */
-    Color getColor( E entity );
+    Color getColor(E entity);
 
     /**
-     * Colors to reserve - note that it will only be called once, any changes to
-     * the collection after that will have no effect.
+     * Colors to reserve - note that it will only be called once, any changes to the collection after that will have no effect.
      *
      * @return reserved colors
      */

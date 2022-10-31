@@ -18,102 +18,81 @@
  */
 package org.neo4j.doc.server;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import static org.neo4j.doc.server.helpers.WebContainerHelper.createContainer;
 
+import java.io.File;
+import java.nio.file.Path;
 import org.neo4j.doc.server.helpers.CommunityWebContainerBuilder;
 import org.neo4j.doc.server.helpers.TestWebContainer;
 
-import static org.neo4j.doc.server.helpers.WebContainerHelper.createContainer;
-
-public final class WebContainerHolder extends Thread
-{
+public final class WebContainerHolder extends Thread {
     private static AssertionError allocation;
     private static TestWebContainer testWebContainer;
     private static CommunityWebContainerBuilder builder;
 
-    static synchronized TestWebContainer allocate( boolean onRandomPorts ) throws Exception
-    {
-        if ( allocation != null )
-        {
+    static synchronized TestWebContainer allocate(boolean onRandomPorts) throws Exception {
+        if (allocation != null) {
             throw allocation;
         }
-        if ( testWebContainer == null )
-        {
-            Path testFolderPath = WebContainerTestUtils.createTempDir( "webcontainer-x" ); //This folder will be removed.
-            testWebContainer = startServer( testFolderPath.toFile(), onRandomPorts );
+        if (testWebContainer == null) {
+            Path testFolderPath = WebContainerTestUtils.createTempDir("webcontainer-x"); //This folder will be removed.
+            testWebContainer = startServer(testFolderPath.toFile(), onRandomPorts);
         }
-        allocation = new AssertionError( "The server was allocated from here but not released properly" );
+        allocation = new AssertionError("The server was allocated from here but not released properly");
         return testWebContainer;
     }
 
-    static synchronized void release( TestWebContainer server )
-    {
-        if ( server == null )
-        {
+    static synchronized void release(TestWebContainer server) {
+        if (server == null) {
             return;
         }
-        if ( server != WebContainerHolder.testWebContainer )
-        {
-            throw new AssertionError( "trying to suspend a server not allocated from here" );
+        if (server != WebContainerHolder.testWebContainer) {
+            throw new AssertionError("trying to suspend a server not allocated from here");
         }
-        if ( allocation == null )
-        {
-            throw new AssertionError( "releasing the server although it is not allocated" );
+        if (allocation == null) {
+            throw new AssertionError("releasing the server although it is not allocated");
         }
         allocation = null;
     }
 
-    static synchronized void ensureNotRunning()
-    {
-        if ( allocation != null )
-        {
+    static synchronized void ensureNotRunning() {
+        if (allocation != null) {
             throw allocation;
         }
         shutdown();
     }
 
-    static synchronized void setWebContainerBuilderProperty( String key, String value )
-    {
+    static synchronized void setWebContainerBuilderProperty(String key, String value) {
         initBuilder();
-        builder = builder.withProperty( key, value );
+        builder = builder.withProperty(key, value);
     }
 
-    private static TestWebContainer startServer( File path, boolean onRandomPorts ) throws Exception
-    {
+    private static TestWebContainer startServer(File path, boolean onRandomPorts) throws Exception {
         initBuilder();
-        return createContainer( builder, path, onRandomPorts );
+        return createContainer(builder, path, onRandomPorts);
     }
 
-    private static synchronized void shutdown()
-    {
+    private static synchronized void shutdown() {
         allocation = null;
-        try
-        {
-            if ( testWebContainer != null )
-            {
+        try {
+            if (testWebContainer != null) {
                 testWebContainer.shutdown();
             }
         }
-        finally
-        {
+        finally {
             builder = null;
             testWebContainer = null;
         }
     }
 
-    private static void initBuilder()
-    {
-        if ( builder == null )
-        {
+    private static void initBuilder() {
+        if (builder == null) {
             builder = CommunityWebContainerBuilder.serverOnRandomPorts();
         }
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         shutdown();
     }
 }

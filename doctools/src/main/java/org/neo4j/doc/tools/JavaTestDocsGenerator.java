@@ -22,21 +22,17 @@ package org.neo4j.doc.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-
 import org.neo4j.doc.test.TestData.Producer;
 
 /**
- * This class is supporting the generation of ASCIIDOC documentation
- * from Java JUnit tests. Snippets can be supplied programmatically in the Java-section
- * and will replace their @@snippetName placeholders in the documentation description.
+ * This class is supporting the generation of ASCIIDOC documentation from Java JUnit tests. Snippets can be supplied programmatically in the Java-section and
+ * will replace their @@snippetName placeholders in the documentation description.
  *
  * @author peterneubauer
- *
  */
-public class JavaTestDocsGenerator extends AsciiDocGenerator
-{
+public class JavaTestDocsGenerator extends AsciiDocGenerator {
     public static final Producer<JavaTestDocsGenerator> PRODUCER =
-            ( graph, title, documentation ) -> (JavaTestDocsGenerator) new JavaTestDocsGenerator( title ).description( documentation );
+            (graph, title, documentation, db) -> (JavaTestDocsGenerator) new JavaTestDocsGenerator(title).description(documentation);
 
     public JavaTestDocsGenerator(String title) {
         super(title, "docs");
@@ -70,6 +66,6 @@ public class JavaTestDocsGenerator extends AsciiDocGenerator
     }
 
     public void addImageSnippet(String tagName, String imageName, String title) {
-        this.addSnippet( tagName, "\nimage:" + imageName + "[" + title + "]\n" );
+        this.addSnippet(tagName, "\nimage:" + imageName + "[" + title + "]\n");
     }
 }

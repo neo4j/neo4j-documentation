@@ -18,45 +18,38 @@
  */
 package org.neo4j.examples.server;
 
-public class Relation
-{
+public class Relation {
     public static final String OUT = "out";
     public static final String IN = "in";
     public static final String BOTH = "both";
     private String type;
     private String direction;
 
-    public String toJsonCollection()
-    {
+    public String toJsonCollection() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "{ " );
+        sb.append("{ ");
         sb.append(" \"type\" : \"").append(type).append("\"");
-        if ( direction != null )
-        {
+        if (direction != null) {
             sb.append(", \"direction\" : \"").append(direction).append("\"");
         }
-        sb.append( " }" );
+        sb.append(" }");
         return sb.toString();
     }
 
-    public Relation( String type, String direction )
-    {
-        setType( type );
-        setDirection( direction );
+    public Relation(String type, String direction) {
+        setType(type);
+        setDirection(direction);
     }
 
-    public Relation( String type )
-    {
-        this( type, null );
+    public Relation(String type) {
+        this(type, null);
     }
 
-    public void setType( String type )
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public void setDirection( String direction )
-    {
+    public void setDirection(String direction) {
         this.direction = direction;
     }
 }

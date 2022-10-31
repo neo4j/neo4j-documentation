@@ -20,13 +20,11 @@ package org.neo4j.examples.socnet;
 
 import java.util.Iterator;
 
-
 /**
  * Decorator class that wraps any iterator and remembers the current node.
  */
 
-public class PositionedIterator<T> implements Iterator<T>
-{
+public class PositionedIterator<T> implements Iterator<T> {
     private Iterator<? extends T> inner;
     private T current;
     private Boolean initiated = false;
@@ -36,41 +34,34 @@ public class PositionedIterator<T> implements Iterator<T>
      *
      * @param iterator The iterator to wrap
      */
-    public PositionedIterator( Iterator<? extends T> iterator )
-    {
+    public PositionedIterator(Iterator<? extends T> iterator) {
         inner = iterator;
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return inner.hasNext();
     }
 
     @Override
-    public T next()
-    {
+    public T next() {
         initiated = true;
         current = inner.next();
         return current;
     }
 
     @Override
-    public void remove()
-    {
+    public void remove() {
         inner.remove();
     }
 
     /**
-     * Returns the current node. Any subsequent calls to current will return the same object,
-     * unless the next() method has been called.
+     * Returns the current node. Any subsequent calls to current will return the same object, unless the next() method has been called.
      *
      * @return The current node.
      */
-    public T current()
-    {
-        if ( !initiated )
-        {
+    public T current() {
+        if (!initiated) {
             return next();
         }
 

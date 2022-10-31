@@ -18,13 +18,11 @@
  */
 package org.neo4j.examples;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EmbeddedNeo4jWithBoltIT
-{
+class EmbeddedNeo4jWithBoltIT {
     @Test
-    public void justExecuteIt() throws Throwable
-    {
-        EmbeddedNeo4jWithBolt.main( null );
+    void justExecuteIt() throws Throwable {
+        EmbeddedNeo4jWithBolt.main(null);
     }
 }

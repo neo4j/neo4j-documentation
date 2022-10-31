@@ -18,70 +18,62 @@
  */
 package org.neo4j.harness.doc;
 
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.harness.junit.rule.Neo4jRule;
+import org.neo4j.harness.Neo4j;
+import org.neo4j.harness.junit.extension.Neo4jExtension;
 
-import static org.junit.Assert.assertEquals;
-import static org.neo4j.internal.helpers.collection.Iterators.count;
-
-public class ExtensionTestingDocIT
-{
-    @Rule
-    public Neo4jRule neo4j = new Neo4jRule()
-            .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
-            .withFixture( graphDatabaseService ->
+class ExtensionTestingDocIT {
+    @RegisterExtension
+    static final Neo4jExtension neo4jExtension = Neo4jExtension.builder()
+            .withUnmanagedExtension("/myExtension", MyUnmanagedExtension.class)
+            .withFixture(graphDatabaseService ->
             {
-                try ( Transaction tx = graphDatabaseService.beginTx() )
-                {
-                    tx.createNode( Label.label( "User" ) );
+                try (Transaction tx = graphDatabaseService.beginTx()) {
+                    tx.createNode(Label.label("User"));
                     tx.commit();
                 }
                 return null;
-            } );
+            }).build();
 
     // tag::testExtension[]
     @Path("")
-    public static class MyUnmanagedExtension
-    {
+    public static class MyUnmanagedExtension {
         @GET
-        public Response myEndpoint()
-        {
+        public Response myEndpoint() {
             return Response.ok().build();
         }
     }
 
     @Test
-    public void testMyExtension() throws Exception
-    {
+    void testMyExtension(Neo4j neo4j){
         // Given
-        HTTP.Response response = HTTP.GET( HTTP.GET( neo4j.httpURI().resolve( "myExtension" ).toString() ).location() );
+        HTTP.Response response = HTTP.GET(HTTP.GET(neo4j.httpURI().resolve("myExtension").toString()).location());
 
         // Then
-        assertEquals( 200, response.status() );
+        assertEquals(200, response.status());
     }
 
     @Test
-    public void testMyExtensionWithFunctionFixture()
-    {
+    void testMyExtensionWithFunctionFixture(Neo4j neo4j) {
         final GraphDatabaseService graphDatabaseService = neo4j.defaultDatabaseService();
-        try ( Transaction transaction = graphDatabaseService.beginTx() )
-        {
+        try (Transaction transaction = graphDatabaseService.beginTx()) {
             // Given
-            Result result = transaction.execute( "MATCH (n:User) return n" );
+            Result result = transaction.execute("MATCH (n:User) return n");
 
             // Then
-            assertEquals( 1, count( result ) );
+            assertEquals(1, count(result));
             transaction.commit();
         }
     }

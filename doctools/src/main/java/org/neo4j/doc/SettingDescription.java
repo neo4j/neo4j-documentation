@@ -49,5 +49,5 @@ public interface SettingDescription {
 
     String validationMessage();
 
-    SettingDescription formatted(Function<String, String> format);
+    SettingDescription formatted(Function<String,String> format);
 }

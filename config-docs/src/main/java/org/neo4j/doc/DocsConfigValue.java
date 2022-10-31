@@ -38,15 +38,15 @@ public class DocsConfigValue implements SettingDescription {
     private final boolean enterprise;
 
     public DocsConfigValue(String id,
-                           String name,
-                           Optional<String> description,
-                           boolean deprecated,
-                           String valueDescription,
-                           Optional<String> defaultValue,
-                           boolean internal,
-                           Optional<String> replacement,
-                           boolean dynamic,
-                           boolean enterprise) {
+            String name,
+            Optional<String> description,
+            boolean deprecated,
+            String valueDescription,
+            Optional<String> defaultValue,
+            boolean internal,
+            Optional<String> replacement,
+            boolean dynamic,
+            boolean enterprise) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -124,9 +124,8 @@ public class DocsConfigValue implements SettingDescription {
     }
 
     @Override
-    public SettingDescription formatted(Function<String, String> format)
-    {
-        Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
+    public SettingDescription formatted(Function<String,String> format) {
+        Function<String,String> f = (str) -> str == null ? null : format.apply(str);
         return new DocsConfigValue(
                 id, name,
                 description.map(s -> escapeTableDelimiters(f.apply(s))),
@@ -145,6 +144,7 @@ public class DocsConfigValue implements SettingDescription {
 
     /**
      * Escape pipe/bar character in input since it is used to delimit fields in the table.
+     *
      * @param text Setting description or valid values description.
      * @return The same with pipe characters replaced with "{vbar}", which renders well without breaking tables.
      */
@@ -153,31 +153,25 @@ public class DocsConfigValue implements SettingDescription {
     }
 
     @Override
-    public boolean equals( Object o )
-    {
-        if ( this == o )
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if ( o == null || getClass() != o.getClass() )
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         SettingDescription that = (SettingDescription) o;
-        return Objects.equals( name, that.name() ) &&
-                Objects.equals( description, that.description() );
+        return Objects.equals(name, that.name()) &&
+                Objects.equals(description, that.description());
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash( name, description );
+    public int hashCode() {
+        return Objects.hash(name, description);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "DocsConfigValue{" + "id='" + id() + "\', name='" + name + "\', description='" + description + "\'}";
     }
-
 }

@@ -19,21 +19,17 @@
 package org.neo4j.doc.server.helpers;
 
 import com.sun.jersey.api.client.Client;
-
 import java.net.URI;
-
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 
-public final class FunctionalTestHelper
-{
+public final class FunctionalTestHelper {
     private final TestWebContainer container;
 
     public static final Client CLIENT = Client.create();
     private RestRequest request;
 
-    public FunctionalTestHelper( TestWebContainer container )
-    {
+    public FunctionalTestHelper(TestWebContainer container) {
         this.container = container;
         this.request = new RestRequest(container.getBaseUri().resolve("db/neo4j/"));
     }
@@ -42,8 +38,7 @@ public final class FunctionalTestHelper
         return request.get(path);
     }
 
-    public URI baseUri()
-    {
+    public URI baseUri() {
         return container.getBaseUri();
     }
 }

@@ -21,17 +21,14 @@ package org.neo4j.visualization.graphviz;
 
 import org.neo4j.visualization.PropertyType;
 
-interface PropertyFormatter
-{
+interface PropertyFormatter {
     /**
      * Format a property as a string.
-     * @param key
-     *            the key of the property to format.
-     * @param type
-     *            an object representing the type of the property.
-     * @param value
-     *            the value or the property to format.
+     *
+     * @param key   the key of the property to format.
+     * @param type  an object representing the type of the property.
+     * @param value the value or the property to format.
      * @return the property formatted as a string.
      */
-    String format( String key, PropertyType type, Object value );
+    String format(String key, PropertyType type, Object value);
 }

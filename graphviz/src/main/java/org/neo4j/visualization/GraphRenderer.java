@@ -23,42 +23,35 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
 /**
- * @param <E>
- *            A base exception type that can be thrown by the methods of this
- *            renderer.
+ * @param <E> A base exception type that can be thrown by the methods of this renderer.
  */
-public interface GraphRenderer<E extends Throwable>
-{
+public interface GraphRenderer<E extends Throwable> {
     /**
      * Renders a node.
-     * @param node
-     *            the node to render.
+     *
+     * @param node the node to render.
      * @return an object capable of rendering the properties of the node, or
-     *         <code>null</code> to not render properties externally.
-     * @throws E
-     *             if an error occurs when rendering the node.
+     * <code>null</code> to not render properties externally.
+     * @throws E if an error occurs when rendering the node.
      */
-    PropertyRenderer<E> renderNode( Node node ) throws E;
+    PropertyRenderer<E> renderNode(Node node) throws E;
 
     /**
      * Renders a relationship.
-     * @param relationship
-     *            the relationship to render.
-     * @return an object capable of rendering the properties of the
-     *         relationship, or <code>null</code> to not render properties
-     *         externally.
-     * @throws E
-     *             if an error occurs when rendering the relationship.
+     *
+     * @param relationship the relationship to render.
+     * @return an object capable of rendering the properties of the relationship, or <code>null</code> to not render properties externally.
+     * @throws E if an error occurs when rendering the relationship.
      */
-    PropertyRenderer<E> renderRelationship( Relationship relationship )
-        throws E;
+    PropertyRenderer<E> renderRelationship(Relationship relationship)
+            throws E;
 
     /**
      * Invoked when the entire graph has been rendered.
-     * @throws E
-     *             if an error occurs.
+     *
+     * @throws E if an error occurs.
      */
     void done() throws E;
 
-    GraphRenderer<E> renderSubgraph( String name ) throws E;
+    GraphRenderer<E> renderSubgraph(String name) throws E;
 }

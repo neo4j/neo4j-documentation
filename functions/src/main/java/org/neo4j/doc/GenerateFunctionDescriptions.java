@@ -29,48 +29,39 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.neo4j.internal.helpers.Args;
 
-public class GenerateFunctionDescriptions
-{
+public class GenerateFunctionDescriptions {
 
-    public static void main( String[] args ) throws IOException
-    {
-        Args arguments = Args.parse( args );
+    public static void main(String[] args) throws IOException {
+        Args arguments = Args.parse(args);
         printUsage();
 
         List<String> orphans = arguments.orphans();
-        Path outFile = orphans.size() == 1 ? Paths.get( orphans.get( 0 ) ) : null;
+        Path outFile = orphans.size() == 1 ? Paths.get(orphans.get(0)) : null;
 
-        try
-        {
+        try {
             String doc = new FunctionDescriptionsGenerator().document();
-            if ( null != outFile )
-            {
+            if (null != outFile) {
                 Path parentDir = outFile.getParent();
-                if ( !Files.exists( parentDir ) )
-                {
-                    Files.createDirectories( parentDir );
+                if (!Files.exists(parentDir)) {
+                    Files.createDirectories(parentDir);
                 }
-                System.out.println( "Saving docs in '" + outFile.toFile().getAbsolutePath() + "'." );
-                Files.write( outFile, doc.getBytes() );
+                System.out.println("Saving docs in '" + outFile.toFile().getAbsolutePath() + "'.");
+                Files.write(outFile, doc.getBytes());
             }
-            else
-            {
-                System.out.println( doc );
+            else {
+                System.out.println(doc);
             }
         }
-        catch ( NoSuchElementException | NoSuchFileException e )
-        {
+        catch (NoSuchElementException | NoSuchFileException e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    private static void printUsage()
-    {
-        System.out.printf( "Usage: FunctionReferenceTool <out_file>%n" );
-        System.out.printf( "    If no <out-file> is given prints to stdout.%n" );
+    private static void printUsage() {
+        System.out.printf("Usage: FunctionReferenceTool <out_file>%n");
+        System.out.printf("    If no <out-file> is given prints to stdout.%n");
     }
 }

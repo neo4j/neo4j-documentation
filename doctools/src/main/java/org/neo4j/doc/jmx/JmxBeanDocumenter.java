@@ -19,11 +19,18 @@
  */
 package org.neo4j.doc.jmx;
 
-import org.neo4j.doc.AsciiDocListGenerator;
-import org.neo4j.doc.SettingDescription;
-import org.neo4j.doc.SettingDescriptionImpl;
-import org.neo4j.doc.util.FileUtil;
-
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.management.Descriptor;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
@@ -36,19 +43,10 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import org.neo4j.doc.AsciiDocListGenerator;
+import org.neo4j.doc.SettingDescription;
+import org.neo4j.doc.SettingDescriptionImpl;
+import org.neo4j.doc.util.FileUtil;
 
 public class JmxBeanDocumenter {
 
@@ -56,7 +54,7 @@ public class JmxBeanDocumenter {
     private static final String IFDEF_NONHTMLOUTPUT = "ifdef::nonhtmloutput[]\n";
     private static final String ENDIF = "endif::nonhtmloutput[]\n";
     private static final String JAVADOC_URL = "link:{neo4j-javadoc-base-uri}/";
-    private static final Map<String, String> TYPES = new HashMap<String, String>() {{
+    private static final Map<String,String> TYPES = new HashMap<String,String>() {{
         put("java.lang.String", "String");
         put("java.util.List", "List (java.util.List)");
         put("java.util.Date", "Date (java.util.Date)");
@@ -68,7 +66,8 @@ public class JmxBeanDocumenter {
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
     }
 
-    public void document(List<ObjectInstance> objectInstances, FileUtil fileUtil, AsciiDocListGenerator asciiDocListGenerator) throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException {
+    public void document(List<ObjectInstance> objectInstances, FileUtil fileUtil, AsciiDocListGenerator asciiDocListGenerator)
+            throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException {
         List<SettingDescription> settingDescriptions = new ArrayList<>();
         for (ObjectInstance objectInstance : objectInstances) {
             ObjectName objectName = objectInstance.getObjectName();
@@ -91,7 +90,8 @@ public class JmxBeanDocumenter {
         return mBeanServer.queryMBeans(new ObjectName(query), null);
     }
 
-    private SettingDescription asSettingDescription(ObjectName objectName, String name) throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+    private SettingDescription asSettingDescription(ObjectName objectName, String name)
+            throws IntrospectionException, InstanceNotFoundException, ReflectionException {
         MBeanInfo mBeanInfo = mBeanServer.getMBeanInfo(objectName);
         String description = mBeanInfo.getDescription();
         String id = getId(name);
@@ -188,7 +188,8 @@ public class JmxBeanDocumenter {
                     out.print(",");
                 }
             }
-        } else {
+        }
+        else {
             out.print("(no parameters)");
         }
         out.println();
@@ -197,10 +198,12 @@ public class JmxBeanDocumenter {
     private String getType(String type) {
         if (TYPES.containsKey(type)) {
             return TYPES.get(type);
-        } else if (type.endsWith(";")) {
+        }
+        else if (type.endsWith(";")) {
             if (type.startsWith("[L")) {
                 return type.substring(2, type.length() - 1) + "[]";
-            } else {
+            }
+            else {
                 throw new IllegalArgumentException("Don't know how to parse this type: " + type);
             }
         }
@@ -215,7 +218,8 @@ public class JmxBeanDocumenter {
                 newType = getLinkedType(getType((String) originalType), nonHtml);
                 if (nonHtml) {
                     newType += " as CompositeData[]";
-                } else {
+                }
+                else {
                     newType += " as http://docs.oracle.com/javase/7/docs/api/javax/management/openmbean/CompositeData.html"
                             + "[CompositeData][]";
                 }
@@ -228,13 +232,16 @@ public class JmxBeanDocumenter {
         if (!type.startsWith("org.neo4j")) {
             if (!type.startsWith("java.util.List<org.neo4j.")) {
                 return type;
-            } else {
+            }
+            else {
                 String typeInList = type.substring(15, type.length() - 1);
                 return String.format("java.util.List<%s>", getLinkedType(typeInList, nonHtml));
             }
-        } else if (nonHtml || type.startsWith("org.neo4j.kernel")) {
+        }
+        else if (nonHtml || type.startsWith("org.neo4j.kernel")) {
             return type;
-        } else {
+        }
+        else {
             StringBuilder url = new StringBuilder(160);
             url.append(JAVADOC_URL);
             String typeString = type;
@@ -258,7 +265,8 @@ public class JmxBeanDocumenter {
                     .replace("NumberOf", "NumberOf\u200A")
                     .replace("InUse", "\u200AInUse")
                     .replace("Transactions", "\u200ATransactions");
-        } else {
+        }
+        else {
             return name;
         }
     }
@@ -272,5 +280,4 @@ public class JmxBeanDocumenter {
     private String nonHtmlCondition(boolean nonHtml) {
         return nonHtml ? IFDEF_NONHTMLOUTPUT : IFDEF_HTMLOUTPUT;
     }
-
 }

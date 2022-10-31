@@ -18,9 +18,11 @@
  */
 package org.neo4j.examples;
 
+import static com.google.common.collect.Iterables.size;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+
 import java.io.IOException;
 import java.nio.file.Path;
-
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.RelationshipType;
@@ -29,72 +31,58 @@ import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventListener;
 import org.neo4j.io.fs.FileUtils;
 
-import static com.google.common.collect.Iterables.size;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-
-public class TransactionEventListenerExample
-{
-    private static final Path HOME_DIRECTORY = Path.of( "target/transaction-event-listener" );
+public class TransactionEventListenerExample {
+    private static final Path HOME_DIRECTORY = Path.of("target/transaction-event-listener");
 
     // tag::TransactionEventListener[]
-    public static void main( String[] args ) throws IOException
-    {
-        FileUtils.deleteDirectory( HOME_DIRECTORY );
-        var managementService = new DatabaseManagementServiceBuilder( HOME_DIRECTORY ).build();
-        var database = managementService.database( DEFAULT_DATABASE_NAME );
+    public static void main(String[] args) throws IOException {
+        FileUtils.deleteDirectory(HOME_DIRECTORY);
+        var managementService = new DatabaseManagementServiceBuilder(HOME_DIRECTORY).build();
+        var database = managementService.database(DEFAULT_DATABASE_NAME);
 
         var countingListener = new CountingTransactionEventListener();
-        managementService.registerTransactionEventListener( DEFAULT_DATABASE_NAME, countingListener );
+        managementService.registerTransactionEventListener(DEFAULT_DATABASE_NAME, countingListener);
 
-        var connectionType = RelationshipType.withName( "CONNECTS" );
-        try ( var transaction = database.beginTx() )
-        {
+        var connectionType = RelationshipType.withName("CONNECTS");
+        try (var transaction = database.beginTx()) {
             var startNode = transaction.createNode();
             var endNode = transaction.createNode();
-            startNode.createRelationshipTo( endNode, connectionType );
+            startNode.createRelationshipTo(endNode, connectionType);
             transaction.commit();
         }
     }
 
-    private static class CountingTransactionEventListener implements TransactionEventListener<CreatedEntitiesCounter>
-    {
+    private static class CountingTransactionEventListener implements TransactionEventListener<CreatedEntitiesCounter> {
         @Override
-        public CreatedEntitiesCounter beforeCommit( TransactionData data, Transaction transaction, GraphDatabaseService databaseService ) throws Exception
-        {
-            return new CreatedEntitiesCounter( size( data.createdNodes() ), size( data.createdRelationships() ) );
+        public CreatedEntitiesCounter beforeCommit(TransactionData data, Transaction transaction, GraphDatabaseService databaseService) throws Exception {
+            return new CreatedEntitiesCounter(size(data.createdNodes()), size(data.createdRelationships()));
         }
 
         @Override
-        public void afterCommit( TransactionData data, CreatedEntitiesCounter entitiesCounter, GraphDatabaseService databaseService )
-        {
-            System.out.println( "Number of created nodes: " + entitiesCounter.getCreatedNodes() );
-            System.out.println( "Number of created relationships: " + entitiesCounter.getCreatedRelationships() );
+        public void afterCommit(TransactionData data, CreatedEntitiesCounter entitiesCounter, GraphDatabaseService databaseService) {
+            System.out.println("Number of created nodes: " + entitiesCounter.getCreatedNodes());
+            System.out.println("Number of created relationships: " + entitiesCounter.getCreatedRelationships());
         }
 
         @Override
-        public void afterRollback( TransactionData data, CreatedEntitiesCounter state, GraphDatabaseService databaseService )
-        {
+        public void afterRollback(TransactionData data, CreatedEntitiesCounter state, GraphDatabaseService databaseService) {
         }
     }
 
-    private static class CreatedEntitiesCounter
-    {
+    private static class CreatedEntitiesCounter {
         private final long createdNodes;
         private final long createdRelationships;
 
-        public CreatedEntitiesCounter( long createdNodes, long createdRelationships )
-        {
+        public CreatedEntitiesCounter(long createdNodes, long createdRelationships) {
             this.createdNodes = createdNodes;
             this.createdRelationships = createdRelationships;
         }
 
-        public long getCreatedNodes()
-        {
+        public long getCreatedNodes() {
             return createdNodes;
         }
 
-        public long getCreatedRelationships()
-        {
+        public long getCreatedRelationships() {
             return createdRelationships;
         }
     }

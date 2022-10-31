@@ -18,53 +18,48 @@
  */
 package org.neo4j.harness.doc;
 
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 import java.net.URI;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.harness.junit.rule.Neo4jRule;
+import org.neo4j.harness.Neo4j;
+import org.neo4j.harness.junit.extension.Neo4jExtension;
 
-import static org.junit.Assert.assertEquals;
-import static org.neo4j.internal.helpers.collection.Iterators.count;
-
-public class JUnitDocIT
-{
+class JUnitDocIT {
     // tag::useJUnitRule[]
-    @Rule
-    public Neo4jRule neo4j = new Neo4jRule()
-            .withFixture( "CREATE (admin:Admin)" )
-            .withFixture( graphDatabaseService ->
+    @RegisterExtension
+    static final Neo4jExtension neo4jExtension = Neo4jExtension.builder()
+            .withFixture("CREATE (admin:Admin)")
+            .withFixture(graphDatabaseService ->
             {
-                try (Transaction tx = graphDatabaseService.beginTx())
-                {
-                    tx.createNode( Label.label( "Admin" ) );
+                try (Transaction tx = graphDatabaseService.beginTx()) {
+                    tx.createNode(Label.label("Admin"));
                     tx.commit();
                 }
                 return null;
-            } );
+            }).build();
 
     @Test
-    public void shouldWorkWithServer()
-    {
+    void shouldWorkWithServer(Neo4j neo4j) {
         // Given
         URI serverURI = neo4j.httpURI();
 
         // When I access the server
-        HTTP.Response response = HTTP.GET( serverURI.toString() );
+        HTTP.Response response = HTTP.GET(serverURI.toString());
 
         // Then it should reply
         assertEquals(200, response.status());
 
         // and we have access to underlying GraphDatabaseService
         try (Transaction tx = neo4j.defaultDatabaseService().beginTx()) {
-            assertEquals( 2, count(tx.findNodes( Label.label( "Admin" ) ) ));
+            assertEquals(2, count(tx.findNodes(Label.label("Admin"))));
             tx.commit();
         }
     }
     // end::useJUnitRule[]
-
 }

@@ -19,12 +19,13 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import org.junit.Test;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
-
+import org.junit.jupiter.api.Test;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -34,54 +35,46 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.walk.Walker;
 
-import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-
-public class TestNewGraphvizWriter
-{
-    enum type implements RelationshipType
-    {
-        KNOWS, WORKS_FOR
+class TestNewGraphvizWriter {
+    enum type implements RelationshipType {
+        KNOWS,
+        WORKS_FOR
     }
 
     @Test
-    public void testSimpleGraph() throws Exception
-    {
-        Path folder = Path.of( "target/example-db" + System.nanoTime() );
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( folder ).build();
-        try
-        {
-            GraphDatabaseService neo = managementService.database( DEFAULT_DATABASE_NAME );
-            try ( Transaction tx = neo.beginTx() )
-            {
+    void testSimpleGraph() throws Exception {
+        Path folder = Path.of("target/example-db" + System.nanoTime());
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(folder).build();
+        try {
+            GraphDatabaseService neo = managementService.database(DEFAULT_DATABASE_NAME);
+            try (Transaction tx = neo.beginTx()) {
                 final Node emil = tx.createNode();
-                emil.setProperty( "name", "Emil Eifrém" );
-                emil.setProperty( "age", 30 );
+                emil.setProperty("name", "Emil Eifrém");
+                emil.setProperty("age", 30);
                 final Node tobias = tx.createNode();
-                tobias.setProperty( "name", "Tobias \"thobe\" Ivarsson" );
-                tobias.setProperty( "age", 23 );
-                tobias.setProperty( "hours", new int[]{10, 10, 4, 4, 0} );
+                tobias.setProperty("name", "Tobias \"thobe\" Ivarsson");
+                tobias.setProperty("age", 23);
+                tobias.setProperty("hours", new int[]{10, 10, 4, 4, 0});
                 final Node johan = tx.createNode();
-                johan.setProperty( "!<>)", "!<>)" );
-                johan.setProperty( "name", "!<>Johan '\\n00b' !<>Svensson" );
-                final Relationship emilKNOWStobias = emil.createRelationshipTo( tobias, type.KNOWS );
-                emilKNOWStobias.setProperty( "since", "2003-08-17" );
-                final Relationship johanKNOWSemil = johan.createRelationshipTo( emil, type.KNOWS );
-                final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo( johan, type.KNOWS );
-                final Relationship tobiasWORKS_FORemil = tobias.createRelationshipTo( emil, type.WORKS_FOR );
+                johan.setProperty("!<>)", "!<>)");
+                johan.setProperty("name", "!<>Johan '\\n00b' !<>Svensson");
+                final Relationship emilKNOWStobias = emil.createRelationshipTo(tobias, type.KNOWS);
+                emilKNOWStobias.setProperty("since", "2003-08-17");
+                final Relationship johanKNOWSemil = johan.createRelationshipTo(emil, type.KNOWS);
+                final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo(johan, type.KNOWS);
+                final Relationship tobiasWORKS_FORemil = tobias.createRelationshipTo(emil, type.WORKS_FOR);
                 OutputStream out = new ByteArrayOutputStream();
                 GraphvizWriter writer = new GraphvizWriter();
                 Iterable<Node> traverser =
-                        tx.traversalDescription().depthFirst().relationships( type.KNOWS ).relationships( type.WORKS_FOR ).traverse( emil ).nodes();
-                writer.emit( out, Walker.crosscut( traverser, type.KNOWS, type.WORKS_FOR ) );
+                        tx.traversalDescription().depthFirst().relationships(type.KNOWS).relationships(type.WORKS_FOR).traverse(emil).nodes();
+                writer.emit(out, Walker.crosscut(traverser, type.KNOWS, type.WORKS_FOR));
                 tx.commit();
                 out.toString();
             }
         }
-        finally
-        {
+        finally {
             managementService.shutdown();
-            deleteDirectory( folder.toFile() );
+            deleteDirectory(folder.toFile());
         }
     }
 }

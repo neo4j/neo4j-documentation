@@ -19,32 +19,23 @@
  */
 package org.neo4j.doc.server;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.TestName;
-
 import java.io.File;
+import org.junit.jupiter.api.BeforeAll;
 
-public class ExclusiveWebContainerTestBase
-{
-    public File folder = new File( "target/example-db" + System.nanoTime() );
-    @Rule
-    public TestName name = new TestName();
+public class ExclusiveWebContainerTestBase {
+    public File folder = new File("target/example-db" + System.nanoTime());
 
-    @BeforeClass
-    public static void ensureServerNotRunning()
-    {
-        System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
+    @BeforeAll
+    public static void ensureServerNotRunning() {
+        System.setProperty("org.neo4j.useInsecureCertificateGeneration", "true");
         WebContainerHolder.ensureNotRunning();
     }
 
-    private static String txEndpoint( String database )
-    {
-        return String.format( "db/%s/tx", database );
+    private static String txEndpoint(String database) {
+        return String.format("db/%s/tx", database);
     }
 
-    protected static String txCommitEndpoint( String database )
-    {
-        return txEndpoint( database ) + "/commit";
+    protected static String txCommitEndpoint(String database) {
+        return txEndpoint(database) + "/commit";
     }
 }

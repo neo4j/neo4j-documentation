@@ -18,6 +18,12 @@
  */
 package org.neo4j.doc.test;
 
+import static java.util.Arrays.asList;
+import static java.util.Arrays.copyOfRange;
+import static org.neo4j.doc.test.GraphDescription.PropType.ERROR;
+import static org.neo4j.doc.test.GraphDescription.PropType.STRING;
+import static org.neo4j.graphdb.Label.label;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -30,18 +36,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-
-import static java.util.Arrays.asList;
-import static java.util.Arrays.copyOfRange;
-import static org.neo4j.doc.test.GraphDescription.PropType.ERROR;
-import static org.neo4j.doc.test.GraphDescription.PropType.STRING;
-import static org.neo4j.graphdb.Label.label;
 
 public class GraphDescription implements GraphDefinition {
     @Inherited
@@ -53,7 +52,6 @@ public class GraphDescription implements GraphDefinition {
         NODE[] nodes() default {};
 
         REL[] relationships() default {};
-
     }
 
     @Target({})
@@ -173,13 +171,13 @@ public class GraphDescription implements GraphDefinition {
         }
     }
 
-    public static TestData.Producer<Map<String, Node>> createGraphFor(final GraphHolder holder) {
-        return ( graph, title, documentation ) -> graph.create(holder.graphdb());
+    public static TestData.Producer<Map<String,Node>> createGraphFor() {
+        return (graph, title, documentation, db) -> graph.create(db);
     }
 
     @Override
-    public Map<String, Node> create(GraphDatabaseService graphdb) {
-        Map<String, Node> result = new HashMap<>();
+    public Map<String,Node> create(GraphDatabaseService graphdb) {
+        Map<String,Node> result = new HashMap<>();
         try (Transaction tx = graphdb.beginTx()) {
             for (NODE def : nodes) {
                 Node node = init(tx.createNode(), def.setNameProperty() ? def.name() : null, def.properties());
@@ -190,7 +188,7 @@ public class GraphDescription implements GraphDefinition {
             }
             for (REL def : rels) {
                 init(result.get(def.start()).createRelationshipTo(result.get(def.end()),
-                        RelationshipType.withName(def.type())), def.setNameProperty() ? def.name() : null,
+                                RelationshipType.withName(def.type())), def.setNameProperty() ? def.name() : null,
                         def.properties());
             }
             tx.commit();
@@ -198,15 +196,14 @@ public class GraphDescription implements GraphDefinition {
         return result;
     }
 
-    private static <T extends Entity> T init( T entity, String name, PROP[] properties ) {
+    private static <T extends Entity> T init(T entity, String name, PROP[] properties) {
         for (PROP prop : properties) {
             PropType tpe = prop.type();
-            switch (tpe) {
-                case ARRAY:
-                    entity.setProperty(prop.key(), tpe.convert(prop.componentType(), prop.value()));
-                    break;
-                default:
-                    entity.setProperty(prop.key(), prop.type().convert(prop.value()));
+            if (tpe == PropType.ARRAY) {
+                entity.setProperty(prop.key(), tpe.convert(prop.componentType(), prop.value()));
+            }
+            else {
+                entity.setProperty(prop.key(), prop.type().convert(prop.value()));
             }
         }
         if (name != null) {
@@ -221,7 +218,7 @@ public class GraphDescription implements GraphDefinition {
     private static final REL[] NO_RELS = {};
     private static final GraphDescription EMPTY = new GraphDescription(NO_NODES, NO_RELS) {
         @Override
-        public Map<String, Node> create(GraphDatabaseService graphdb) {
+        public Map<String,Node> create(GraphDatabaseService graphdb) {
             // don't bother with creating a transaction
             return new HashMap<>();
         }
@@ -230,7 +227,7 @@ public class GraphDescription implements GraphDefinition {
     private final REL[] rels;
 
     public static GraphDescription create(String... definition) {
-        Map<String, NODE> nodes = new HashMap<>();
+        Map<String,NODE> nodes = new HashMap<>();
         List<REL> relationships = new ArrayList<>();
         parse(definition, nodes, relationships);
         return new GraphDescription(nodes.values().toArray(NO_NODES), relationships.toArray(NO_RELS));
@@ -240,13 +237,13 @@ public class GraphDescription implements GraphDefinition {
         if (graph == null) {
             return EMPTY;
         }
-        Map<String, NODE> nodes = new HashMap<>();
+        Map<String,NODE> nodes = new HashMap<>();
         for (NODE node : graph.nodes()) {
             if (nodes.put(defined(node.name()), node) != null) {
                 throw new IllegalArgumentException("Node \"" + node.name() + "\" defined more than once");
             }
         }
-        Map<String, REL> rels = new HashMap<>();
+        Map<String,REL> rels = new HashMap<>();
         List<REL> relationships = new ArrayList<>();
         for (REL rel : graph.relationships()) {
             createIfAbsent(nodes, rel.start());
@@ -263,10 +260,11 @@ public class GraphDescription implements GraphDefinition {
         return new GraphDescription(nodes.values().toArray(NO_NODES), relationships.toArray(NO_RELS));
     }
 
-    private static void createIfAbsent(Map<String, NODE> nodes, String name, String... labels) {
+    private static void createIfAbsent(Map<String,NODE> nodes, String name, String... labels) {
         if (!nodes.containsKey(name)) {
             nodes.put(name, new DefaultNode(name, labels));
-        } else {
+        }
+        else {
             NODE preexistingNode = nodes.get(name);
             // Join with any new labels
             HashSet<String> joinedLabels = new HashSet<>(asList(labels));
@@ -274,12 +272,12 @@ public class GraphDescription implements GraphDefinition {
                 joinedLabels.add(label.value());
             }
 
-            String[] labelNameArray = joinedLabels.toArray(new String[joinedLabels.size()]);
+            String[] labelNameArray = joinedLabels.toArray(new String[0]);
             nodes.put(name, new NodeWithAddedLabels(preexistingNode, labelNameArray));
         }
     }
 
-    private static String parseAndCreateNodeIfAbsent(Map<String, NODE> nodes, String descriptionToParse) {
+    private static String parseAndCreateNodeIfAbsent(Map<String,NODE> nodes, String descriptionToParse) {
         String[] parts = descriptionToParse.split(":");
         if (parts.length == 0) {
             throw new IllegalArgumentException("Empty node names are not allowed.");
@@ -289,7 +287,7 @@ public class GraphDescription implements GraphDefinition {
         return parts[0];
     }
 
-    private static void parse(String[] description, Map<String, NODE> nodes, List<REL> relationships) {
+    private static void parse(String[] description, Map<String,NODE> nodes, List<REL> relationships) {
         for (String part : description) {
             for (String line : part.split("\n")) {
                 String[] components = line.split(" ");
@@ -445,5 +443,4 @@ public class GraphDescription implements GraphDefinition {
             return name;
         }
     }
-
 }

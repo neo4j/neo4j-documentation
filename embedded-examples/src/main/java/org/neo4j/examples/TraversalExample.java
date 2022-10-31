@@ -20,8 +20,10 @@
 // tag::_sampleDocumentation[]
 package org.neo4j.examples;
 
-import java.io.IOException;
+import static java.lang.System.out;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
+import java.io.IOException;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.Direction;
@@ -37,159 +39,134 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Uniqueness;
 import org.neo4j.io.fs.FileUtils;
 
-import static java.lang.System.out;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-
-public class TraversalExample
-{
+public class TraversalExample {
     private GraphDatabaseService db;
     private TraversalDescription friendsTraversal;
 
-    private static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of( "target/neo4j-traversal-example" );
+    private static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of("target/neo4j-traversal-example");
 
-    public static void main( String[] args ) throws IOException
-    {
-        FileUtils.deleteDirectory( databaseDirectory );
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
-        GraphDatabaseService database = managementService.database( DEFAULT_DATABASE_NAME );
-        TraversalExample example = new TraversalExample( database );
+    public static void main(String[] args) throws IOException {
+        FileUtils.deleteDirectory(databaseDirectory);
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
+        GraphDatabaseService database = managementService.database(DEFAULT_DATABASE_NAME);
+        TraversalExample example = new TraversalExample(database);
         Node joe = example.createData();
-        example.run( joe );
+        example.run(joe);
         managementService.shutdown();
     }
 
-    public TraversalExample( GraphDatabaseService db )
-    {
+    public TraversalExample(GraphDatabaseService db) {
         this.db = db;
     }
 
-    private Node createData()
-    {
-        try ( Transaction transaction = db.beginTx() )
-        {
+    private Node createData() {
+        try (Transaction transaction = db.beginTx()) {
             String query = "CREATE (joe {name: 'Joe'}), (sara {name: 'Sara'}), " + "(lisa {name: 'Lisa'}), (peter {name: 'PETER'}), (dirk {name: 'Dirk'}), " +
                     "(lars {name: 'Lars'}), (ed {name: 'Ed'})," + "(joe)-[:KNOWS]->(sara), (lisa)-[:LIKES]->(joe), " +
                     "(peter)-[:KNOWS]->(sara), (dirk)-[:KNOWS]->(peter), " + "(lars)-[:KNOWS]->(drk), (ed)-[:KNOWS]->(lars), " + "(lisa)-[:KNOWS]->(lars) " +
                     "RETURN joe";
-            Result result = transaction.execute( query );
-            Object joe = result.columnAs( "joe" ).next();
-            if ( joe instanceof Node )
-            {
+            Result result = transaction.execute(query);
+            Object joe = result.columnAs("joe").next();
+            if (joe instanceof Node) {
                 transaction.commit();
                 return (Node) joe;
             }
-            else
-            {
-                throw new RuntimeException( "Joe isn't a node!" );
+            else {
+                throw new RuntimeException("Joe isn't a node!");
             }
         }
     }
 
-    private void run( Node joe )
-    {
-        try (Transaction tx = db.beginTx())
-        {
-            joe = tx.getNodeById( joe.getId() );
-            init( tx );
-            out.println( knowsLikesTraverser( tx, joe ) );
-            out.println( traverseBaseTraverser( joe ) );
-            out.println( depth3( joe ) );
-            out.println( depth4( joe ) );
-            out.println( nodes( joe ) );
-            out.println( relationships( joe ) );
+    private void run(Node joe) {
+        try (Transaction tx = db.beginTx()) {
+            joe = tx.getNodeById(joe.getId());
+            init(tx);
+            out.println(knowsLikesTraverser(tx, joe));
+            out.println(traverseBaseTraverser(joe));
+            out.println(depth3(joe));
+            out.println(depth4(joe));
+            out.println(nodes(joe));
+            out.println(relationships(joe));
         }
     }
 
-    void init( Transaction tx )
-    {
+    void init(Transaction tx) {
         // tag::basetraverser[]
         friendsTraversal = tx.traversalDescription()
                 .depthFirst()
-                .relationships( Rels.KNOWS )
-                .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
+                .relationships(Rels.KNOWS)
+                .uniqueness(Uniqueness.RELATIONSHIP_GLOBAL);
         // end::basetraverser[]
     }
 
-    public String knowsLikesTraverser( Transaction transaction, Node node )
-    {
+    public String knowsLikesTraverser(Transaction transaction, Node node) {
         String output = "";
         // tag::knowslikestraverser[]
-        for ( Path position : transaction.traversalDescription()
+        for (Path position : transaction.traversalDescription()
                 .depthFirst()
-                .relationships( Rels.KNOWS )
-                .relationships( Rels.LIKES, Direction.INCOMING )
-                .evaluator( Evaluators.toDepth( 5 ) )
-                .traverse( node ) )
-        {
+                .relationships(Rels.KNOWS)
+                .relationships(Rels.LIKES, Direction.INCOMING)
+                .evaluator(Evaluators.toDepth(5))
+                .traverse(node)) {
             output += position + "\n";
         }
         // end::knowslikestraverser[]
         return output;
     }
 
-    public String traverseBaseTraverser( Node node )
-    {
+    public String traverseBaseTraverser(Node node) {
         String output = "";
         // tag::traversebasetraverser[]
-        for ( Path path : friendsTraversal.traverse( node ) )
-        {
+        for (Path path : friendsTraversal.traverse(node)) {
             output += path + "\n";
         }
         // end::traversebasetraverser[]
         return output;
     }
 
-    public String depth3( Node node )
-    {
+    public String depth3(Node node) {
         String output = "";
         // tag::depth3[]
-        for ( Path path : friendsTraversal
-                .evaluator( Evaluators.toDepth( 3 ) )
-                .traverse( node ) )
-        {
+        for (Path path : friendsTraversal
+                .evaluator(Evaluators.toDepth(3))
+                .traverse(node)) {
             output += path + "\n";
         }
         // end::depth3[]
         return output;
     }
 
-    public String depth4( Node node )
-    {
+    public String depth4(Node node) {
         String output = "";
         // tag::depth4[]
-        for ( Path path : friendsTraversal
-                .evaluator( Evaluators.fromDepth( 2 ) )
-                .evaluator( Evaluators.toDepth( 4 ) )
-                .traverse( node ) )
-        {
+        for (Path path : friendsTraversal
+                .evaluator(Evaluators.fromDepth(2))
+                .evaluator(Evaluators.toDepth(4))
+                .traverse(node)) {
             output += path + "\n";
         }
         // end::depth4[]
         return output;
     }
 
-    public String nodes( Node node )
-    {
+    public String nodes(Node node) {
         String output = "";
         // tag::nodes[]
-        for ( Node currentNode : friendsTraversal
-                .traverse( node )
-                .nodes() )
-        {
-            output += currentNode.getProperty( "name" ) + "\n";
+        for (Node currentNode : friendsTraversal
+                .traverse(node)
+                .nodes()) {
+            output += currentNode.getProperty("name") + "\n";
         }
         // end::nodes[]
         return output;
     }
 
-    public String relationships( Node node )
-    {
+    public String relationships(Node node) {
         String output = "";
         // tag::relationships[]
-        for ( Relationship relationship : friendsTraversal
-                .traverse( node )
-                .relationships() )
-        {
+        for (Relationship relationship : friendsTraversal
+                .traverse(node)
+                .relationships()) {
             output += relationship.getType().name() + "\n";
         }
         // end::relationships[]
@@ -197,9 +174,9 @@ public class TraversalExample
     }
 
     // tag::sourceRels[]
-    private enum Rels implements RelationshipType
-    {
-        LIKES, KNOWS
+    private enum Rels implements RelationshipType {
+        LIKES,
+        KNOWS
     }
     // end::sourceRels[]
 }

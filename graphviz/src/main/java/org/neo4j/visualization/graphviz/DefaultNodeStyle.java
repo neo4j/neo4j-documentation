@@ -21,61 +21,50 @@ package org.neo4j.visualization.graphviz;
 
 import java.io.IOException;
 import java.util.Iterator;
-
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.visualization.PropertyType;
 
-class DefaultNodeStyle implements NodeStyle
-{
+class DefaultNodeStyle implements NodeStyle {
     protected final DefaultStyleConfiguration config;
 
-    DefaultNodeStyle( DefaultStyleConfiguration configuration )
-    {
+    DefaultNodeStyle(DefaultStyleConfiguration configuration) {
         this.config = configuration;
     }
 
     @Override
-    public void emitNodeStart( Appendable stream, Node node )
-            throws IOException
-    {
+    public void emitNodeStart(Appendable stream, Node node)
+            throws IOException {
         stream.append("  N").append(String.valueOf(node.getId())).append(" [\n");
-        config.emit( node, stream );
+        config.emit(node, stream);
         stream.append("    label = \"{").append(config.escapeLabel(config.getTitle(node)));
         Iterator<Label> labels = node.getLabels().iterator();
-        if ( labels.hasNext() )
-        {
-            if ( labels.hasNext() )
-            {
-                stream.append( ": " );
-                while ( labels.hasNext() )
-                {
-                    stream.append( labels.next()
-                            .name() );
-                    if ( labels.hasNext() )
-                    {
-                        stream.append( ", " );
+        if (labels.hasNext()) {
+            if (labels.hasNext()) {
+                stream.append(": ");
+                while (labels.hasNext()) {
+                    stream.append(labels.next()
+                            .name());
+                    if (labels.hasNext()) {
+                        stream.append(", ");
                     }
                 }
             }
         }
-        stream.append( "|" );
+        stream.append("|");
     }
 
     @Override
-    public void emitEnd( Appendable stream ) throws IOException
-    {
-        stream.append( "}\"\n  ]\n" );
+    public void emitEnd(Appendable stream) throws IOException {
+        stream.append("}\"\n  ]\n");
     }
 
     @Override
-    public void emitProperty( Appendable stream, String key, Object value )
-            throws IOException
-    {
-        if ( config.acceptNodeProperty( key ) )
-        {
-            PropertyType type = PropertyType.getTypeOf( value );
-            config.emitNodeProperty( stream, key, type, value );
+    public void emitProperty(Appendable stream, String key, Object value)
+            throws IOException {
+        if (config.acceptNodeProperty(key)) {
+            PropertyType type = PropertyType.getTypeOf(value);
+            config.emitNodeProperty(stream, key, type, value);
         }
     }
 }

@@ -18,30 +18,25 @@
  */
 package org.neo4j.examples;
 
-import java.io.IOException;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import org.neo4j.doc.tools.JavaDocsGenerator;
-
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
-public class TerminateTransactionsDocTest
-{
-    private static TerminateTransactions terminateTransactions;
-    private static final JavaDocsGenerator gen = new JavaDocsGenerator( "terminate-tx-java", "dev" );
+import java.io.IOException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.neo4j.doc.tools.JavaDocsGenerator;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
+public class TerminateTransactionsDocTest {
+    private static TerminateTransactions terminateTransactions;
+    private static final JavaDocsGenerator gen = new JavaDocsGenerator("terminate-tx-java", "dev");
+
+    @BeforeAll
+    public static void setUpBeforeClass() {
         terminateTransactions = new TerminateTransactions();
     }
 
     @Test
-    public void test() throws IOException
-    {
+    void test() throws IOException {
         String result = terminateTransactions.run();
-        gen.saveToFile( "result", createOutputSnippet( result ) );
+        gen.saveToFile("result", createOutputSnippet(result));
     }
 }

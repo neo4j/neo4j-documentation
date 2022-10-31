@@ -18,11 +18,13 @@
  */
 package org.neo4j.examples;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+import static org.neo4j.internal.helpers.collection.Iterators.loop;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -34,66 +36,56 @@ import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.io.fs.FileUtils;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.internal.helpers.collection.Iterators.loop;
+public class EmbeddedNeo4jWithIndexing {
+    private static final Path databaseDirectory = Path.of("target/neo4j-store-with-new-indexing");
 
-public class EmbeddedNeo4jWithIndexing
-{
-    private static final Path databaseDirectory = Path.of( "target/neo4j-store-with-new-indexing" );
-
-    public static void main( final String[] args ) throws IOException
-    {
-        System.out.println( "Starting database ..." );
-        FileUtils.deleteDirectory( databaseDirectory );
+    public static void main(final String[] args) throws IOException {
+        System.out.println("Starting database ...");
+        FileUtils.deleteDirectory(databaseDirectory);
 
         // tag::startDb[]
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
-        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
+        GraphDatabaseService graphDb = managementService.database(DEFAULT_DATABASE_NAME);
         // end::startDb[]
 
         {
             // tag::createIndex[]
             IndexDefinition usernamesIndex;
-            try ( Transaction tx = graphDb.beginTx() )
-            {
+            try (Transaction tx = graphDb.beginTx()) {
                 Schema schema = tx.schema();
-                usernamesIndex = schema.indexFor( Label.label( "User" ) )  // <1>
-                        .on( "username" )                                  // <2>
-                        .withName( "usernames" )                           // <3>
+                usernamesIndex = schema.indexFor(Label.label("User"))  // <1>
+                        .on("username")                                  // <2>
+                        .withName("usernames")                           // <3>
                         .create();                                         // <4>
                 tx.commit();                                               // <5>
             }
             // end::createIndex[]
             // tag::wait[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
+            try (Transaction tx = graphDb.beginTx()) {
                 Schema schema = tx.schema();
-                schema.awaitIndexOnline( usernamesIndex, 10, TimeUnit.SECONDS );
+                schema.awaitIndexOnline(usernamesIndex, 10, TimeUnit.SECONDS);
             }
             // end::wait[]
             // tag::progress[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
+            try (Transaction tx = graphDb.beginTx()) {
                 Schema schema = tx.schema();
-                System.out.println( String.format( "Percent complete: %1.0f%%",
-                        schema.getIndexPopulationProgress( usernamesIndex ).getCompletedPercentage() ) );
+                System.out.println(String.format("Percent complete: %1.0f%%",
+                        schema.getIndexPopulationProgress(usernamesIndex).getCompletedPercentage()));
             }
             // end::progress[]
         }
 
         {
             // tag::addUsers[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                Label label = Label.label( "User" );
+            try (Transaction tx = graphDb.beginTx()) {
+                Label label = Label.label("User");
 
                 // Create some users
-                for ( int id = 0; id < 100; id++ )
-                {
-                    Node userNode = tx.createNode( label );
-                    userNode.setProperty( "username", "user" + id + "@neo4j.org" );
+                for (int id = 0; id < 100; id++) {
+                    Node userNode = tx.createNode(label);
+                    userNode.setProperty("username", "user" + id + "@neo4j.org");
                 }
-                System.out.println( "Users created" );
+                System.out.println("Users created");
                 tx.commit();
             }
             // end::addUsers[]
@@ -101,24 +93,20 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::findUsers[]
-            Label label = Label.label( "User" );
+            Label label = Label.label("User");
             int idToFind = 45;
             String nameToFind = "user" + idToFind + "@neo4j.org";
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                try ( ResourceIterator<Node> users =
-                              tx.findNodes( label, "username", nameToFind ) )
-                {
+            try (Transaction tx = graphDb.beginTx()) {
+                try (ResourceIterator<Node> users =
+                        tx.findNodes(label, "username", nameToFind)) {
                     ArrayList<Node> userNodes = new ArrayList<>();
-                    while ( users.hasNext() )
-                    {
-                        userNodes.add( users.next() );
+                    while (users.hasNext()) {
+                        userNodes.add(users.next());
                     }
 
-                    for ( Node node : userNodes )
-                    {
+                    for (Node node : userNodes) {
                         System.out.println(
-                                "The username of user " + idToFind + " is " + node.getProperty( "username" ) );
+                                "The username of user " + idToFind + " is " + node.getProperty("username"));
                     }
                 }
             }
@@ -127,15 +115,13 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::resourceIterator[]
-            Label label = Label.label( "User" );
+            Label label = Label.label("User");
             int idToFind = 45;
             String nameToFind = "user" + idToFind + "@neo4j.org";
-            try ( Transaction tx = graphDb.beginTx();
-                  ResourceIterator<Node> users = tx.findNodes( label, "username", nameToFind ) )
-            {
+            try (Transaction tx = graphDb.beginTx();
+                    ResourceIterator<Node> users = tx.findNodes(label, "username", nameToFind)) {
                 Node firstUserNode;
-                if ( users.hasNext() )
-                {
+                if (users.hasNext()) {
                     firstUserNode = users.next();
                 }
                 users.close();
@@ -146,15 +132,13 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::updateUsers[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                Label label = Label.label( "User" );
+            try (Transaction tx = graphDb.beginTx()) {
+                Label label = Label.label("User");
                 int idToFind = 45;
                 String nameToFind = "user" + idToFind + "@neo4j.org";
 
-                for ( Node node : loop( tx.findNodes( label, "username", nameToFind ) ) )
-                {
-                    node.setProperty( "username", "user" + (idToFind + 1) + "@neo4j.org" );
+                for (Node node : loop(tx.findNodes(label, "username", nameToFind))) {
+                    node.setProperty("username", "user" + (idToFind + 1) + "@neo4j.org");
                 }
                 tx.commit();
             }
@@ -163,14 +147,12 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::deleteUsers[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                Label label = Label.label( "User" );
+            try (Transaction tx = graphDb.beginTx()) {
+                Label label = Label.label("User");
                 int idToFind = 46;
                 String nameToFind = "user" + idToFind + "@neo4j.org";
 
-                for ( Node node : loop( tx.findNodes( label, "username", nameToFind ) ) )
-                {
+                for (Node node : loop(tx.findNodes(label, "username", nameToFind))) {
                     node.delete();
                 }
                 tx.commit();
@@ -180,16 +162,15 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::dropIndex[]
-            try ( Transaction tx = graphDb.beginTx() )
-            {
-                IndexDefinition usernamesIndex = tx.schema().getIndexByName( "usernames" ); // <1>
+            try (Transaction tx = graphDb.beginTx()) {
+                IndexDefinition usernamesIndex = tx.schema().getIndexByName("usernames"); // <1>
                 usernamesIndex.drop();
                 tx.commit();
             }
             // end::dropIndex[]
         }
 
-        System.out.println( "Shutting down database ..." );
+        System.out.println("Shutting down database ...");
         // tag::shutdownDb[]
         managementService.shutdown();
         // end::shutdownDb[]
