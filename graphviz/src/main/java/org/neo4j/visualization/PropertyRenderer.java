@@ -20,29 +20,24 @@
 package org.neo4j.visualization;
 
 /**
- * The {@link PropertyRenderer} is responsible for rendering the properties of a
- * node or relationship.
- * @param <E>
- *            A base exception type that can be thrown by the methods of this
- *            renderer.
+ * The {@link PropertyRenderer} is responsible for rendering the properties of a node or relationship.
+ *
+ * @param <E> A base exception type that can be thrown by the methods of this renderer.
  */
-public interface PropertyRenderer<E extends Throwable>
-{
+public interface PropertyRenderer<E extends Throwable> {
     /**
      * Renders a property.
-     * @param propertyKey
-     *            the key of the property.
-     * @param propertyValue
-     *            the value of the property.
-     * @throws E
-     *             if an error occurs when rendering the property.
+     *
+     * @param propertyKey   the key of the property.
+     * @param propertyValue the value of the property.
+     * @throws E if an error occurs when rendering the property.
      */
-    void renderProperty( String propertyKey, Object propertyValue ) throws E;
+    void renderProperty(String propertyKey, Object propertyValue) throws E;
 
     /**
      * Invoked when all properties have been rendered.
-     * @throws E
-     *             if an error occurs.
+     *
+     * @throws E if an error occurs.
      */
     void done() throws E;
 }

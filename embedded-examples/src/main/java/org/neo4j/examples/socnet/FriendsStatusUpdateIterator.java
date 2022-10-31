@@ -22,48 +22,40 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import org.neo4j.graphdb.Transaction;
 
 class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
     private final ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<>();
     private final StatusUpdateComparator comparator = new StatusUpdateComparator();
 
-    public FriendsStatusUpdateIterator( Transaction transaction, Person person )
-    {
-        Iterable<Person> friends = person.getFriends( transaction );
-        for ( Person friend : friends )
-        {
-            Iterator<StatusUpdate> iterator = friend.getStatus( transaction ).iterator();
+    public FriendsStatusUpdateIterator(Transaction transaction, Person person) {
+        Iterable<Person> friends = person.getFriends(transaction);
+        for (Person friend : friends) {
+            Iterator<StatusUpdate> iterator = friend.getStatus(transaction).iterator();
             if (iterator.hasNext()) {
-                statuses.add( new PositionedIterator<>( iterator ));
+                statuses.add(new PositionedIterator<>(iterator));
             }
         }
 
         sort();
     }
 
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return statuses.size() > 0;
     }
 
-    public StatusUpdate next()
-    {
-        if ( statuses.size() == 0 )
-        {
+    public StatusUpdate next() {
+        if (statuses.size() == 0) {
             throw new NoSuchElementException();
         }
         // tag::getActivityStream[]
         PositionedIterator<StatusUpdate> first = statuses.get(0);
         StatusUpdate returnVal = first.current();
 
-        if ( !first.hasNext() )
-        {
-            statuses.remove( 0 );
+        if (!first.hasNext()) {
+            statuses.remove(0);
         }
-        else
-        {
+        else {
             first.next();
             sort();
         }
@@ -72,14 +64,12 @@ class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
         // end::getActivityStream[]
     }
 
-    private void sort()
-    {
-        statuses.sort( comparator );
+    private void sort() {
+        statuses.sort(comparator);
     }
 
-    public void remove()
-    {
-        throw new UnsupportedOperationException( "Don't know how to do that..." );
+    public void remove() {
+        throw new UnsupportedOperationException("Don't know how to do that...");
     }
 
     private class StatusUpdateComparator implements Comparator<PositionedIterator<StatusUpdate>> {

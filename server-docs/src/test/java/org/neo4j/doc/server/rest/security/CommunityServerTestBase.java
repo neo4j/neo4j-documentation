@@ -19,14 +19,16 @@
  */
 package org.neo4j.doc.server.rest.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.neo4j.doc.server.HTTP.RawPayload.rawPayload;
+import static org.neo4j.doc.server.helpers.CommunityWebContainerBuilder.builder;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.core.util.Base64;
-import org.junit.After;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
+import org.junit.jupiter.api.AfterEach;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.ExclusiveWebContainerTestBase;
 import org.neo4j.doc.server.HTTP;
@@ -34,84 +36,64 @@ import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.string.UTF8;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.collection.IsIn.isIn;
-import static org.junit.Assert.assertThat;
-import static org.neo4j.doc.server.HTTP.RawPayload.rawPayload;
-import static org.neo4j.doc.server.helpers.CommunityWebContainerBuilder.builder;
-
-public class CommunityServerTestBase extends ExclusiveWebContainerTestBase
-{
+public class CommunityServerTestBase extends ExclusiveWebContainerTestBase {
     protected TestWebContainer webContainer;
 
-    @After
-    public void cleanup()
-    {
-        if ( webContainer != null )
-        {
+    @AfterEach
+    public void cleanup() {
+        if (webContainer != null) {
             webContainer.shutdown();
         }
     }
 
-    protected void startServer( boolean authEnabled ) throws IOException
-    {
+    protected void startServer(boolean authEnabled) throws IOException {
         webContainer = builder()
-                .usingDataDir( folder.getAbsolutePath() )
-                .withProperty( GraphDatabaseSettings.auth_enabled.name(), Boolean.toString( authEnabled ) )
+                .usingDataDir(folder.getAbsolutePath())
+                .withProperty(GraphDatabaseSettings.auth_enabled.name(), Boolean.toString(authEnabled))
                 .onRandomPorts()
                 .build();
     }
 
-    protected String challengeResponse( String username, String password )
-    {
-        return "Basic " + base64( username + ":" + password );
+    protected String challengeResponse(String username, String password) {
+        return "Basic " + base64(username + ":" + password);
     }
 
-    protected String databaseURL()
-    {
-        return webContainer.getBaseUri().resolve( "db/neo4j/" ).toString();
+    protected String databaseURL() {
+        return webContainer.getBaseUri().resolve("db/neo4j/").toString();
     }
 
-    protected String base64(String value)
-    {
-        return UTF8.decode( Base64.encode( value ) );
+    protected String base64(String value) {
+        return UTF8.decode(Base64.encode(value));
     }
 
-    protected String txCommitURL()
-    {
+    protected String txCommitURL() {
         return databaseURL() + "tx/commit";
     }
 
-    private void assertPermissionError( HTTP.Response response, List<String> errors ) throws JsonParseException
-    {
-        assertThat( response.status(), equalTo( 200 ) );
-        assertThat( response.get( "errors" ).size(), equalTo( 1 ) );
+    private void assertPermissionError(HTTP.Response response, List<String> errors) throws JsonParseException {
+        assertThat(response.status()).isEqualTo(200);
+        assertThat(response.get("errors")).hasSize(1);
 
-        JsonNode firstError = response.get( "errors" ).get( 0 );
-        assertThat( firstError.get( "code" ).asText(), isIn( errors ) );
+        JsonNode firstError = response.get("errors").get(0);
+        assertThat(firstError.get("code").asText()).isIn(errors);
 
-        assertThat( firstError.get( "message" ).asText(), startsWith( "Permission denied." ) );
+        assertThat(firstError.get("message").asText()).startsWith("Permission denied.");
     }
 
-    protected String txCommitURL( String database )
-    {
-        return webContainer.getBaseUri().resolve( txCommitEndpoint( database ) ).toString();
+    protected String txCommitURL(String database) {
+        return webContainer.getBaseUri().resolve(txCommitEndpoint(database)).toString();
     }
 
-    void assertPermissionErrorAtSystemAccess( HTTP.Response response ) throws JsonParseException
-    {
-        List<String> possibleErrors = Arrays.asList( "Neo.ClientError.Security.CredentialsExpired", "Neo.ClientError.Security.Forbidden" );
-        assertPermissionError( response, possibleErrors );
+    void assertPermissionErrorAtSystemAccess(HTTP.Response response) throws JsonParseException {
+        List<String> possibleErrors = Arrays.asList("Neo.ClientError.Security.CredentialsExpired", "Neo.ClientError.Security.Forbidden");
+        assertPermissionError(response, possibleErrors);
     }
 
-    protected static HTTP.RawPayload query( String statement )
-    {
-        return rawPayload( "{\"statements\":[{\"statement\":\"" + statement + "\"}]}" );
+    protected static HTTP.RawPayload query(String statement) {
+        return rawPayload("{\"statements\":[{\"statement\":\"" + statement + "\"}]}");
     }
 
-    protected String simpleCypherRequestBody()
-    {
+    protected String simpleCypherRequestBody() {
         return "{\"statements\": [{\"statement\": \"CREATE (n:MyLabel) RETURN n\"}]}";
     }
 }

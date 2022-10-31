@@ -18,11 +18,9 @@
  */
 package org.neo4j.doc.server.rest;
 
-import org.junit.Before;
-import org.junit.Rule;
-
 import java.util.Map;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.neo4j.doc.server.SharedWebContainerTestBase;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
@@ -31,21 +29,18 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 
 public class AbstractRestFunctionalTestBase extends SharedWebContainerTestBase implements GraphHolder {
+    @RegisterExtension
+    public TestData<Map<String,Node>> data = TestData.producedThrough(GraphDescription.createGraphFor());
 
-    @Rule
-    public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
-
-    @Rule
+    @RegisterExtension
     public TestData<RESTDocsGenerator> gen = TestData.producedThrough(RESTDocsGenerator.PRODUCER);
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        gen().setSection(getDocumentationSectionName());
-        gen().setGraph(graphdb());
-    }
-
-    private Long idFor(String name) {
-        return data.get().get(name).getId();
+        gen.setGraphDatabaseService(container().getDefaultDatabase());
+        data.setGraphDatabaseService(container().getDefaultDatabase());
+        gen.get().setSection(getDocumentationSectionName());
+        gen.get().setGraph(graphdb());
     }
 
     @Override
@@ -54,7 +49,7 @@ public class AbstractRestFunctionalTestBase extends SharedWebContainerTestBase i
     }
 
     protected static String databaseUri() {
-        return  container().getBaseUri() + "db/neo4j/";
+        return container().getBaseUri() + "db/neo4j/";
     }
 
     protected String getDatabaseUri() {
@@ -69,12 +64,7 @@ public class AbstractRestFunctionalTestBase extends SharedWebContainerTestBase i
         return databaseUri() + "tx/commit";
     }
 
-    public RESTDocsGenerator gen() {
-        return gen.get();
-    }
-
     protected String getDocumentationSectionName() {
         return "dev/rest-api";
     }
-
 }

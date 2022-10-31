@@ -19,22 +19,19 @@
  */
 package org.neo4j.doc.metatest;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class AsciiDocGeneratorTest
-{
+class AsciiDocGeneratorTest {
     private File sectionDirectory;
 
     @TempDir
@@ -42,12 +39,11 @@ class AsciiDocGeneratorTest
 
     @BeforeEach
     void setup() {
-        sectionDirectory = new File( new File( directory, "testasciidocs" ), "testsection" );
+        sectionDirectory = new File(new File(directory, "testasciidocs"), "testsection");
     }
 
     @Test
-    void dumpToSeparateFile() throws IOException
-    {
+    void dumpToSeparateFile() throws IOException {
         String reference = AsciiDocGenerator.dumpToSeparateFile(sectionDirectory, "test1", ".title1\ntest1-content");
         assertEquals(".title1\ninclude::includes/test1.asciidoc[]\n", reference);
         File includeDir = new File(sectionDirectory, "includes");
@@ -58,9 +54,8 @@ class AsciiDocGeneratorTest
     }
 
     @Test
-    void dumpToSeparateFileWithType() throws IOException
-    {
-        String reference = AsciiDocGenerator.dumpToSeparateFileWithType( sectionDirectory, "console", "test2-content" );
+    void dumpToSeparateFileWithType() throws IOException {
+        String reference = AsciiDocGenerator.dumpToSeparateFileWithType(sectionDirectory, "console", "test2-content");
         assertEquals("include::includes/console-1.asciidoc[]\n", reference);
         File includeDir = new File(sectionDirectory, "includes");
         File includeFile = new File(includeDir, "console-1.asciidoc");
@@ -76,11 +71,9 @@ class AsciiDocGeneratorTest
 
     private String readFileAsString(File file) throws java.io.IOException {
         byte[] buffer = new byte[(int) file.length()];
-        try (BufferedInputStream f = new BufferedInputStream(new FileInputStream(file)))
-        {
+        try (BufferedInputStream f = new BufferedInputStream(new FileInputStream(file))) {
             f.read(buffer);
             return new String(buffer);
         }
     }
-
 }

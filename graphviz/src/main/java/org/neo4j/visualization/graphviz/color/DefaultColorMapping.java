@@ -27,50 +27,40 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A color mapper matching keys to colors, producing string representations of
- * the colors.
- *
- * The mapper uses the colors from {@link Color}, in the order they are defined
- * there. When running out of colors, it's starts over from the first one again.
+ * A color mapper matching keys to colors, producing string representations of the colors.
+ * <p>
+ * The mapper uses the colors from {@link Color}, in the order they are defined there. When running out of colors, it's starts over from the first one again.
  */
-public class DefaultColorMapping<E>
-{
+public class DefaultColorMapping<E> {
     private final List<String> availableColors = new ArrayList<>();
     private int usedAvailableColors = 0;
-    private final Map<E, String> colorMappings = new HashMap<>();
+    private final Map<E,String> colorMappings = new HashMap<>();
 
     /**
      * Map colors using the full set of colors in {@link Color}.
      */
-    public DefaultColorMapping()
-    {
-        this( Collections.<Color>emptyList() );
+    public DefaultColorMapping() {
+        this(Collections.<Color>emptyList());
     }
 
     /**
      * Map colors from {@link Color} while excluding the reserved colors.
-     *
-     * Both the dark and light variation of the colors are excluded, even though
-     * only the dark variation will be used by the reserved mapping.
+     * <p>
+     * Both the dark and light variation of the colors are excluded, even though only the dark variation will be used by the reserved mapping.
      *
      * @param reservedColors colors this mapper shouldn't use
      */
-    public DefaultColorMapping( Collection<Color> reservedColors )
-    {
+    public DefaultColorMapping(Collection<Color> reservedColors) {
         Color[] existingColors = Color.values();
         // add the dark colors first, then the lighter ones
-        for ( Color color : existingColors )
-        {
-            if ( !reservedColors.contains( color ) )
-            {
-                availableColors.add( color.dark );
+        for (Color color : existingColors) {
+            if (!reservedColors.contains(color)) {
+                availableColors.add(color.dark);
             }
         }
-        for ( Color color : existingColors )
-        {
-            if ( !reservedColors.contains( color ) )
-            {
-                availableColors.add( color.light );
+        for (Color color : existingColors) {
+            if (!reservedColors.contains(color)) {
+                availableColors.add(color.light);
             }
         }
     }
@@ -81,15 +71,13 @@ public class DefaultColorMapping<E>
      * @param key the key
      * @return the color as a String
      */
-    protected String getColor( E key )
-    {
-        String color = colorMappings.get( key );
-        if ( color == null )
-        {
-            color = availableColors.get( usedAvailableColors
-                                         % availableColors.size() );
+    protected String getColor(E key) {
+        String color = colorMappings.get(key);
+        if (color == null) {
+            color = availableColors.get(usedAvailableColors
+                    % availableColors.size());
             usedAvailableColors++;
-            colorMappings.put( key, color );
+            colorMappings.put(key, color);
         }
         return color;
     }
@@ -100,8 +88,7 @@ public class DefaultColorMapping<E>
      * @param color
      * @return
      */
-    protected String getColor( Color color )
-    {
+    protected String getColor(Color color) {
         return color.dark;
     }
 }

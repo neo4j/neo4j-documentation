@@ -100,90 +100,92 @@
                                 <!-- All settings -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg value="--id=settings-reference-all-settings" />
-                                    <arg value="--id-prefix=config_" />
-                                    <arg value="--title=All settings" />
-                                    <arg value="--deprecated=true" />
-                                    <arg file="${project.build.directory}/docs/ops/all-settings.adoc" />
+                                    <arg value="--id=settings-reference-all-settings"/>
+                                    <arg value="--id-prefix=config_"/>
+                                    <arg value="--title=All settings"/>
+                                    <arg value="--deprecated=true"/>
+                                    <arg file="${project.build.directory}/docs/ops/all-settings.adoc"/>
                                 </java>
 
                                 <!-- All internal settings -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg value="--id=settings-reference-internal-settings" />
-                                    <arg value="--id-prefix=internal_" />
-                                    <arg value="--title=Internal settings" />
-                                    <arg value="--deprecated=true" />
-                                    <arg value="--unsupported" />
-                                    <arg value="--internal=true" />
-                                    <arg file="${project.build.directory}/docs/ops/internal-settings.adoc" />
+                                    <arg value="--id=settings-reference-internal-settings"/>
+                                    <arg value="--id-prefix=internal_"/>
+                                    <arg value="--title=Internal settings"/>
+                                    <arg value="--deprecated=true"/>
+                                    <arg value="--unsupported"/>
+                                    <arg value="--internal=true"/>
+                                    <arg file="${project.build.directory}/docs/ops/internal-settings.adoc"/>
                                 </java>
 
                                 <!-- All deprecated settings -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg value="--id=settings-reference-deprecated-settings" />
-                                    <arg value="--title=Deprecated settings" />
-                                    <arg value="--id-prefix=deprecated-setting_" />
-                                    <arg value="--deprecated-only=true" />
-                                    <arg file="${project.build.directory}/docs/ops/deprecated-settings.adoc" />
+                                    <arg value="--id=settings-reference-deprecated-settings"/>
+                                    <arg value="--title=Deprecated settings"/>
+                                    <arg value="--id-prefix=deprecated-setting_"/>
+                                    <arg value="--deprecated-only=true"/>
+                                    <arg file="${project.build.directory}/docs/ops/deprecated-settings.adoc"/>
                                 </java>
 
                                 <!-- All Causal Clustering settings by prefix -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg value="--id=settings-reference-causal-clustering-settings" />
-                                    <arg value="--title=Causal Clustering settings" />
-                                    <arg value="--id-prefix=cc-setting_" />
-                                    <arg value="--prefix=causal_clustering" />
-                                    <arg file="${project.build.directory}/docs/ops/cc-settings.adoc" />
+                                    <arg value="--id=settings-reference-causal-clustering-settings"/>
+                                    <arg value="--title=Causal Clustering settings"/>
+                                    <arg value="--id-prefix=cc-setting_"/>
+                                    <arg value="--prefix=causal_clustering"/>
+                                    <arg file="${project.build.directory}/docs/ops/cc-settings.adoc"/>
                                 </java>
 
                                 <!-- Only dynamic settings -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg value="--id=reference-dynamic-settings-reference" />
-                                    <arg value="--title=Dynamic settings reference" />
-                                    <arg value="--dynamic-only=true" />
-                                    <arg file="${project.build.directory}/docs/ops/dynamic-settings.adoc" />
+                                    <arg value="--id=reference-dynamic-settings-reference"/>
+                                    <arg value="--title=Dynamic settings reference"/>
+                                    <arg value="--dynamic-only=true"/>
+                                    <arg file="${project.build.directory}/docs/ops/dynamic-settings.adoc"/>
                                 </java>
 
                                 <!-- Old config docs tool -->
                                 <!-- Combined configuration docs for all public configuration other than connectors, which are handled separately below. -->
                                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-attributes.asciidoc" />
-                                    <arg value="org.neo4j.server.configuration.ServerSettings" />
-                                    <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
-                                    <arg value="com.neo4j.configuration.MetricsSettings" />
-                                    <arg value="com.neo4j.configuration.ClusterSettings" />
-                                    <arg value="com.neo4j.configuration.KubernetesSettings" />
-                                    <arg value="com.neo4j.server.enterprise.EnterpriseServerSettings" />
-                                    <arg value="com.neo4j.configuration.SecuritySettings" />
-                                    <arg value="com.neo4j.configuration.EnterpriseEditionSettings" />
+                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-attributes.asciidoc"/>
+                                    <arg value="org.neo4j.server.configuration.ServerSettings"/>
+                                    <arg value="org.neo4j.configuration.GraphDatabaseSettings"/>
+                                    <arg value="com.neo4j.configuration.MetricsSettings"/>
+                                    <arg value="com.neo4j.configuration.ClusterSettings"/>
+                                    <arg value="com.neo4j.configuration.KubernetesSettings"/>
+                                    <arg value="com.neo4j.server.enterprise.EnterpriseServerSettings"/>
+                                    <arg value="com.neo4j.configuration.SecuritySettings"/>
+                                    <arg value="com.neo4j.configuration.EnterpriseEditionSettings"/>
                                 </java>
 
                                 <!-- Connector documentation is kept separate, because otherwise the grouping of these keys becomes unclear (IMO) -->
                                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
-                                    classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-bolt-connector-attributes.asciidoc" />
-                                    <arg value="org.neo4j.configuration.connectors.BoltConnector" />
-                                </java>
-
-                                <java classname="org.neo4j.doc.GenerateConfigDocumentation"
-                                    classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
-                                    <arg value="org.neo4j.configuration.connectors.HttpConnector" />
+                                      classpathref="maven.compile.classpath" failonerror="true" fork="true">
+                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-bolt-connector-attributes.asciidoc"/>
+                                    <arg value="org.neo4j.configuration.connectors.BoltConnector"/>
                                 </java>
 
                                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
-                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-https-connector-attributes.asciidoc" />
-                                    <arg value="org.neo4j.configuration.connectors.HttpsConnector" />
+                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc"/>
+                                    <arg value="org.neo4j.configuration.connectors.HttpConnector"/>
+                                </java>
+
+                                <java classname="org.neo4j.doc.GenerateConfigDocumentation"
+                                      classpathref="maven.compile.classpath" failonerror="true" fork="true">
+                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-https-connector-attributes.asciidoc"/>
+                                    <arg value="org.neo4j.configuration.connectors.HttpsConnector"/>
                                 </java>
                             </target>
                         </configuration>
-                        <goals><goal>run</goal></goals>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <dependencies>

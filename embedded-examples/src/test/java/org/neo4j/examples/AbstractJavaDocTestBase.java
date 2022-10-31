@@ -18,59 +18,45 @@
  */
 package org.neo4j.examples;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
+import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 
 import java.util.Map;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.neo4j.cypher.docgen.tooling.CypherPrettifier;
 import org.neo4j.doc.test.GraphDescription;
-import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.harness.junit.rule.Neo4jRule;
+import org.neo4j.harness.junit.extension.Neo4jExtension;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
+@ExtendWith(Neo4jExtension.class)
+public abstract class AbstractJavaDocTestBase {
+    @RegisterExtension
+    final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough(JavaTestDocsGenerator.PRODUCER);
+    @RegisterExtension
+    final TestData<Map<String,Node>> data = TestData.producedThrough(GraphDescription.createGraphFor());
 
-public abstract class AbstractJavaDocTestBase implements GraphHolder
-{
-    @ClassRule
-    public static Neo4jRule neo4j = new Neo4jRule();
-
-    @Rule
-    public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
-
-    @Rule
-    public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
-
-    @Override
-    public GraphDatabaseService graphdb()
-    {
-        return neo4j.defaultDatabaseService();
+    protected String createCypherSnippet(String cypherQuery) {
+        String snippet = CypherPrettifier.apply(cypherQuery);
+        return AsciidocHelper.createAsciiDocSnippet("cypher", snippet);
     }
 
-    protected String createCypherSnippet( String cypherQuery )
-    {
-        String snippet = CypherPrettifier.apply( cypherQuery );
-        return AsciidocHelper.createAsciiDocSnippet( "cypher", snippet );
+    @BeforeEach
+    public void setUp(GraphDatabaseService graphDb) {
+        cleanDatabaseContent(graphDb);
+        gen.setGraphDatabaseService(graphDb);
+        data.setGraphDatabaseService(graphDb);
+
+        gen.get().setGraph(graphDb);
     }
 
-    @Before
-    public void setUp()
-    {
-        GraphDatabaseService graphdb = graphdb();
-        cleanDatabaseContent( graphdb );
-        gen.get().setGraph( graphdb );
-    }
-
-    @After
-    public void doc()
-    {
-        gen.get().document( "target/docs/dev", "examples" );
+    @AfterEach
+    public void doc() {
+        gen.get().document("target/docs/dev", "examples");
     }
 }

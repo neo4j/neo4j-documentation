@@ -20,7 +20,6 @@ package org.neo4j.doc.server.rest;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.StringKeyObjectValueIgnoreCaseMultivaluedMap;
-
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.ArrayList;
@@ -38,8 +37,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-public class JaxRsResponse extends Response
-{
+public class JaxRsResponse extends Response {
 
     private final int status;
     private final MultivaluedMap<String,Object> metaData;
@@ -48,13 +46,14 @@ public class JaxRsResponse extends Response
     private String data;
     private MediaType type;
 
-    public JaxRsResponse( ClientResponse response )
-    {
+    public JaxRsResponse(ClientResponse response) {
         this(response, extractContent(response));
     }
 
     private static String extractContent(ClientResponse response) {
-        if (response.getStatus() == Status.NO_CONTENT.getStatusCode()) return null;
+        if (response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
+            return null;
+        }
         return response.getEntity(String.class);
     }
 
@@ -69,189 +68,158 @@ public class JaxRsResponse extends Response
     }
 
     @Override
-    public String getEntity()
-    {
+    public String getEntity() {
         return data;
     }
 
     @Override
-    public <T> T readEntity( Class<T> entityType )
-    {
+    public <T> T readEntity(Class<T> entityType) {
         return null;
     }
 
     @Override
-    public <T> T readEntity( GenericType<T> entityType )
-    {
+    public <T> T readEntity(GenericType<T> entityType) {
         return null;
     }
 
     @Override
-    public <T> T readEntity( Class<T> entityType, Annotation[] annotations )
-    {
+    public <T> T readEntity(Class<T> entityType, Annotation[] annotations) {
         return null;
     }
 
     @Override
-    public <T> T readEntity( GenericType<T> entityType, Annotation[] annotations )
-    {
+    public <T> T readEntity(GenericType<T> entityType, Annotation[] annotations) {
         return null;
     }
 
     @Override
-    public boolean hasEntity()
-    {
+    public boolean hasEntity() {
         return false;
     }
 
     @Override
-    public boolean bufferEntity()
-    {
+    public boolean bufferEntity() {
         return false;
     }
 
     @Override
-    public void close()
-    {
+    public void close() {
     }
 
     @Override
-    public MediaType getMediaType()
-    {
+    public MediaType getMediaType() {
         return null;
     }
 
     @Override
-    public Locale getLanguage()
-    {
+    public Locale getLanguage() {
         return null;
     }
 
     @Override
-    public int getLength()
-    {
+    public int getLength() {
         return 0;
     }
 
     @Override
-    public Set<String> getAllowedMethods()
-    {
+    public Set<String> getAllowedMethods() {
         return null;
     }
 
     @Override
-    public Map<String,NewCookie> getCookies()
-    {
+    public Map<String,NewCookie> getCookies() {
         return null;
     }
 
     @Override
-    public EntityTag getEntityTag()
-    {
+    public EntityTag getEntityTag() {
         return null;
     }
 
     @Override
-    public Date getDate()
-    {
+    public Date getDate() {
         return null;
     }
 
     @Override
-    public Date getLastModified()
-    {
+    public Date getLastModified() {
         return null;
     }
 
     @Override
-    public int getStatus()
-    {
+    public int getStatus() {
         return status;
     }
 
     @Override
-    public StatusType getStatusInfo()
-    {
+    public StatusType getStatusInfo() {
         return null;
     }
 
     @Override
-    public MultivaluedMap<String, Object> getMetadata()
-    {
+    public MultivaluedMap<String,Object> getMetadata() {
         return metaData;
     }
 
-    private MultivaluedMap<String, Object> extractMetaData(ClientResponse jettyResponse) {
-        MultivaluedMap<String, Object> metadata = new StringKeyObjectValueIgnoreCaseMultivaluedMap();
-        for ( Map.Entry<String, List<String>> header : jettyResponse.getHeaders()
-                .entrySet() )
-        {
-            for ( Object value : header.getValue() )
-            {
-                metadata.putSingle( header.getKey(), value );
+    private MultivaluedMap<String,Object> extractMetaData(ClientResponse jettyResponse) {
+        MultivaluedMap<String,Object> metadata = new StringKeyObjectValueIgnoreCaseMultivaluedMap();
+        for (Map.Entry<String,List<String>> header : jettyResponse.getHeaders()
+                .entrySet()) {
+            for (Object value : header.getValue()) {
+                metadata.putSingle(header.getKey(), value);
             }
         }
         return metadata;
     }
 
     @Override
-    public MultivaluedMap<String,Object> getHeaders()
-    {
+    public MultivaluedMap<String,Object> getHeaders() {
         return headers;
     }
 
     @Override
-    public MultivaluedMap<String,String> getStringHeaders()
-    {
+    public MultivaluedMap<String,String> getStringHeaders() {
         return null;
     }
 
     @Override
-    public String getHeaderString( String name )
-    {
+    public String getHeaderString(String name) {
         return null;
     }
 
-    private MultivaluedMap<String,Object> extractHeaders( ClientResponse jettyResponse )
-    {
+    private MultivaluedMap<String,Object> extractHeaders(ClientResponse jettyResponse) {
         MultivaluedHashMap<String,Object> result = new MultivaluedHashMap<>();
 
         MultivaluedMap<String,String> headers = jettyResponse.getHeaders();
-        for ( Map.Entry<String,List<String>> entry : headers.entrySet() )
-        {
-            result.put( entry.getKey(), new ArrayList<>( entry.getValue() ) );
+        for (Map.Entry<String,List<String>> entry : headers.entrySet()) {
+            result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
 
         return result;
     }
 
     // new URI( getHeaders().get( HttpHeaders.LOCATION ).get(0));
-    public URI getLocation()
-    {
+    public URI getLocation() {
         return location;
     }
 
     @Override
-    public Set<Link> getLinks()
-    {
+    public Set<Link> getLinks() {
         return null;
     }
 
     @Override
-    public boolean hasLink( String relation )
-    {
+    public boolean hasLink(String relation) {
         return false;
     }
 
     @Override
-    public Link getLink( String relation )
-    {
+    public Link getLink(String relation) {
         return null;
     }
 
     @Override
-    public Link.Builder getLinkBuilder( String relation )
-    {
+    public Link.Builder getLinkBuilder(String relation) {
         return null;
     }
 

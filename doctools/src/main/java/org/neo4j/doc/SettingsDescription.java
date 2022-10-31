@@ -19,8 +19,6 @@
  */
 package org.neo4j.doc;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.neo4j.configuration.Description;
 import org.neo4j.configuration.GroupSetting;
 import org.neo4j.configuration.Internal;
@@ -40,103 +38,91 @@ import org.neo4j.internal.helpers.Exceptions;
 /**
  * A meta description of a settings class, used to generate documentation.
  */
-public class SettingsDescription
-{
+public class SettingsDescription {
     /**
      * Create a description of a given class.
      */
-    @SuppressWarnings( "unchecked" )
-    public static SettingsDescription describe( Class<?> settingClass )
-    {
-        String classDescription = settingClass.isAnnotationPresent( Description.class )
-              ? settingClass.getAnnotation( Description.class ).value()
-              : "List of configuration settings";
-        String settingsName = settingClass.getName().replace( "$", "-" );
-        Object instance = GroupSetting.class.isAssignableFrom( settingClass ) ? groupInstance( settingClass ) : null;
+    @SuppressWarnings("unchecked")
+    public static SettingsDescription describe(Class<?> settingClass) {
+        String classDescription = settingClass.isAnnotationPresent(Description.class)
+                ? settingClass.getAnnotation(Description.class).value()
+                : "List of configuration settings";
+        String settingsName = settingClass.getName().replace("$", "-");
+        Object instance = GroupSetting.class.isAssignableFrom(settingClass) ? groupInstance(settingClass) : null;
 
         List<SettingDescription> settings = new LinkedList<>();
-        Arrays.stream( FieldUtils.getAllFields( settingClass ) )
-                .filter( f -> f.getType().isAssignableFrom( SettingImpl.class ) )
-                .forEach( field ->
+        Arrays.stream(FieldUtils.getAllFields(settingClass))
+                .filter(f -> f.getType().isAssignableFrom(SettingImpl.class))
+                .forEach(field ->
                 {
-                    try
-                    {
-                        field.setAccessible( true );
-                        SettingImpl<Object> setting = (SettingImpl<Object>) field.get( instance );
+                    try {
+                        field.setAccessible(true);
+                        SettingImpl<Object> setting = (SettingImpl<Object>) field.get(instance);
 
                         String name = setting.name();
-                        String id = "config_" + (name.replace( "(", "" ).replace( ")", "" ));
-                        boolean deprecated = field.isAnnotationPresent( Deprecated.class );
+                        String id = "config_" + (name.replace("(", "").replace(")", ""));
+                        boolean deprecated = field.isAnnotationPresent(Deprecated.class);
                         String deprecationMsg = deprecated ? "The `" + name + "` configuration setting has been deprecated." : null;
                         String validationMsg = setting.toString();
                         boolean isEnterprise = field.getDeclaringClass().getName().startsWith("com.neo4j");
-                        Optional<String> descr = field.isAnnotationPresent( Description.class ) ? Optional.of( field.getAnnotation( Description.class ).value() ) : Optional.of( "No description" );
+                        Optional<String> descr = field.isAnnotationPresent(Description.class) ? Optional.of(field.getAnnotation(Description.class).value())
+                                : Optional.of("No description");
                         boolean hasDefault = setting.defaultValue() != null;
-                        String defaultValue = hasDefault ? setting.valueToString( setting.defaultValue() ) : null;
+                        String defaultValue = hasDefault ? setting.valueToString(setting.defaultValue()) : null;
 
-                        settings.add( new SettingDescriptionImpl( id, name, descr, deprecationMsg, validationMsg, defaultValue, deprecated, hasDefault, isEnterprise ) );
+                        settings.add(
+                                new SettingDescriptionImpl(id, name, descr, deprecationMsg, validationMsg, defaultValue, deprecated, hasDefault, isEnterprise));
                     }
-                    catch ( Exception e )
-                    {
-                        String msg = String.format( "Can not describe %s, reason: %s", settingClass.getSimpleName(), e.getMessage() );
-                        throw new RuntimeException( msg, e );
+                    catch (Exception e) {
+                        String msg = String.format("Can not describe %s, reason: %s", settingClass.getSimpleName(), e.getMessage());
+                        throw new RuntimeException(msg, e);
                     }
-                } );
+                });
 
         return new SettingsDescription(
                 // Nested classes have `$` in the name, which is an asciidoc keyword
                 settingsName,
                 classDescription,
-                settings );
+                settings);
     }
 
-    private static Object groupInstance( Class<?> settingClass )
-    {
-        try
-        {
+    private static Object groupInstance(Class<?> settingClass) {
+        try {
             // Group classes are special, we need to instantiate them to read their
             // configuration, this is how the group config DSL works
-            var constructor = settingClass.getConstructor( String.class );
-            constructor.setAccessible( true );
-            return constructor.newInstance( "<id>" );
+            var constructor = settingClass.getConstructor(String.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance("<id>");
         }
-        catch(Exception e1)
-        {
-            try
-            {
+        catch (Exception e1) {
+            try {
                 var constructor = settingClass.getConstructor();
-                constructor.setAccessible( true );
+                constructor.setAccessible(true);
                 return constructor.newInstance();
             }
-            catch ( Exception e2 )
-            {
-                throw new RuntimeException( Exceptions.chain( e1, e2 ) );
+            catch (Exception e2) {
+                throw new RuntimeException(Exceptions.chain(e1, e2));
             }
         }
     }
 
-    private static Optional<Setting<?>> fieldAsSetting( Class<?> settingClass, Object instance, Field field )
-    {
+    private static Optional<Setting<?>> fieldAsSetting(Class<?> settingClass, Object instance, Field field) {
         Setting<?> setting;
-        try
-        {
-            setting = (Setting<?>) field.get( instance );
+        try {
+            setting = (Setting<?>) field.get(instance);
         }
-        catch ( Exception e )
-        {
+        catch (Exception e) {
             return Optional.empty();
         }
 
-        if( field.isAnnotationPresent( Internal.class ) )
-        {
+        if (field.isAnnotationPresent(Internal.class)) {
             return Optional.empty();
         }
 
-        if( !field.isAnnotationPresent( Description.class ))
-        {
-            throw new RuntimeException( String.format(
+        if (!field.isAnnotationPresent(Description.class)) {
+            throw new RuntimeException(String.format(
                     "Public setting `%s` is missing description in %s.",
-                    setting.name(), settingClass.getName() ) );
+                    setting.name(), settingClass.getName()));
         }
         return Optional.of(setting);
     }
@@ -145,48 +131,40 @@ public class SettingsDescription
     private final String description;
     private final List<SettingDescription> settings;
 
-    public SettingsDescription( String name, String description, List<SettingDescription> settings )
-    {
+    public SettingsDescription(String name, String description, List<SettingDescription> settings) {
         this.name = name;
         this.description = description;
         this.settings = settings;
     }
 
-    public Stream<SettingDescription> settings()
-    {
+    public Stream<SettingDescription> settings() {
         return settings.stream().sorted(Comparator.comparing(SettingDescription::name));
     }
 
-    public String id()
-    {
+    public String id() {
         return "config-" + name();
     }
 
-    public String description()
-    {
+    public String description() {
         return description;
     }
 
-    public String name()
-    {
+    public String name() {
         return name;
     }
 
     /**
-     * Combine this description with another one. This is an immutable operation,
-     * meaning it returns a new description that is the combination of this and the
+     * Combine this description with another one. This is an immutable operation, meaning it returns a new description that is the combination of this and the
      * one passed in.
-     *
-     * The name and description is taken from this description, name and setting
-     * from the provided one are discarded.
+     * <p>
+     * The name and description is taken from this description, name and setting from the provided one are discarded.
      *
      * @param other another setting description
      * @return the union of this and the provided settings description
      */
-    public SettingsDescription union( SettingsDescription other )
-    {
-        ArrayList<SettingDescription> union = new ArrayList<>( this.settings );
-        union.addAll( other.settings );
-        return new SettingsDescription( name, description, union );
+    public SettingsDescription union(SettingsDescription other) {
+        ArrayList<SettingDescription> union = new ArrayList<>(this.settings);
+        union.addAll(other.settings);
+        return new SettingsDescription(name, description, union);
     }
 }

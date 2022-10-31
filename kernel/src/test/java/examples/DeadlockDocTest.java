@@ -24,78 +24,63 @@ package examples;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionFailureException;
 import org.neo4j.harness.junit.extension.Neo4jExtension;
 import org.neo4j.kernel.DeadlockDetectedException;
 
-@ExtendWith( Neo4jExtension.class )
-class DeadlockDocTest
-{
+@ExtendWith(Neo4jExtension.class)
+class DeadlockDocTest {
     @Test
-    void transactionWithRetries( GraphDatabaseService databaseService )
-    {
-        Object result = transactionWithRetry( databaseService );
+    void transactionWithRetries(GraphDatabaseService databaseService) {
+        Object result = transactionWithRetry(databaseService);
     }
 
-    private Object transactionWithRetry( GraphDatabaseService databaseService )
-    {
+    private Object transactionWithRetry(GraphDatabaseService databaseService) {
         // tag::retry[]
         Throwable txEx = null;
         int RETRIES = 5;
         int BACKOFF = 3000;
-        for ( int i = 0; i < RETRIES; i++ )
-        {
-            try ( Transaction tx = databaseService.beginTx() )
-            {
+        for (int i = 0; i < RETRIES; i++) {
+            try (Transaction tx = databaseService.beginTx()) {
                 Object result = doStuff(tx);
                 tx.commit();
                 return result;
             }
-            catch ( Throwable ex )
-            {
+            catch (Throwable ex) {
                 txEx = ex;
 
                 // Add whatever exceptions to retry on here
-                if ( !(ex instanceof DeadlockDetectedException) )
-                {
+                if (!(ex instanceof DeadlockDetectedException)) {
                     break;
                 }
             }
 
             // Wait so that we don't immediately get into the same deadlock
-            if ( i < RETRIES - 1 )
-            {
-                try
-                {
-                    Thread.sleep( BACKOFF );
+            if (i < RETRIES - 1) {
+                try {
+                    Thread.sleep(BACKOFF);
                 }
-                catch ( InterruptedException e )
-                {
-                    throw new TransactionFailureException( "Interrupted", e );
+                catch (InterruptedException e) {
+                    throw new TransactionFailureException("Interrupted", e);
                 }
             }
         }
 
-        if ( txEx instanceof TransactionFailureException )
-        {
+        if (txEx instanceof TransactionFailureException) {
             throw ((TransactionFailureException) txEx);
         }
-        else if ( txEx instanceof Error )
-        {
+        else if (txEx instanceof Error) {
             throw ((Error) txEx);
         }
-        else
-        {
+        else {
             throw ((RuntimeException) txEx);
         }
         // end::retry[]
     }
 
-    private Object doStuff( Transaction tx )
-    {
+    private Object doStuff(Transaction tx) {
         return null;
     }
 }

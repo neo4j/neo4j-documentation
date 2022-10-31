@@ -21,30 +21,23 @@ package org.neo4j.walk;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
-public abstract class Walker
-{
-    public abstract <R, E extends Throwable> R accept( Visitor<R, E> visitor ) throws E;
+public abstract class Walker {
+    public abstract <R, E extends Throwable> R accept(Visitor<R,E> visitor) throws E;
 
-    public static Walker fullGraph( Transaction transaction )
-    {
-        return new Walker()
-        {
+    public static Walker fullGraph(Transaction transaction) {
+        return new Walker() {
             @Override
-            public <R, E extends Throwable> R accept( Visitor<R, E> visitor ) throws E
-            {
-                for ( Node node : transaction.getAllNodes() )
-                {
-                    visitor.visitNode( node );
-                    for ( Relationship edge : node.getRelationships( Direction.OUTGOING ) )
-                    {
-                        visitor.visitRelationship( edge );
+            public <R, E extends Throwable> R accept(Visitor<R,E> visitor) throws E {
+                for (Node node : transaction.getAllNodes()) {
+                    visitor.visitNode(node);
+                    for (Relationship edge : node.getRelationships(Direction.OUTGOING)) {
+                        visitor.visitRelationship(edge);
                     }
                 }
                 return visitor.done();
@@ -52,26 +45,19 @@ public abstract class Walker
         };
     }
 
-    public static Walker crosscut( Iterable<Node> traverser, final RelationshipType... types )
-    {
+    public static Walker crosscut(Iterable<Node> traverser, final RelationshipType... types) {
         final Set<Node> nodes = new HashSet<>();
-        for ( Node node : traverser )
-        {
-            nodes.add( node );
+        for (Node node : traverser) {
+            nodes.add(node);
         }
-        return new Walker()
-        {
+        return new Walker() {
             @Override
-            public <R, E extends Throwable> R accept( Visitor<R, E> visitor ) throws E
-            {
-                for ( Node node : nodes )
-                {
-                    visitor.visitNode( node );
-                    for ( Relationship relationship : node.getRelationships( types ) )
-                    {
-                        if ( nodes.contains( relationship.getOtherNode( node ) ) )
-                        {
-                            visitor.visitRelationship( relationship );
+            public <R, E extends Throwable> R accept(Visitor<R,E> visitor) throws E {
+                for (Node node : nodes) {
+                    visitor.visitNode(node);
+                    for (Relationship relationship : node.getRelationships(types)) {
+                        if (nodes.contains(relationship.getOtherNode(node))) {
+                            visitor.visitRelationship(relationship);
                         }
                     }
                 }

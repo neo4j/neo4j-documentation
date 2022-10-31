@@ -19,59 +19,50 @@
  */
 package org.neo4j.doc.server;
 
-import org.junit.After;
-import org.junit.Test;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.doc.server.helpers.TestWebContainer;
-import org.neo4j.server.configuration.ServerSettings;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.neo4j.doc.server.helpers.CommunityWebContainerBuilder.builder;
 import static org.neo4j.internal.helpers.collection.MapUtil.map;
 import static org.neo4j.kernel.api.exceptions.Status.Transaction.TransactionNotFound;
 
-public class TransactionTimeoutDocIT extends ExclusiveWebContainerTestBase
-{
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.doc.server.helpers.TestWebContainer;
+
+class TransactionTimeoutDocIT extends ExclusiveWebContainerTestBase {
     private TestWebContainer webContainer;
 
-    @After
-    public void stopTheServer()
-    {
-        if ( webContainer != null )
-        {
+    @AfterEach
+    public void stopTheServer() {
+        if (webContainer != null) {
             webContainer.shutdown();
         }
     }
 
     @Test
-    public void shouldHonorReallyLowSessionTimeout() throws Exception
-    {
+    void shouldHonorReallyLowSessionTimeout() throws Exception {
         // Given
         webContainer = builder()
-                .withProperty( GraphDatabaseSettings.transaction_timeout.name(), "1" )
+                .withProperty(GraphDatabaseSettings.transaction_timeout.name(), "1")
                 .onRandomPorts()
-                .usingDataDir( folder.getAbsolutePath() ).build();
+                .usingDataDir(folder.getAbsolutePath()).build();
 
-        String tx = HTTP.POST( txURI(), Collections.singletonList(map("statement", "CREATE (n)"))).location();
+        String tx = HTTP.POST(txURI(), Collections.singletonList(map("statement", "CREATE (n)"))).location();
 
         // When
-        Thread.sleep( 1000 * 5 );
-        Map<String, Object> response = HTTP.POST( tx + "/commit" ).content();
+        Thread.sleep(1000 * 5);
+        Map<String,Object> response = HTTP.POST(tx + "/commit").content();
 
         // Then
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> errors = (List<Map<String, Object>>) response.get( "errors" );
-        assertThat( errors.get( 0 ).get( "code" ), equalTo( TransactionNotFound.code().serialize() ) );
+        List<Map<String,Object>> errors = (List<Map<String,Object>>) response.get("errors");
+        assertThat(errors.get(0).get("code")).isEqualTo(TransactionNotFound.code().serialize());
     }
 
-    private String txURI()
-    {
+    private String txURI() {
         return webContainer.getBaseUri().toString() + "db/neo4j/tx";
     }
 }

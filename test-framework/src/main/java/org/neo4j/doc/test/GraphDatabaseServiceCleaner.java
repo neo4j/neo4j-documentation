@@ -25,48 +25,37 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 
-public class GraphDatabaseServiceCleaner
-{
-    private GraphDatabaseServiceCleaner()
-    {
+public final class GraphDatabaseServiceCleaner {
+    private GraphDatabaseServiceCleaner() {
         throw new UnsupportedOperationException();
     }
 
-    public static void cleanDatabaseContent( GraphDatabaseService db )
-    {
-        cleanupSchema( db );
-        cleanupAllRelationshipsAndNodes( db );
+    public static void cleanDatabaseContent(GraphDatabaseService db) {
+        cleanupSchema(db);
+        cleanupAllRelationshipsAndNodes(db);
     }
 
-    public static void cleanupSchema( GraphDatabaseService db )
-    {
-        try ( Transaction tx = db.beginTx() )
-        {
+    public static void cleanupSchema(GraphDatabaseService db) {
+        try (Transaction tx = db.beginTx()) {
             var schema = tx.schema();
-            for ( ConstraintDefinition constraint : schema.getConstraints() )
-            {
+            for (ConstraintDefinition constraint : schema.getConstraints()) {
                 constraint.drop();
             }
 
-            for ( IndexDefinition index : schema.getIndexes() )
-            {
+            for (IndexDefinition index : schema.getIndexes()) {
                 index.drop();
             }
             tx.commit();
         }
     }
 
-    public static void cleanupAllRelationshipsAndNodes( GraphDatabaseService db )
-    {
-        try ( Transaction tx = db.beginTx() )
-        {
-            for ( Relationship relationship : tx.getAllRelationships() )
-            {
+    public static void cleanupAllRelationshipsAndNodes(GraphDatabaseService db) {
+        try (Transaction tx = db.beginTx()) {
+            for (Relationship relationship : tx.getAllRelationships()) {
                 relationship.delete();
             }
 
-            for ( Node node : tx.getAllNodes() )
-            {
+            for (Node node : tx.getAllNodes()) {
                 node.delete();
             }
             tx.commit();

@@ -18,122 +18,78 @@
  */
 package org.neo4j.doc.test;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import static java.util.Objects.requireNonNull;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Objects;
-
+import java.lang.reflect.Method;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.neo4j.annotations.documented.Documented;
+import org.neo4j.graphdb.GraphDatabaseService;
 
-public class TestData<T> implements TestRule {
+public class TestData<T> implements BeforeEachCallback, AfterEachCallback {
 
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Title {
-        String value();
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        Method method = context.getRequiredTestMethod();
+        final Documented doc = method.getAnnotation(Documented.class);
+        GraphDescription.Graph g = method.getAnnotation(GraphDescription.Graph.class);
+        if (g == null) {
+            g = context.getRequiredTestClass().getAnnotation(GraphDescription.Graph.class);
+        }
+        final GraphDescription graph = GraphDescription.create(g);
+        testDataCache.set(create(graph, null, doc == null ? null : doc.value(), method.getName()));
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+        testDataCache.remove();
+    }
+
+    public static class TestDataRecord<T> {
+        private final GraphDescription graph;
+        private final String title;
+        private final String doc;
+        private T entry;
+
+        public TestDataRecord(GraphDescription graph, String title, String doc) {
+            this.graph = graph;
+            this.title = title;
+            this.doc = doc;
+        }
     }
 
     public interface Producer<T> {
-        T create(GraphDefinition graph, String title, String documentation);
+        T create(GraphDefinition graph, String title, String documentation, GraphDatabaseService db);
     }
 
     public static <T> TestData<T> producedThrough(Producer<T> transformation) {
-        Objects.requireNonNull(transformation);
-        return new TestData<>(transformation);
+        return new TestData<>(requireNonNull(transformation));
     }
 
-    public T get() {
-        return get(true);
-    }
-
-    private static final class Lazy {
-        private volatile Object productOrFactory;
-
-        Lazy(GraphDefinition graph, String title, String documentation) {
-            productOrFactory = new Factory(graph, title, documentation);
-        }
-
-        @SuppressWarnings("unchecked")
-        <T> T get(Producer<T> producer, boolean create) {
-            Object result = productOrFactory;
-            if (result instanceof Factory) {
-                synchronized (this) {
-                    if ((result = productOrFactory) instanceof Factory) {
-                        productOrFactory = result = ((Factory) result).create(producer, create);
-                    }
-                }
-            }
-            return (T) result;
-        }
-    }
-
-    private static final class Factory {
-        private final GraphDefinition graph;
-        private final String title;
-        private final String documentation;
-
-        Factory(GraphDefinition graph, String title, String documentation) {
-            this.graph = graph;
-            this.title = title;
-            this.documentation = documentation;
-        }
-
-        Object create(Producer<?> producer, boolean create) {
-            return create ? producer.create(graph, title, documentation) : null;
-        }
+    public void setGraphDatabaseService(GraphDatabaseService db) {
+        TestDataRecord<T> testDataRecord = testDataCache.get();
+        testDataRecord.entry = producer.create(testDataRecord.graph, testDataRecord.title, testDataRecord.doc, db);
     }
 
     private final Producer<T> producer;
-    private final ThreadLocal<Lazy> product = new InheritableThreadLocal<>();
+    private final ThreadLocal<TestDataRecord<T>> testDataCache = new InheritableThreadLocal<>();
 
     private TestData(Producer<T> producer) {
         this.producer = producer;
     }
 
-    @Override
-    public Statement apply(final Statement base, final Description description) {
-        final Title title = description.getAnnotation(Title.class);
-        final Documented doc = description.getAnnotation(Documented.class);
-        GraphDescription.Graph g = description.getAnnotation(GraphDescription.Graph.class);
-        if (g == null) {
-            g = description.getTestClass().getAnnotation(GraphDescription.Graph.class);
+    public T get() {
+        TestDataRecord<T> testDataRecord = testDataCache.get();
+        if (testDataRecord == null) {
+            throw new IllegalStateException("You have to call setGraphDatabaseService() first");
         }
-        final GraphDescription graph = GraphDescription.create(g);
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                product.set( create( graph, title == null ? null : title.value(), doc == null ? null : doc.value(), description.getMethodName() ) );
-                try
-                {
-                    base.evaluate();
-                }
-                finally
-                {
-                    product.set( null );
-                }
-            }
-        };
-    }
-
-    private T get(boolean create) {
-        Lazy lazy = product.get();
-        if (lazy == null) {
-            if (create) {
-                throw new IllegalStateException("Not in test case");
-            }
-            return null;
-        }
-        return lazy.get(producer, create);
+        return testDataRecord.entry;
     }
 
     private static final String EMPTY = "";
 
-    private static Lazy create(GraphDescription graph, String title, String doc, String methodName) {
+    private static <T> TestDataRecord<T> create(GraphDescription graph, String title, String doc, String methodName) {
         if (doc != null) {
             if (title == null) {
                 // standard javadoc means of finding a title
@@ -142,7 +98,8 @@ public class TestData<T> implements TestRule {
                     title = doc.substring(0, dot);
                     if (title.contains("\n")) {
                         title = null;
-                    } else {
+                    }
+                    else {
                         title = title.trim();
                         doc = doc.substring(dot + 1);
                     }
@@ -158,7 +115,8 @@ public class TestData<T> implements TestRule {
                     if (start == i) {
                         end = ++start; // skip initial blank lines
                     }
-                } else {
+                }
+                else {
                     for (int j = 0; j < lines[i].length(); j++) {
                         if (!Character.isWhitespace(lines[i].charAt(j))) {
                             indent = Math.min(indent, j);
@@ -182,13 +140,13 @@ public class TestData<T> implements TestRule {
                 documentation.append(EMPTY.equals(lines[i]) ? EMPTY : lines[i].substring(indent)).append("\n");
             }
             doc = documentation.toString();
-        } else {
+        }
+        else {
             doc = EMPTY;
         }
         if (title == null) {
             title = methodName.replace("_", " ");
         }
-        return new Lazy(graph, title, doc);
+        return new TestDataRecord<>(graph, title, doc);
     }
-
 }

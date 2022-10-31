@@ -24,58 +24,49 @@ package org.neo4j.metrics.docs;
 
 import com.neo4j.metrics.source.MetricGroup;
 import com.neo4j.metrics.source.Metrics;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
 import org.neo4j.internal.helpers.Args;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.service.Services;
 
-public class GenerateMetricsDocumentation
-{
+public class GenerateMetricsDocumentation {
     private static final String OUTPUT_FILE_FLAG = "output";
 
-    public static void main( String[] input ) throws Exception
-    {
-        Args args = Args.withFlags( OUTPUT_FILE_FLAG ).parse( input );
+    public static void main(String[] input) throws Exception {
+        Args args = Args.withFlags(OUTPUT_FILE_FLAG).parse(input);
 
         List<String> metricGroups = args.orphans();
-        if ( metricGroups.size() != 1 )
-        {
-            System.out.println( "Usage: GenerateMetricsDocumentation [--output file] metricGroup" );
-            System.exit( 1 );
+        if (metricGroups.size() != 1) {
+            System.out.println("Usage: GenerateMetricsDocumentation [--output file] metricGroup");
+            System.exit(1);
         }
-        MetricGroup metricGroup = MetricGroup.valueOf( metricGroups.get( 0 ) );
+        MetricGroup metricGroup = MetricGroup.valueOf(metricGroups.get(0));
 
         MetricsAsciiDocGenerator generator = new MetricsAsciiDocGenerator();
         StringBuilder builder = new StringBuilder();
 
-        Collection<Metrics> metricsClasses = Services.loadAll( Metrics.class );
-        ArrayList<Metrics> sortedMetrics = new ArrayList<>( metricsClasses );
-        sortedMetrics.sort( Comparator.comparing( ( metric ) -> metric.getClass().getName() ) );
+        Collection<Metrics> metricsClasses = Services.loadAll(Metrics.class);
+        ArrayList<Metrics> sortedMetrics = new ArrayList<>(metricsClasses);
+        sortedMetrics.sort(Comparator.comparing((metric) -> metric.getClass().getName()));
 
-        for ( Metrics metricsClass : sortedMetrics )
-        {
-            if ( metricGroup.equals( metricsClass.getGroup() ) )
-            {
-                generator.generateDocsFor( metricsClass, builder );
+        for (Metrics metricsClass : sortedMetrics) {
+            if (metricGroup.equals(metricsClass.getGroup())) {
+                generator.generateDocsFor(metricsClass, builder);
             }
         }
 
-        String outputFileName = args.get( OUTPUT_FILE_FLAG );
-        if ( outputFileName != null )
-        {
-            Path output = Path.of( outputFileName );
-            System.out.println( "Saving docs for '" + metricGroups + "' metrics in '" + output.toAbsolutePath() + "'." );
-            FileUtils.writeToFile( output, builder.toString(), false );
+        String outputFileName = args.get(OUTPUT_FILE_FLAG);
+        if (outputFileName != null) {
+            Path output = Path.of(outputFileName);
+            System.out.println("Saving docs for '" + metricGroups + "' metrics in '" + output.toAbsolutePath() + "'.");
+            FileUtils.writeToFile(output, builder.toString(), false);
         }
-        else
-        {
-            System.out.println( builder.toString() );
+        else {
+            System.out.println(builder.toString());
         }
     }
 }

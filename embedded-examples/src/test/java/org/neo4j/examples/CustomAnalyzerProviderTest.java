@@ -18,17 +18,15 @@
  */
 package org.neo4j.examples;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
 
-public class CustomAnalyzerProviderTest
-{
+class CustomAnalyzerProviderTest {
     @Test
-    public void creatingCustomAnalyzer()
-    {
+    void creatingCustomAnalyzer() {
         AnalyzerProviderExample example = new AnalyzerProviderExample();
         AnalyzerProviderExample.CustomAnalyzerProvider provider = example.new CustomAnalyzerProvider();
-        assertNotNull( provider.createAnalyzer() );
+        assertNotNull(provider.createAnalyzer());
     }
 }

@@ -20,52 +20,45 @@
 package org.neo4j.visualization.graphviz;
 
 import java.io.IOException;
-
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.visualization.PropertyType;
 
-class DefaultRelationshipStyle implements RelationshipStyle
-{
+class DefaultRelationshipStyle implements RelationshipStyle {
     private final DefaultStyleConfiguration config;
 
-    DefaultRelationshipStyle( DefaultStyleConfiguration configuration )
-    {
+    DefaultRelationshipStyle(DefaultStyleConfiguration configuration) {
         this.config = configuration;
     }
 
-    public void emitRelationshipStart( Appendable stream, Relationship relationship )
-            throws IOException
-    {
+    public void emitRelationshipStart(Appendable stream, Relationship relationship)
+            throws IOException {
         Node start = relationship.getStartNode(), end = relationship.getEndNode();
-        boolean reversed = config.reverseOrder( relationship );
+        boolean reversed = config.reverseOrder(relationship);
         long startId = start.getId(), endId = end.getId();
-        if ( reversed )
-        {
+        if (reversed) {
             long tmp = startId;
             startId = endId;
             endId = tmp;
         }
         stream.append("  N").append(String.valueOf(startId)).append(" -> N").append(String.valueOf(endId)).append(" [\n");
-        config.emit( relationship, stream );
-        if ( reversed ) stream.append( "    dir = back\n" );
-        if ( config.displayRelationshipLabel )
-        {
+        config.emit(relationship, stream);
+        if (reversed) {
+            stream.append("    dir = back\n");
+        }
+        if (config.displayRelationshipLabel) {
             stream.append("    label = \"").append(config.escapeLabel(config.getTitle(relationship))).append("\\n");
         }
     }
 
-    public void emitEnd( Appendable stream ) throws IOException
-    {
-        stream.append( config.displayRelationshipLabel ? "\"\n  ]\n" : "  ]\n" );
+    public void emitEnd(Appendable stream) throws IOException {
+        stream.append(config.displayRelationshipLabel ? "\"\n  ]\n" : "  ]\n");
     }
 
-    public void emitProperty( Appendable stream, String key, Object value ) throws IOException
-    {
-        if ( config.displayRelationshipLabel && config.acceptEdgeProperty( key ) )
-        {
-            PropertyType type = PropertyType.getTypeOf( value );
-            config.emitRelationshipProperty( stream, key, type, value );
+    public void emitProperty(Appendable stream, String key, Object value) throws IOException {
+        if (config.displayRelationshipLabel && config.acceptEdgeProperty(key)) {
+            PropertyType type = PropertyType.getTypeOf(value);
+            config.emitRelationshipProperty(stream, key, type, value);
         }
     }
 }

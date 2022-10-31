@@ -27,29 +27,25 @@ import org.neo4j.graphdb.RelationshipType;
  * Wrap a {@code Map<String, Color>} to expose it as a {@code ColorMapper<RelationshipType>}.
  */
 public class SimpleRelationshipTypeColorMapper implements
-        ColorMapper<RelationshipType>
-{
-    private final Map<String, Color> mappings;
+        ColorMapper<RelationshipType> {
+    private final Map<String,Color> mappings;
 
     /**
      * Map relationship types represented as strings to colors.
      *
      * @param mappings relationship type names to color mappings
      */
-    public SimpleRelationshipTypeColorMapper( Map<String, Color> mappings )
-    {
+    public SimpleRelationshipTypeColorMapper(Map<String,Color> mappings) {
         this.mappings = mappings;
     }
 
     @Override
-    public Color getColor( RelationshipType type )
-    {
-        return mappings.get( type.name() );
+    public Color getColor(RelationshipType type) {
+        return mappings.get(type.name());
     }
 
     @Override
-    public Collection<Color> getColors()
-    {
+    public Collection<Color> getColors() {
         return mappings.values();
     }
 }

@@ -29,79 +29,68 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
-@Path( "/" )
-public class DummyThirdPartyWebService
-{
+@Path("/")
+public class DummyThirdPartyWebService {
 
     public static final String DUMMY_WEB_SERVICE_MOUNT_POINT = "/dummy";
 
     @GET
-    @Produces( MediaType.TEXT_PLAIN )
-    public Response sayHello()
-    {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response sayHello() {
         return Response.ok()
-                .entity( "hello" )
+                .entity("hello")
                 .build();
     }
 
     @GET
     @Path("/{something}/{somethingElse}")
-    @Produces( MediaType.TEXT_PLAIN )
+    @Produces(MediaType.TEXT_PLAIN)
     public Response forSecurityTesting() {
         return Response.ok().entity("you've reached a dummy service").build();
     }
 
     @GET
-    @Path( "inject-test" )
-    @Produces( MediaType.TEXT_PLAIN )
-    public Response countNodes( @Context DatabaseManagementService dbms )
-    {
-        final GraphDatabaseService db = dbms.database( "neo4j" );
-        try (Transaction transaction = db.beginTx())
-        {
+    @Path("inject-test")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response countNodes(@Context DatabaseManagementService dbms) {
+        final GraphDatabaseService db = dbms.database("neo4j");
+        try (Transaction transaction = db.beginTx()) {
             return Response.ok()
-                    .entity( String.valueOf( countNodesIn( transaction ) ) )
+                    .entity(String.valueOf(countNodesIn(transaction)))
                     .build();
         }
     }
 
     @GET
-    @Path( "needs-auth-header" )
-    @Produces( MediaType.APPLICATION_JSON )
-    public Response authHeader( @Context HttpHeaders headers )
-    {
-        StringBuilder theEntity = new StringBuilder( "{" );
-        Iterator<Map.Entry<String, List<String>>> headerIt = headers.getRequestHeaders().entrySet().iterator();
-        while ( headerIt.hasNext() )
-        {
-            Map.Entry<String, List<String>> header = headerIt.next();
-            if (header.getValue().size() != 1)
-            {
-                throw new IllegalArgumentException( "Mutlivalued header: "
-                                                    + header.getKey() );
+    @Path("needs-auth-header")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response authHeader(@Context HttpHeaders headers) {
+        StringBuilder theEntity = new StringBuilder("{");
+        Iterator<Map.Entry<String,List<String>>> headerIt = headers.getRequestHeaders().entrySet().iterator();
+        while (headerIt.hasNext()) {
+            Map.Entry<String,List<String>> header = headerIt.next();
+            if (header.getValue().size() != 1) {
+                throw new IllegalArgumentException("Mutlivalued header: "
+                        + header.getKey());
             }
-            theEntity.append( "\"" ).append( header.getKey() ).append( "\":\"" )
-                     .append( header.getValue().get( 0 ) ).append( "\"" );
-            if ( headerIt.hasNext() )
-            {
-                theEntity.append( ", " );
+            theEntity.append("\"").append(header.getKey()).append("\":\"")
+                    .append(header.getValue().get(0)).append("\"");
+            if (headerIt.hasNext()) {
+                theEntity.append(", ");
             }
         }
-        theEntity.append( "}" );
-        return Response.ok().entity( theEntity.toString() ).build();
+        theEntity.append("}");
+        return Response.ok().entity(theEntity.toString()).build();
     }
 
-    private int countNodesIn( Transaction tx )
-    {
+    private int countNodesIn(Transaction tx) {
         int count = 0;
-        for ( Node ignore : tx.getAllNodes() )
-        {
+        for (Node ignore : tx.getAllNodes()) {
             count++;
         }
         return count;

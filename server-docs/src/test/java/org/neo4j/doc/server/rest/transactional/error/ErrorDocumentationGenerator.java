@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
 import org.neo4j.kernel.api.exceptions.Status;
 
 /**
@@ -39,159 +38,134 @@ import org.neo4j.kernel.api.exceptions.Status;
  * |===
  * </pre>
  */
-public class ErrorDocumentationGenerator
-{
-    public static void main( String[] args ) throws Exception
-    {
-        File baseDir = getBaseDirectory( args );
+public class ErrorDocumentationGenerator {
+    public static void main(String[] args) {
+        File baseDir = getBaseDirectory(args);
 
         ErrorDocumentationGenerator generator = new ErrorDocumentationGenerator();
 
-        try
-        {
+        try {
             generateDocumentation(
                     generator.generateClassificationDocs(),
-                    new File( baseDir, "status-code-classifications.asccidoc" ),
-                    "status code classification" );
+                    new File(baseDir, "status-code-classifications.asccidoc"),
+                    "status code classification");
 
             generateDocumentation(
                     generator.generateStatusCodeDocs(),
-                    new File( baseDir, "status-code-codes.asccidoc" ),
+                    new File(baseDir, "status-code-codes.asccidoc"),
                     "status code statuses");
         }
-        catch ( Exception e )
-        {
+        catch (Exception e) {
             // Send it to standard out, so we can see it through the Maven build.
-            e.printStackTrace( System.out );
+            e.printStackTrace(System.out);
             System.out.flush();
-            System.exit( 1 );
+            System.exit(1);
         }
     }
 
-    private static File getBaseDirectory( String[] args )
-    {
+    private static File getBaseDirectory(String[] args) {
         File baseDir = null;
-        if(args.length == 1)
-        {
+        if (args.length == 1) {
             baseDir = new File(args[0]);
-
-        } else
-        {
+        }
+        else {
             System.out.println("Usage: ErrorDocumentationGenerator [output folder]");
             System.exit(0);
         }
         return baseDir;
     }
 
-    private static void generateDocumentation( Table table, File file, String description ) throws Exception
-    {
-        System.out.printf( "Saving %s docs in '%s'.%n", description, file.getAbsolutePath() );
+    private static void generateDocumentation(Table table, File file, String description) throws Exception {
+        System.out.printf("Saving %s docs in '%s'.%n", description, file.getAbsolutePath());
         file.getParentFile().mkdirs();
-        try ( PrintStream out = new PrintStream( file, StandardCharsets.UTF_8.name() ) )
-        {
-            table.print( out );
+        try (PrintStream out = new PrintStream(file, StandardCharsets.UTF_8)) {
+            table.print(out);
         }
     }
 
-    public Table generateClassificationDocs()
-    {
+    public Table generateClassificationDocs() {
         Table table = new Table();
-        table.setCols( "<1m,<3,<1" );
-        table.setHeader( "Classification", "Description", "Effect on transaction" );
+        table.setCols("<1m,<3,<1");
+        table.setHeader("Classification", "Description", "Effect on transaction");
 
-        for ( Status.Classification classification : Status.Classification.class.getEnumConstants() )
-        {
-            table.addRow( classificationAsRow( classification ) );
+        for (Status.Classification classification : Status.Classification.class.getEnumConstants()) {
+            table.addRow(classificationAsRow(classification));
         }
 
         return table;
     }
 
-    private Object[] classificationAsRow( Status.Classification classification )
-    {
+    private Object[] classificationAsRow(Status.Classification classification) {
         // TODO fail on missing description
         String description = classification.description().length() > 0
                 ? classification.description()
                 : "No description available.";
         String txEffect = classification.rollbackTransaction() ? "Rollback" : "None";
-        return new Object[] { classification.name(), description, txEffect };
+        return new Object[]{classification.name(), description, txEffect};
     }
 
-    public Table generateStatusCodeDocs()
-    {
+    public Table generateStatusCodeDocs() {
         Table table = new Table();
-        table.setCols( "<1m,<1" );
-        table.setHeader( "Status Code", "Description" );
+        table.setCols("<1m,<1");
+        table.setHeader("Status Code", "Description");
 
-        TreeMap<String, Status.Code> sortedStatuses = sortedStatusCodes();
-        for ( String code : sortedStatuses.keySet() )
-        {
-            Status.Code statusCode = sortedStatuses.get( code );
-            table.addRow( codeAsTableRow( statusCode ) );
+        TreeMap<String,Status.Code> sortedStatuses = sortedStatusCodes();
+        for (String code : sortedStatuses.keySet()) {
+            Status.Code statusCode = sortedStatuses.get(code);
+            table.addRow(codeAsTableRow(statusCode));
         }
 
         return table;
     }
 
-    private Object[] codeAsTableRow( Status.Code code )
-    {
+    private Object[] codeAsTableRow(Status.Code code) {
         // TODO fail on missing description
         String description = code.description().length() > 0 ? code.description() : "No description available.";
-        return new Object[] { code.serialize(), description };
+        return new Object[]{code.serialize(), description};
     }
 
-    private TreeMap<String, Status.Code> sortedStatusCodes()
-    {
-        TreeMap<String, Status.Code> sortedStatuses = new TreeMap<>();
-        for ( Status status : Status.Code.all() )
-        {
-            sortedStatuses.put( status.code().serialize(), status.code() );
+    private TreeMap<String,Status.Code> sortedStatusCodes() {
+        TreeMap<String,Status.Code> sortedStatuses = new TreeMap<>();
+        for (Status status : Status.Code.all()) {
+            sortedStatuses.put(status.code().serialize(), status.code());
         }
         return sortedStatuses;
     }
 
-    public static class Table
-    {
+    public static class Table {
         private String cols;
         private String[] header;
         private List<Object[]> rows = new ArrayList<>();
 
-        public void setCols( String cols )
-        {
+        public void setCols(String cols) {
             this.cols = cols;
         }
 
-        public void setHeader( String... header )
-        {
+        public void setHeader(String... header) {
             this.header = header;
         }
 
-        public void addRow( Object... xs )
-        {
+        public void addRow(Object... xs) {
             rows.add(xs);
         }
 
-        public void print( PrintStream out )
-        {
-            out.printf( "[options=\"header\", cols=\"%s\"]%n", cols );
-            out.printf( "|===%n" );
+        public void print(PrintStream out) {
+            out.printf("[options=\"header\", cols=\"%s\"]%n", cols);
+            out.printf("|===%n");
 
-            for( String columnHeader : header )
-            {
-                out.printf( "|%s ", columnHeader );
+            for (String columnHeader : header) {
+                out.printf("|%s ", columnHeader);
             }
-            out.printf( "%n" );
+            out.printf("%n");
 
-            for( Object[] row : rows )
-            {
-                for( Object cell : row )
-                {
-                    out.printf( "|%s ", cell );
+            for (Object[] row : rows) {
+                for (Object cell : row) {
+                    out.printf("|%s ", cell);
                 }
-                out.printf( "%n" );
+                out.printf("%n");
             }
 
-            out.printf( "|===%n" );
+            out.printf("|===%n");
         }
     }
 }

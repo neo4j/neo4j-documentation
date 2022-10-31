@@ -18,49 +18,42 @@
  */
 package org.neo4j.doc.server;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import static org.neo4j.configuration.SettingValueParsers.TRUE;
+import static org.neo4j.doc.server.WebContainerHolder.release;
+import static org.neo4j.doc.server.WebContainerHolder.setWebContainerBuilderProperty;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.doc.server.helpers.WebContainerHelper;
 
-import static org.neo4j.configuration.SettingValueParsers.TRUE;
-import static org.neo4j.doc.server.WebContainerHolder.release;
-import static org.neo4j.doc.server.WebContainerHolder.setWebContainerBuilderProperty;
-
-public class SharedWebContainerTestBase
-{
-    protected static TestWebContainer container()
-    {
+public class SharedWebContainerTestBase {
+    protected static TestWebContainer container() {
         return testWebContainer;
     }
 
     private static TestWebContainer testWebContainer;
 
-    @BeforeClass
-    public static void allocateServer() throws Throwable
-    {
-        System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
-        setWebContainerBuilderProperty( GraphDatabaseSettings.cypher_hints_error.name(), TRUE );
-        setWebContainerBuilderProperty( BoltConnector.enabled.name(), TRUE );
-        setWebContainerBuilderProperty( BoltConnector.listen_address.name(), "localhost:0" );
-        setWebContainerBuilderProperty( BoltConnector.advertised_address.name(), ":0" );
-        setWebContainerBuilderProperty( GraphDatabaseSettings.transaction_timeout.name(), "300s" );
-        testWebContainer = WebContainerHolder.allocate( false );
-        WebContainerHelper.cleanTheDatabase( testWebContainer );
+    @BeforeAll
+    public static void allocateServer() throws Exception {
+        System.setProperty("org.neo4j.useInsecureCertificateGeneration", "true");
+        setWebContainerBuilderProperty(GraphDatabaseSettings.cypher_hints_error.name(), TRUE);
+        setWebContainerBuilderProperty(BoltConnector.enabled.name(), TRUE);
+        setWebContainerBuilderProperty(BoltConnector.listen_address.name(), "localhost:0");
+        setWebContainerBuilderProperty(BoltConnector.advertised_address.name(), ":0");
+        setWebContainerBuilderProperty(GraphDatabaseSettings.transaction_timeout.name(), "300s");
+        testWebContainer = WebContainerHolder.allocate(false);
+        WebContainerHelper.cleanTheDatabase(testWebContainer);
     }
 
-    @AfterClass
-    public static void releaseServer()
-    {
-        try
-        {
-            release( testWebContainer );
+    @AfterAll
+    public static void releaseServer() {
+        try {
+            release(testWebContainer);
         }
-        finally
-        {
+        finally {
             testWebContainer = null;
         }
     }

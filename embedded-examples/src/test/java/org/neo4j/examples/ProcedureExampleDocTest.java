@@ -18,12 +18,15 @@
  */
 package org.neo4j.examples;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+import static org.neo4j.internal.helpers.collection.MapUtil.map;
+
+import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
-
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -34,13 +37,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.internal.helpers.collection.MapUtil.map;
-
-class ProcedureExampleDocTest
-{
+class ProcedureExampleDocTest {
     private GraphDatabaseService db;
     private DatabaseManagementService managementService;
 
@@ -48,39 +45,34 @@ class ProcedureExampleDocTest
     Path directory;
 
     @Test
-    void listDenseNodesShouldWork() throws Throwable
-    {
+    void listDenseNodesShouldWork() throws Throwable {
         // Given
-        new JarBuilder().createJarFor( directory.resolve( "myProcedures.jar" ).toFile(), ProcedureExample.class );
+        new JarBuilder().createJarFor(directory.resolve("myProcedures.jar").toFile(), ProcedureExample.class);
         managementService =
-                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.toAbsolutePath() ).build();
-        db = managementService.database( DEFAULT_DATABASE_NAME );
+                new DatabaseManagementServiceBuilder(directory).setConfig(GraphDatabaseSettings.plugin_dir, directory.toAbsolutePath()).build();
+        db = managementService.database(DEFAULT_DATABASE_NAME);
 
-        try ( Transaction transaction = db.beginTx() )
-        {
+        try (Transaction transaction = db.beginTx()) {
             Node node1 = transaction.createNode();
             Node node2 = transaction.createNode();
             Node node3 = transaction.createNode();
 
-            node1.createRelationshipTo( node1, RelationshipType.withName( "KNOWS" ) );
-            node1.createRelationshipTo( node2, RelationshipType.withName( "KNOWS" ) );
-            node1.createRelationshipTo( node3, RelationshipType.withName( "KNOWS" ) );
+            node1.createRelationshipTo(node1, RelationshipType.withName("KNOWS"));
+            node1.createRelationshipTo(node2, RelationshipType.withName("KNOWS"));
+            node1.createRelationshipTo(node3, RelationshipType.withName("KNOWS"));
 
             // When
-            Result res = transaction.execute( "CALL org.neo4j.examples.findDenseNodes(2)" );
+            Result res = transaction.execute("CALL org.neo4j.examples.findDenseNodes(2)");
 
             // Then
-            assertEquals( map( "degree", 3L, "nodeId", node1.getId() ), res.next() );
-            assertFalse( res.hasNext() );
+            assertEquals(map("degree", 3L, "nodeId", node1.getId()), res.next());
+            assertFalse(res.hasNext());
         }
-
     }
 
     @AfterEach
-    void tearDown()
-    {
-        if ( managementService != null )
-        {
+    void tearDown() {
+        if (managementService != null) {
             managementService.shutdown();
         }
     }

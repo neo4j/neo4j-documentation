@@ -26,22 +26,24 @@
                             <target>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
-                                    <arg value="--output=${project.build.directory}/docs/ops/available-metrics.asciidoc" />
-                                    <arg value="GENERAL" />
+                                    <arg value="--output=${project.build.directory}/docs/ops/available-metrics.asciidoc"/>
+                                    <arg value="GENERAL"/>
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
-                                    <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc" />
-                                    <arg value="JVM" />
+                                    <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc"/>
+                                    <arg value="JVM"/>
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
-                                    <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc" />
-                                    <arg value="CAUSAL_CLUSTERING" />
+                                    <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc"/>
+                                    <arg value="CAUSAL_CLUSTERING"/>
                                 </java>
                             </target>
                         </configuration>
-                        <goals><goal>run</goal></goals>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <dependencies>

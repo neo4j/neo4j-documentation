@@ -18,14 +18,16 @@
  */
 package org.neo4j.examples;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -33,62 +35,50 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.WriteOperationsNotAllowedException;
 import org.neo4j.internal.helpers.Exceptions;
-import org.neo4j.kernel.api.exceptions.ReadOnlyDbException;
 import org.neo4j.io.fs.FileUtils;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 /**
  * How to get a read-only Neo4j instance.
  */
-public class ReadOnlyDocTest
-{
+class ReadOnlyDocTest {
     protected GraphDatabaseService graphDb;
     private DatabaseManagementService managementService;
 
     /**
      * Create read only database.
      */
-    @Before
-    public void prepareReadOnlyDatabase() throws IOException
-    {
-        Path dir = Path.of( "target/read-only-managementService/location" );
-        if ( Files.exists( dir ) )
-        {
-            FileUtils.deleteDirectory( dir );
+    @BeforeEach
+    public void prepareReadOnlyDatabase() throws IOException {
+        Path dir = Path.of("target/read-only-managementService/location");
+        if (Files.exists(dir)) {
+            FileUtils.deleteDirectory(dir);
         }
-        new DatabaseManagementServiceBuilder( dir ).build().shutdown();
+        new DatabaseManagementServiceBuilder(dir).build().shutdown();
         // tag::createReadOnlyInstance[]
-        managementService = new DatabaseManagementServiceBuilder( dir ).setConfig( GraphDatabaseSettings.read_only_database_default, true ).build();
-        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+        managementService = new DatabaseManagementServiceBuilder(dir).setConfig(GraphDatabaseSettings.read_only_database_default, true).build();
+        graphDb = managementService.database(DEFAULT_DATABASE_NAME);
         // end::createReadOnlyInstance[]
     }
 
     /**
      * Shutdown the database.
      */
-    @After
-    public void shutdownDatabase()
-    {
+    @AfterEach
+    public void shutdownDatabase() {
         managementService.shutdown();
     }
 
     @Test
-    public void makeSureDbIsOnlyReadable()
-    {
+    void makeSureDbIsOnlyReadable() {
         // when
-        try ( Transaction tx = graphDb.beginTx() )
-        {
+        try (Transaction tx = graphDb.beginTx()) {
             tx.createNode();
             tx.commit();
-            fail( "expected exception" );
+            fail("expected exception");
         }
         // then
-        catch ( Exception e )
-        {
-            assertTrue( "Database should be in read only mode", Exceptions.contains( e, c -> c instanceof WriteOperationsNotAllowedException ) );
+        catch (Exception e) {
+            assertTrue(Exceptions.contains(e, c -> c instanceof WriteOperationsNotAllowedException), "Database should be in read only mode");
             // ok
         }
     }

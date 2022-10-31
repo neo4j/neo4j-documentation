@@ -20,7 +20,6 @@ package org.neo4j.doc.server.helpers;
 
 import org.neo4j.graphdb.Transaction;
 
-public interface UnitOfWork
-{
-    void doWork( Transaction tx );
+public interface UnitOfWork {
+    void doWork(Transaction tx);
 }

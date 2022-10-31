@@ -18,8 +18,10 @@
  */
 package org.neo4j.examples.orderedpath;
 
-import java.util.ArrayList;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+import static org.neo4j.graphdb.RelationshipType.withName;
 
+import java.util.ArrayList;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -35,102 +37,86 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.graphdb.RelationshipType.withName;
-
-public class OrderedPath
-{
-    private static final RelationshipType REL1 = withName( "REL1" ), REL2 = withName( "REL2" ),
-            REL3 = withName( "REL3" );
-    static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of( "target/neo4j-orderedpath-db" );
+public class OrderedPath {
+    private static final RelationshipType REL1 = withName("REL1"), REL2 = withName("REL2"),
+            REL3 = withName("REL3");
+    static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of("target/neo4j-orderedpath-db");
     private final DatabaseManagementService managementService;
     GraphDatabaseService db;
 
-    public OrderedPath( DatabaseManagementService managementService, GraphDatabaseService db )
-    {
+    public OrderedPath(DatabaseManagementService managementService, GraphDatabaseService db) {
         this.managementService = managementService;
         this.db = db;
     }
 
-    public static void main( String[] args )
-    {
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
-        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
-        OrderedPath op = new OrderedPath( managementService, db );
+    public static void main(String[] args) {
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(databaseDirectory).build();
+        GraphDatabaseService db = managementService.database(DEFAULT_DATABASE_NAME);
+        OrderedPath op = new OrderedPath(managementService, db);
         op.shutdownGraph();
     }
 
-    public Node createTheGraph()
-    {
-        try ( Transaction tx = db.beginTx() )
-        {
+    public Node createTheGraph() {
+        try (Transaction tx = db.beginTx()) {
             // tag::createGraph[]
             Node A = tx.createNode();
             Node B = tx.createNode();
             Node C = tx.createNode();
             Node D = tx.createNode();
 
-            A.createRelationshipTo( C, REL2 );
-            C.createRelationshipTo( D, REL3 );
-            A.createRelationshipTo( B, REL1 );
-            B.createRelationshipTo( C, REL2 );
+            A.createRelationshipTo(C, REL2);
+            C.createRelationshipTo(D, REL3);
+            A.createRelationshipTo(B, REL1);
+            B.createRelationshipTo(C, REL2);
             // end::createGraph[]
-            A.setProperty( "name", "A" );
-            B.setProperty( "name", "B" );
-            C.setProperty( "name", "C" );
-            D.setProperty( "name", "D" );
+            A.setProperty("name", "A");
+            B.setProperty("name", "B");
+            C.setProperty("name", "C");
+            D.setProperty("name", "D");
             tx.commit();
             return A;
         }
     }
 
-    public void shutdownGraph()
-    {
-        if ( managementService != null )
-        {
+    public void shutdownGraph() {
+        if (managementService != null) {
             managementService.shutdown();
         }
     }
 
-    public TraversalDescription findPaths( Transaction tx )
-    {
+    public TraversalDescription findPaths(Transaction tx) {
         // tag::walkOrderedPath[]
         final ArrayList<RelationshipType> orderedPathContext = new ArrayList<>();
-        orderedPathContext.add( REL1 );
-        orderedPathContext.add( withName( "REL2" ) );
-        orderedPathContext.add( withName( "REL3" ) );
+        orderedPathContext.add(REL1);
+        orderedPathContext.add(withName("REL2"));
+        orderedPathContext.add(withName("REL3"));
         TraversalDescription td = tx.traversalDescription()
-                .evaluator( new Evaluator()
-                {
+                .evaluator(new Evaluator() {
                     @Override
-                    public Evaluation evaluate( final Path path )
-                    {
-                        if ( path.length() == 0 )
-                        {
+                    public Evaluation evaluate(final Path path) {
+                        if (path.length() == 0) {
                             return Evaluation.EXCLUDE_AND_CONTINUE;
                         }
-                        RelationshipType expectedType = orderedPathContext.get( path.length() - 1 );
+                        RelationshipType expectedType = orderedPathContext.get(path.length() - 1);
                         boolean isExpectedType = path.lastRelationship()
-                                .isType( expectedType );
+                                .isType(expectedType);
                         boolean included = path.length() == orderedPathContext.size() && isExpectedType;
                         boolean continued = path.length() < orderedPathContext.size() && isExpectedType;
-                        return Evaluation.of( included, continued );
+                        return Evaluation.of(included, continued);
                     }
-                } )
-                .uniqueness( Uniqueness.NODE_PATH );
+                })
+                .uniqueness(Uniqueness.NODE_PATH);
         // end::walkOrderedPath[]
         return td;
     }
 
-    String printPaths( Transaction tx, TraversalDescription td, Node A )
-    {
+    String printPaths(Transaction tx, TraversalDescription td, Node A) {
         String output = "";
         // tag::printPath[]
-        Traverser traverser = td.traverse( tx.getNodeById( A.getId() ) );
-        PathPrinter pathPrinter = new PathPrinter( "name" );
-        for ( Path path : traverser )
-        {
-            output += Paths.pathToString( path, pathPrinter );
+        Traverser traverser = td.traverse(tx.getNodeById(A.getId()));
+        PathPrinter pathPrinter = new PathPrinter("name");
+        for (Path path : traverser) {
+            output += Paths.pathToString(path, pathPrinter);
         }
         // end::printPath[]
         output += "\n";
@@ -138,31 +124,25 @@ public class OrderedPath
     }
 
     // tag::pathPrinter[]
-    static class PathPrinter implements Paths.PathDescriptor<Path>
-    {
+    static class PathPrinter implements Paths.PathDescriptor<Path> {
         private final String nodePropertyKey;
 
-        public PathPrinter( String nodePropertyKey )
-        {
+        public PathPrinter(String nodePropertyKey) {
             this.nodePropertyKey = nodePropertyKey;
         }
 
         @Override
-        public String nodeRepresentation( Path path, Node node )
-        {
-            return "(" + node.getProperty( nodePropertyKey, "" ) + ")";
+        public String nodeRepresentation(Path path, Node node) {
+            return "(" + node.getProperty(nodePropertyKey, "") + ")";
         }
 
         @Override
-        public String relationshipRepresentation( Path path, Node from, Relationship relationship )
-        {
+        public String relationshipRepresentation(Path path, Node from, Relationship relationship) {
             String prefix = "--", suffix = "--";
-            if ( from.equals( relationship.getEndNode() ) )
-            {
+            if (from.equals(relationship.getEndNode())) {
                 prefix = "<--";
             }
-            else
-            {
+            else {
                 suffix = "-->";
             }
             return prefix + "[" + relationship.getType().name() + "]" + suffix;

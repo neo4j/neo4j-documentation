@@ -38,54 +38,47 @@ public final class SettingDescriptionImpl implements SettingDescription {
     private final boolean hasDefault;
     private final boolean isEnterprise;
 
-    public SettingDescriptionImpl( String id, String name, Optional<String> description,
-                               String deprecationDescription,
-                               String validationDescription, String defaultValue,
-                               boolean isDeprecated, boolean hasDefault,boolean isEnterprise )
-    {
+    public SettingDescriptionImpl(String id, String name, Optional<String> description,
+            String deprecationDescription,
+            String validationDescription, String defaultValue,
+            boolean isDeprecated, boolean hasDefault, boolean isEnterprise) {
         this.id = id;
         this.deprecationDescription = deprecationDescription;
         this.validationDescription = validationDescription;
         this.defaultValue = defaultValue;
         this.isDeprecated = isDeprecated;
-        this.name = name.replace( "{", "\\{" ).replace( "}", "\\}" );
+        this.name = name.replace("{", "\\{").replace("}", "\\}");
         this.description = description;
         this.hasDefault = hasDefault;
         this.isEnterprise = isEnterprise;
     }
 
-    public SettingDescriptionImpl( String id, String name, Optional<String> description )
-    {
-        this( id, name, description, null, null, null, false, false, false );
+    public SettingDescriptionImpl(String id, String name, Optional<String> description) {
+        this(id, name, description, null, null, null, false, false, false);
     }
 
     @Override
-    public String id()
-    {
+    public String id() {
         return id;
     }
 
     @Override
-    public String name()
-    {
+    public String name() {
         return name;
     }
 
     @Override
-    public Optional<String> description()
-    {
+    public Optional<String> description() {
         return description;
     }
 
     @Override
-    public boolean isDeprecated()
-    {
+    public boolean isDeprecated() {
         return isDeprecated;
     }
 
     @Override
-    public boolean hasDefault()
-    {
+    public boolean hasDefault() {
         //if ( !defaultValue.equals( DEFAULT_MARKER ) )
         return hasDefault;
     }
@@ -101,8 +94,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
-    public boolean isInternal()
-    {
+    public boolean isInternal() {
         return false;
     }
 
@@ -117,33 +109,28 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
-    public String defaultValue()
-    {
+    public String defaultValue() {
         return defaultValue;
     }
 
     @Override
-    public String deprecationMessage()
-    {
+    public String deprecationMessage() {
         // Note OBSOLETED & DEPRECATED
         return deprecationDescription;
     }
 
     @Override
-    public String validationMessage()
-    {
+    public String validationMessage() {
         // Note VALIDATION_MESSAGE
         return validationDescription;
     }
 
     /**
-     * Return a new item with all prose descriptions formatted using
-     * the passed-in format.
+     * Return a new item with all prose descriptions formatted using the passed-in format.
      */
     @Override
-    public SettingDescription formatted(Function<String, String> format)
-    {
-        Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
+    public SettingDescription formatted(Function<String,String> format) {
+        Function<String,String> f = (str) -> str == null ? null : format.apply(str);
         return new SettingDescriptionImpl(
                 id, name,
                 Optional.of(f.apply(description.get())),
@@ -154,34 +141,29 @@ public final class SettingDescriptionImpl implements SettingDescription {
                 // which is what the old impl did, and improve the formatters at some point
                 validationDescription,
                 defaultValue,
-                isDeprecated, hasDefault, isEnterprise );
+                isDeprecated, hasDefault, isEnterprise);
     }
 
     @Override
-    public boolean equals( Object o )
-    {
-        if ( this == o )
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if ( o == null || getClass() != o.getClass() )
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         SettingDescription that = (SettingDescription) o;
-        return Objects.equals( name, that.name() ) &&
-               Objects.equals( description, that.description() );
+        return Objects.equals(name, that.name()) &&
+                Objects.equals(description, that.description());
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash( name, description );
+    public int hashCode() {
+        return Objects.hash(name, description);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SettingDescription{" + "id='" + id() + "\', name='" + name + "\', description='" + description + "\'}";
     }
 }

@@ -21,16 +21,13 @@ package org.neo4j.visualization.graphviz;
 
 import org.neo4j.graphdb.Entity;
 
-interface ParameterGetter<C extends Entity>
-{
+interface ParameterGetter<C extends Entity> {
     /**
      * Get the value for a parameter.
-     * @param container
-     *            the node or relationship to get the value for.
-     * @param key
-     *            the parameter to get.
-     * @return the value of the parameter, or <code>null</code> to not emit
-     *         the parameter for this node/relationship.
+     *
+     * @param container the node or relationship to get the value for.
+     * @param key       the parameter to get.
+     * @return the value of the parameter, or <code>null</code> to not emit the parameter for this node/relationship.
      */
-    String getParameterValue( C container, String key );
+    String getParameterValue(C container, String key);
 }

@@ -18,41 +18,36 @@
  */
 package org.neo4j.examples;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
 import org.neo4j.graphdb.schema.AnalyzerProvider;
 
-public class AnalyzerProviderExample
-{
+public class AnalyzerProviderExample {
     // tag::customAnalyzerProvider[]
     public class CustomAnalyzerProvider extends AnalyzerProvider // <1>
     {
         public CustomAnalyzerProvider()                          // <2>
         {
-            super( "custom-analyzer" );                          // <3>
+            super("custom-analyzer");                          // <3>
         }
 
         @Override
         public Analyzer createAnalyzer()                         // <4>
         {
-            try
-            {
+            try {
                 return CustomAnalyzer.builder()                  // <5>
-                        .withTokenizer( StandardTokenizerFactory.class )
-                        .addTokenFilter( LowerCaseFilterFactory.class )
-                        .addTokenFilter( StopFilterFactory.class, "ignoreCase", "false", "words", "stopwords.txt", "format", "wordset" )
+                        .withTokenizer(StandardTokenizerFactory.class)
+                        .addTokenFilter(LowerCaseFilterFactory.class)
+                        .addTokenFilter(StopFilterFactory.class, "ignoreCase", "false", "words", "stopwords.txt", "format", "wordset")
                         .build();
             }
-            catch ( IOException e )
-            {
-                throw new UncheckedIOException( e );
+            catch (IOException e) {
+                throw new UncheckedIOException(e);
             }
         }
     }

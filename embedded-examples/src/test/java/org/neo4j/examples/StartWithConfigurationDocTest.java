@@ -18,51 +18,46 @@
  */
 package org.neo4j.examples;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 import java.nio.file.Path;
 import java.time.Duration;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.io.ByteUnit;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-
-class StartWithConfigurationDocTest
-{
+class StartWithConfigurationDocTest {
     @TempDir
     Path directory;
 
     @Test
-    void loadFromFile()
-    {
+    void loadFromFile() {
         String pathToConfig = "src/test/resources/";
         // tag::startDbWithConfig[]
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                                                            .loadPropertiesFromFile( Path.of( pathToConfig + "neo4j.conf" ) ).build();
-        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
-                // end::startDbWithConfig[]
-        Assertions.assertNotNull( graphDb );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(directory)
+                .loadPropertiesFromFile(Path.of(pathToConfig + "neo4j.conf")).build();
+        GraphDatabaseService graphDb = managementService.database(DEFAULT_DATABASE_NAME);
+        // end::startDbWithConfig[]
+        Assertions.assertNotNull(graphDb);
         managementService.shutdown();
     }
 
     @Test
-    void loadFromHashmap()
-    {
+    void loadFromHashmap() {
         // tag::startDbWithMapConfig[]
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                                .setConfig( GraphDatabaseSettings.pagecache_memory, ByteUnit.mebiBytes( 512 ) )
-                                .setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
-                                .setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
-        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(directory)
+                .setConfig(GraphDatabaseSettings.pagecache_memory, ByteUnit.mebiBytes(512))
+                .setConfig(GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds(60))
+                .setConfig(GraphDatabaseSettings.preallocate_logical_logs, true).build();
+        GraphDatabaseService graphDb = managementService.database(DEFAULT_DATABASE_NAME);
 
         // end::startDbWithMapConfig[]
-        Assertions.assertNotNull( graphDb );
+        Assertions.assertNotNull(graphDb);
         managementService.shutdown();
     }
 }

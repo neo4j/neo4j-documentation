@@ -19,42 +19,39 @@
 package org.neo4j.examples;
 
 import java.util.stream.Stream;
-
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
 
-public class ProcedureExample
-{
+public class ProcedureExample {
     // tag::procedureExample[]
     @Context
     public Transaction transaction;
 
     /**
      * Finds all nodes in the database with more relationships than the specified threshold.
+     *
      * @param threshold only include nodes with at least this many relationships
      * @return a stream of records describing dense nodes in this database
      */
     @Procedure
-    public Stream<DenseNode> findDenseNodes( @Name("threshold") long threshold )
-    {
-        return transaction.getAllNodes().stream().filter( ( node ) -> node.getDegree() > threshold ).map( DenseNode::new );
+    public Stream<DenseNode> findDenseNodes(@Name("threshold") long threshold) {
+        return transaction.getAllNodes().stream().filter((node) -> node.getDegree() > threshold).map(DenseNode::new);
     }
     // end::procedureExample[]
 
     // tag::outputRecordExample[]
+
     /**
      * Output record for {@link #findDenseNodes(long)}.
      */
-    public static class DenseNode
-    {
+    public static class DenseNode {
         public long nodeId;
         public long degree;
 
-        public DenseNode( Node node )
-        {
+        public DenseNode(Node node) {
             this.nodeId = node.getId();
             this.degree = node.getDegree();
         }

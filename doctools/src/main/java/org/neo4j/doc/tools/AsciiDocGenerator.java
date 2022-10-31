@@ -29,29 +29,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import org.neo4j.graphdb.GraphDatabaseService;
 
 /**
- * Generate asciidoc-formatted documentation from HTTP requests and responses.
- * The status and media type of all responses is checked as well as the
- * existence of any expected headers.
- *
+ * Generate asciidoc-formatted documentation from HTTP requests and responses. The status and media type of all responses is checked as well as the existence of
+ * any expected headers.
+ * <p>
  * The filename of the resulting ASCIIDOC test file is derived from the title.
- *
- * The title is determined by either a JavaDoc period terminated first title
- * line, the @Title annotation or the method name, where "_" is replaced by " ".
+ * <p>
+ * The title is determined by either a JavaDoc period terminated first title line, the @Title annotation or the method name, where "_" is replaced by " ".
  */
 public abstract class AsciiDocGenerator {
     private static final String DOCUMENTATION_END = "\n...\n";
-    private final Logger log = Logger.getLogger( AsciiDocGenerator.class.getName() );
+    private final Logger log = Logger.getLogger(AsciiDocGenerator.class.getName());
     protected final String title;
     protected String section;
     protected String description = null;
     protected GraphDatabaseService graph;
     private static final String SNIPPET_MARKER = "@@";
-    private final Map<String, String> snippets = new HashMap<>();
-    private static final Map<String, Integer> counters = new HashMap<>();
+    private final Map<String,String> snippets = new HashMap<>();
+    private static final Map<String,Integer> counters = new HashMap<>();
 
     public AsciiDocGenerator(final String title, final String section) {
         this.section = section;
@@ -73,8 +70,7 @@ public abstract class AsciiDocGenerator {
     }
 
     /**
-     * Add a description to the test (in asciidoc format). Adding multiple
-     * descriptions will yield one paragraph per description.
+     * Add a description to the test (in asciidoc format). Adding multiple descriptions will yield one paragraph per description.
      *
      * @param description the description
      */
@@ -86,12 +82,14 @@ public abstract class AsciiDocGenerator {
         int pos = description.indexOf(DOCUMENTATION_END);
         if (pos != -1) {
             content = description.substring(0, pos);
-        } else {
+        }
+        else {
             content = description;
         }
         if (this.description == null) {
             this.description = content;
-        } else {
+        }
+        else {
             this.description += "\n\n" + content;
         }
         return this;
@@ -107,7 +105,8 @@ public abstract class AsciiDocGenerator {
             File dirs = new File(dir);
             String name = title.replace(" ", "-").toLowerCase() + ".asciidoc";
             return getFW(dirs, name);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -126,7 +125,8 @@ public abstract class AsciiDocGenerator {
                 throw new RuntimeException("File exists: " + out.getAbsolutePath());
             }
             return new OutputStreamWriter(new FileOutputStream(out, false), StandardCharsets.UTF_8);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -149,12 +149,15 @@ public abstract class AsciiDocGenerator {
         }
         try {
             writer.write(content);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 writer.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -201,7 +204,8 @@ public abstract class AsciiDocGenerator {
         if (description.contains(snippetString + "\n")) {
             String include = dumpToSeparateFile(dir, title + "-" + key, snippets.get(key));
             description = description.replace(snippetString + "\n", include);
-        } else {
+        }
+        else {
             log.severe("Could not find " + snippetString + "\\n in " + description);
         }
         return description;
@@ -209,26 +213,23 @@ public abstract class AsciiDocGenerator {
 
     /**
      * Add snippets that will be replaced into corresponding.
-     *
+     * <p>
      * A snippet needs to be on its own line, terminated by "\n".
      *
-     * @@snippetname placeholders in the content of the description.
-     *
-     * @param key the snippet key, without @@
+     * @param key     the snippet key, without @@
      * @param content the content to be inserted
+     * @@snippetname placeholders in the content of the description.
      */
     public void addSnippet(String key, String content) {
         snippets.put(key, content);
     }
 
     /**
-     * Added one or more source snippets from test sources, available from
-     * javadoc using
+     * Added one or more source snippets from test sources, available from javadoc using
      *
-     * @@tagName.
-     *
-     * @param source the class where the snippet is found
+     * @param source   the class where the snippet is found
      * @param tagNames the tag names which should be included
+     * @@tagName.
      */
     public void addTestSourceSnippets(Class<?> source, String... tagNames) {
         for (String tagName : tagNames) {
@@ -239,10 +240,9 @@ public abstract class AsciiDocGenerator {
     /**
      * Added one or more source snippets, available from javadoc using
      *
-     * @@tagName.
-     *
-     * @param source the class where the snippet is found
+     * @param source   the class where the snippet is found
      * @param tagNames the tag names which should be included
+     * @@tagName.
      */
     public void addSourceSnippets(Class<?> source, String... tagNames) {
         for (String tagName : tagNames) {
@@ -253,9 +253,9 @@ public abstract class AsciiDocGenerator {
     private static String sourceSnippet(String tagName, Class<?> source, String classifier) {
         return String.format(
                 "[source, java]%n" +
-                "----%n" +
-                "include::{import-${project.artifactId}-%s}/%s[tag=%s]%n" +
-                "----%n",
+                        "----%n" +
+                        "include::{import-${project.artifactId}-%s}/%s[tag=%s]%n" +
+                        "----%n",
                 classifier, getPath(source), tagName);
     }
 

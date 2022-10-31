@@ -23,27 +23,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
-public class JavaDocsGenerator extends AsciiDocGenerator
-{
+public class JavaDocsGenerator extends AsciiDocGenerator {
     private static final String DIRECTORY = "target" + File.separator + "docs";
 
-    public JavaDocsGenerator( String title, String section )
-    {
-        super( title, section );
+    public JavaDocsGenerator(String title, String section) {
+        super(title, section);
     }
 
-    public void saveToFile( String identifier, String text )
-    {
-        Writer fw = getFW( DIRECTORY + File.separator + this.section,
-                getTitle() + "-" + identifier );
-        try
-        {
-            line( fw, text );
+    public void saveToFile(String identifier, String text) {
+        Writer fw = getFW(DIRECTORY + File.separator + this.section,
+                getTitle() + "-" + identifier);
+        try {
+            line(fw, text);
             fw.flush();
             fw.close();
         }
-        catch ( IOException e )
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

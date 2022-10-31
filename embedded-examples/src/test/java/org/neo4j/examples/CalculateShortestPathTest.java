@@ -18,15 +18,12 @@
  */
 package org.neo4j.examples;
 
-import org.junit.Test;
-
 import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-public class CalculateShortestPathTest
-{
+class CalculateShortestPathTest {
     @Test
-    public void testMain() throws IOException
-    {
-        CalculateShortestPath.main( null );
+    void testMain() throws IOException {
+        CalculateShortestPath.main(null);
     }
 }

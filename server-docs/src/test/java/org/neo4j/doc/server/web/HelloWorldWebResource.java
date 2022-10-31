@@ -25,19 +25,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-@Path( HelloWorldWebResource.ROOT_PATH )
-public class HelloWorldWebResource
-{
+@Path(HelloWorldWebResource.ROOT_PATH)
+public class HelloWorldWebResource {
     public static final String ROOT_PATH = "/greeting";
 
-    @Consumes( "text/plain" )
-    @Produces( "text/plain" )
+    @Consumes("text/plain")
+    @Produces("text/plain")
     @POST
-    public Response sayHello( String name )
-    {
+    public Response sayHello(String name) {
         return Response.ok()
-                .entity( "hello, " + name )
-                .type( "text/plain" )
+                .entity("hello, " + name)
+                .type("text/plain")
                 .build();
     }
 }

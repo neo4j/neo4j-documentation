@@ -20,19 +20,15 @@
 package org.neo4j.visualization.graphviz;
 
 import java.io.IOException;
-
 import org.neo4j.graphdb.Node;
 
-interface NodeStyle extends PropertyContainerStyle
-{
+interface NodeStyle extends PropertyContainerStyle {
     /**
      * Emit the start of a node.
-     * @param stream
-     *            the stream to emit the node to.
-     * @param node
-     *            the node to emit.
-     * @throws IOException
-     *             if there is an error on the stream.
+     *
+     * @param stream the stream to emit the node to.
+     * @param node   the node to emit.
+     * @throws IOException if there is an error on the stream.
      */
-    void emitNodeStart( Appendable stream, Node node ) throws IOException;
+    void emitNodeStart(Appendable stream, Node node) throws IOException;
 }

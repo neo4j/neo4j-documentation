@@ -19,32 +19,28 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-public class AsciidocHelperTest
-{
+class AsciidocHelperTest {
 
     @Test
-    public void test()
-    {
+    void test() {
         String cypher = "MATCH (n) WHERE id(n)=0 WITH n MATCH " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n " +
                 "return n, x";
-        String snippet = AsciidocHelper.createCypherSnippet( cypher );
-        assertTrue(snippet.contains( "n,\n" ));
+        String snippet = AsciidocHelper.createCypherSnippet(cypher);
+        assertTrue(snippet.contains("n,\n"));
     }
 
     @Test
-    public void shouldBreakAtTheRightSpotWithOnMatch()
-    {
+    void shouldBreakAtTheRightSpotWithOnMatch() {
         // given
         String cypher = "merge (a)\non match set a.foo = 2";
 
@@ -53,20 +49,22 @@ public class AsciidocHelperTest
 
         //then
         assertEquals(
-                "[source,cypher]\n" +
-                "----\n" +
-                "MERGE (a)\n" +
-                "ON MATCH SET a.foo = 2\n" +
-                "----\n", snippet);
+                """
+                        [source,cypher]
+                        ----
+                        MERGE (a)
+                        ON MATCH SET a.foo = 2
+                        ----
+                        """, snippet);
     }
 
     @Test
-    public void testUpcasingLabels() {
-        String queryString  = "create n label :Person {} on tail";
-        String snippet = AsciidocHelper.createCypherSnippet( queryString );
+    void testUpcasingLabels() {
+        String queryString = "create n label :Person {} on tail";
+        String snippet = AsciidocHelper.createCypherSnippet(queryString);
 
-        assertTrue( snippet.contains( "LABEL" ) );
-        assertTrue( snippet.contains( "ON" ) );
-        assertFalse( snippet.contains( ":PersON" ) );
+        assertTrue(snippet.contains("LABEL"));
+        assertTrue(snippet.contains("ON"));
+        assertFalse(snippet.contains(":PersON"));
     }
 }

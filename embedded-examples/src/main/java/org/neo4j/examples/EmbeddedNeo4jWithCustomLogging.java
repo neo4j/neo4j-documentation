@@ -22,134 +22,112 @@ import java.io.IOException;
 import java.nio.file.Path;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 
-public class EmbeddedNeo4jWithCustomLogging
-{
-    private static final Path databaseDirectory = Path.of( "target/neo4j-store" );
+public class EmbeddedNeo4jWithCustomLogging {
+    private static final Path databaseDirectory = Path.of("target/neo4j-store");
     private static DatabaseManagementService managementService;
 
-    private static class MyCustomLogProvider implements LogProvider
-    {
-        public MyCustomLogProvider( Object output )
-        {
+    private static class MyCustomLogProvider implements LogProvider {
+        public MyCustomLogProvider(Object output) {
         }
 
         @Override
-        public Log getLog( Class loggingClass )
-        {
+        public Log getLog(Class loggingClass) {
             return new MyCustomLog();
         }
 
         @Override
-        public Log getLog( String context )
-        {
+        public Log getLog(String context) {
             return new MyCustomLog();
         }
 
-        private static class MyCustomLog implements Log
-        {
+        private static class MyCustomLog implements Log {
             @Override
-            public boolean isDebugEnabled()
-            {
+            public boolean isDebugEnabled() {
                 return false;
             }
 
             @Override
-            public void debug( @Nonnull String message )
-            {
+            public void debug(@Nonnull String message) {
 
             }
 
             @Override
-            public void debug( @Nonnull String message, @Nonnull Throwable throwable )
-            {
+            public void debug(@Nonnull String message, @Nonnull Throwable throwable) {
 
             }
 
             @Override
-            public void debug( @Nonnull String format, @Nullable Object... arguments )
-            {
+            public void debug(@Nonnull String format, @Nullable Object... arguments) {
 
             }
 
             @Override
-            public void info( @Nonnull String message )
-            {
+            public void info(@Nonnull String message) {
 
             }
 
             @Override
-            public void info( @Nonnull String message, @Nonnull Throwable throwable )
-            {
+            public void info(@Nonnull String message, @Nonnull Throwable throwable) {
 
             }
 
             @Override
-            public void info( @Nonnull String format, @Nullable Object... arguments )
-            {
+            public void info(@Nonnull String format, @Nullable Object... arguments) {
 
             }
 
             @Override
-            public void warn( @Nonnull String message )
-            {
+            public void warn(@Nonnull String message) {
 
             }
 
             @Override
-            public void warn( @Nonnull String message, @Nonnull Throwable throwable )
-            {
+            public void warn(@Nonnull String message, @Nonnull Throwable throwable) {
 
             }
 
             @Override
-            public void warn( @Nonnull String format, @Nullable Object... arguments )
-            {
+            public void warn(@Nonnull String format, @Nullable Object... arguments) {
 
             }
 
             @Override
-            public void error( @Nonnull String message )
-            {
+            public void error(@Nonnull String message) {
 
             }
 
             @Override
-            public void error( @Nonnull String message, @Nonnull Throwable throwable )
-            {
+            public void error(@Nonnull String message, @Nonnull Throwable throwable) {
 
             }
 
             @Override
-            public void error( @Nonnull String format, @Nullable Object... arguments )
-            {
+            public void error(@Nonnull String format, @Nullable Object... arguments) {
 
             }
         }
     }
 
-    public static void main( final String[] args ) throws IOException
-    {
-        FileUtils.deleteDirectory( databaseDirectory );
+    public static void main(final String[] args) throws IOException {
+        FileUtils.deleteDirectory(databaseDirectory);
 
         Object output = new Object();
 
         // tag::startDbWithLogProvider[]
-        LogProvider logProvider = new MyCustomLogProvider( output );
-        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).setUserLogProvider( logProvider ).build();
+        LogProvider logProvider = new MyCustomLogProvider(output);
+        managementService = new DatabaseManagementServiceBuilder(databaseDirectory).setUserLogProvider(logProvider).build();
         // end::startDbWithLogProvider[]
 
         shutdown();
     }
 
-    private static void shutdown()
-    {
+    private static void shutdown() {
         managementService.shutdown();
     }
 }

@@ -25,42 +25,35 @@ import org.neo4j.visualization.graphviz.StyleParameter.RelationshipTypeColor;
 /**
  * Color relationships automatically based on the type.
  */
-public class AutoRelationshipTypeColor extends RelationshipTypeColor
-{
+public class AutoRelationshipTypeColor extends RelationshipTypeColor {
     private final DefaultColorMapping<String> colors;
     private ColorMapper<RelationshipType> rtcm = null;
 
     /**
      * Use default color mappings.
      */
-    public AutoRelationshipTypeColor()
-    {
+    public AutoRelationshipTypeColor() {
         this.colors = new DefaultColorMapping<>();
     }
 
     /**
-     * Reserve and map colors for relationship types. Any non-mapped
-     * relationship types will be automatically mapped to non-reserved colors.
+     * Reserve and map colors for relationship types. Any non-mapped relationship types will be automatically mapped to non-reserved colors.
      *
      * @param rtcm relationship type to color mapper
      */
-    public AutoRelationshipTypeColor( ColorMapper<RelationshipType> rtcm )
-    {
+    public AutoRelationshipTypeColor(ColorMapper<RelationshipType> rtcm) {
         this.rtcm = rtcm;
         this.colors = new DefaultColorMapping<>(rtcm.getColors());
     }
 
     @Override
-    protected String getColor( RelationshipType type )
-    {
-        if ( rtcm != null )
-        {
-            Color color = rtcm.getColor( type );
-            if ( color != null )
-            {
-                return colors.getColor( color );
+    protected String getColor(RelationshipType type) {
+        if (rtcm != null) {
+            Color color = rtcm.getColor(type);
+            if (color != null) {
+                return colors.getColor(color);
             }
         }
-        return colors.getColor( type.name() );
+        return colors.getColor(type.name());
     }
 }

@@ -18,40 +18,35 @@
  */
 package org.neo4j.examples;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.IOException;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.neo4j.doc.tools.JavaDocsGenerator;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.junit.Assert.assertFalse;
-
-public class EmbeddedNeo4jDocTest
-{
+public class EmbeddedNeo4jDocTest {
     private static EmbeddedNeo4j hello;
     private static JavaDocsGenerator gen;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
         hello = new EmbeddedNeo4j();
-        gen = new JavaDocsGenerator( "hello-world-java", "dev" );
+        gen = new JavaDocsGenerator("hello-world-java", "dev");
     }
 
     @Test
-    public void test() throws IOException
-    {
+    public void test() throws IOException {
         hello.createDb();
         String graph = AsciidocHelper.createGraphVizDeletingReferenceNode(
                 "Hello World Graph",
-                hello.graphDb, "java" );
-        assertFalse( graph.isEmpty() );
-        gen.saveToFile( "graph", graph );
+                hello.graphDb, "java");
+        assertFalse(graph.isEmpty());
+        gen.saveToFile("graph", graph);
 
-        assertFalse( hello.greeting.isEmpty() );
-        gen.saveToFile( "output", hello.greeting + "\n\n" );
+        assertFalse(hello.greeting.isEmpty());
+        gen.saveToFile("output", hello.greeting + "\n\n");
 
         hello.removeData();
         hello.shutDown();

@@ -27,159 +27,130 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.visualization.graphviz.StyleParameter;
 
 /**
- * Color nodes automatically based on relationships. Use NodeColorConfig to set
- * different modes.
+ * Color nodes automatically based on relationships. Use NodeColorConfig to set different modes.
  */
-public class AutoNodeColor extends StyleParameter.NodeColor
-{
+public class AutoNodeColor extends StyleParameter.NodeColor {
     private final DefaultColorMapping<Set<String>> colors;
     private Direction[] directions;
     private boolean differentiateOnDirection;
     private boolean differentiateOnDirectionOnly = false;
     private ColorMapper<Node> ncm = null;
 
-    public AutoNodeColor()
-    {
-        NodeColorConfig.DEFAULT.configure( this );
+    public AutoNodeColor() {
+        NodeColorConfig.DEFAULT.configure(this);
         this.colors = new DefaultColorMapping<>();
     }
 
-    public AutoNodeColor( ColorMapper<Node> ncm )
-    {
-        NodeColorConfig.DEFAULT.configure( this );
+    public AutoNodeColor(ColorMapper<Node> ncm) {
+        NodeColorConfig.DEFAULT.configure(this);
         this.colors = new DefaultColorMapping<>(ncm.getColors());
         this.ncm = ncm;
     }
 
-    public AutoNodeColor( NodeColorConfig config )
-    {
-        config.configure( this );
+    public AutoNodeColor(NodeColorConfig config) {
+        config.configure(this);
         this.colors = new DefaultColorMapping<>();
     }
 
-    public AutoNodeColor( NodeColorConfig config, ColorMapper<Node> ncm )
-    {
-        config.configure( this );
+    public AutoNodeColor(NodeColorConfig config, ColorMapper<Node> ncm) {
+        config.configure(this);
         this.colors = new DefaultColorMapping<>(ncm.getColors());
         this.ncm = ncm;
     }
 
     @Override
-    protected String getColor( Node node )
-    {
-        if ( ncm != null )
-        {
-            Color color = ncm.getColor( node );
-            if ( color != null )
-            {
-                return colors.getColor( color );
+    protected String getColor(Node node) {
+        if (ncm != null) {
+            Color color = ncm.getColor(node);
+            if (color != null) {
+                return colors.getColor(color);
             }
         }
         Set<String> relationshipTypeAndDirections = new HashSet<>();
-        for ( Direction direction : directions )
-        {
-            if ( differentiateOnDirectionOnly )
-            {
-                if ( node.hasRelationship( direction ) )
-                {
-                    relationshipTypeAndDirections.add( direction.name() );
+        for (Direction direction : directions) {
+            if (differentiateOnDirectionOnly) {
+                if (node.hasRelationship(direction)) {
+                    relationshipTypeAndDirections.add(direction.name());
                 }
             }
-            else
-            {
-                for ( Relationship relationship : node.getRelationships( direction ) )
-                {
+            else {
+                for (Relationship relationship : node.getRelationships(direction)) {
                     String key = relationship.getType()
                             .name();
-                    if ( differentiateOnDirection )
-                    {
+                    if (differentiateOnDirection) {
                         key += direction.name();
                     }
-                    relationshipTypeAndDirections.add( key );
+                    relationshipTypeAndDirections.add(key);
                 }
             }
         }
-        return colors.getColor( relationshipTypeAndDirections );
+        return colors.getColor(relationshipTypeAndDirections);
     }
 
-    public enum NodeColorConfig
-    {
+    public enum NodeColorConfig {
         /**
          * Alias for BOTH_IGNORE_DIRECTION.
          */
-        DEFAULT()
-        {
+        DEFAULT() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                BOTH_IGNORE_DIRECTION.configure( style );
+            void configure(AutoNodeColor style) {
+                BOTH_IGNORE_DIRECTION.configure(style);
             }
         },
         /**
          * Differentiate on relationship type and direction.
          */
-        BOTH()
-        {
+        BOTH() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                style.directions = new Direction[] { Direction.INCOMING,
-                        Direction.OUTGOING };
+            void configure(AutoNodeColor style) {
+                style.directions = new Direction[]{Direction.INCOMING,
+                        Direction.OUTGOING};
                 style.differentiateOnDirection = true;
             }
         },
         /**
          * Differentiate on relationship type, ignore direction.
          */
-        BOTH_IGNORE_DIRECTION()
-        {
+        BOTH_IGNORE_DIRECTION() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                style.directions = new Direction[] { Direction.INCOMING,
-                        Direction.OUTGOING };
+            void configure(AutoNodeColor style) {
+                style.directions = new Direction[]{Direction.INCOMING,
+                        Direction.OUTGOING};
                 style.differentiateOnDirection = false;
             }
         },
         /**
          * Only look at incoming relationships.
          */
-        INCOMING()
-        {
+        INCOMING() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                style.directions = new Direction[] { Direction.INCOMING };
+            void configure(AutoNodeColor style) {
+                style.directions = new Direction[]{Direction.INCOMING};
                 style.differentiateOnDirection = false;
             }
         },
         /**
          * Only look at outgoing relationships.
          */
-        OUTGOING()
-        {
+        OUTGOING() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                style.directions = new Direction[] { Direction.OUTGOING };
+            void configure(AutoNodeColor style) {
+                style.directions = new Direction[]{Direction.OUTGOING};
                 style.differentiateOnDirection = false;
             }
         },
         /**
-         * Differentiate only on if a node has incoming or outgoing
-         * relationships.
+         * Differentiate only on if a node has incoming or outgoing relationships.
          */
-        DIRECTION()
-        {
+        DIRECTION() {
             @Override
-            void configure( AutoNodeColor style )
-            {
-                style.directions = new Direction[] { Direction.INCOMING,
-                        Direction.OUTGOING };
+            void configure(AutoNodeColor style) {
+                style.directions = new Direction[]{Direction.INCOMING,
+                        Direction.OUTGOING};
                 style.differentiateOnDirectionOnly = true;
             }
         };
 
-        abstract void configure( AutoNodeColor style );
+        abstract void configure(AutoNodeColor style);
     }
 }

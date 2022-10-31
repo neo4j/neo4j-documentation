@@ -22,6 +22,8 @@
  */
 package org.neo4j.doc;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -32,13 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class ProcedureReferenceGenerator {
 
@@ -55,13 +54,12 @@ public class ProcedureReferenceGenerator {
         this.neo = new Neo4jInstance();
     }
 
-    public String document(String id, String title, String edition, Predicate<Procedure> filter) throws IOException
-    {
+    public String document(String id, String title, String edition, Predicate<Procedure> filter) throws IOException {
         this.filter = filter;
         this.includeRolesColumn = !edition.equalsIgnoreCase("community");
         this.inlineEditionRole = edition.equalsIgnoreCase("both");
-        Map<String, Procedure> communityProcedures = edition.equalsIgnoreCase("enterprise") ? Collections.emptyMap() : communityEditionProcedures();
-        Map<String, Procedure> enterpriseProcedures = edition.equalsIgnoreCase("community") ? Collections.emptyMap() : enterpriseEditionProcedures();
+        Map<String,Procedure> communityProcedures = edition.equalsIgnoreCase("enterprise") ? Collections.emptyMap() : communityEditionProcedures();
+        Map<String,Procedure> enterpriseProcedures = edition.equalsIgnoreCase("community") ? Collections.emptyMap() : enterpriseEditionProcedures();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         this.out = new PrintStream(baos);
@@ -83,36 +81,34 @@ public class ProcedureReferenceGenerator {
         return baos.toString();
     }
 
-    private Map<String, Procedure> communityEditionProcedures() throws IOException {
+    private Map<String,Procedure> communityEditionProcedures() throws IOException {
         DatabaseManagementService managementService = neo.newCommunityInstance();
-        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
-        Map<String, Procedure> procedures = procedures(db);
+        GraphDatabaseService db = managementService.database(DEFAULT_DATABASE_NAME);
+        Map<String,Procedure> procedures = procedures(db);
         managementService.shutdown();
         return procedures;
     }
 
-    private Map<String, Procedure> enterpriseEditionProcedures() throws IOException {
+    private Map<String,Procedure> enterpriseEditionProcedures() throws IOException {
         DatabaseManagementService managementService = neo.newEnterpriseInstance();
-        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
-        Map<String, Procedure> procedures = procedures(db);
+        GraphDatabaseService db = managementService.database(DEFAULT_DATABASE_NAME);
+        Map<String,Procedure> procedures = procedures(db);
         managementService.shutdown();
         return procedures;
     }
 
-    private Map<String, Procedure> procedures(GraphDatabaseService db) {
-        Map<String, Procedure> procedures;
-        try ( Transaction tx = db.beginTx() )
-        {
-            try ( Result result = tx.execute( query ) )
-            {
-                procedures = parseResult( result );
+    private Map<String,Procedure> procedures(GraphDatabaseService db) {
+        Map<String,Procedure> procedures;
+        try (Transaction tx = db.beginTx()) {
+            try (Result result = tx.execute(query)) {
+                procedures = parseResult(result);
             }
         }
         return procedures;
     }
 
-    private Map<String, Procedure> parseResult(Result result) {
-        Map<String, Procedure> procedures = new HashMap<>();
+    private Map<String,Procedure> parseResult(Result result) {
+        Map<String,Procedure> procedures = new HashMap<>();
         result.stream().forEach(row -> {
             Procedure p = new Procedure(row);
             procedures.put(p.name(), p);
@@ -120,7 +116,7 @@ public class ProcedureReferenceGenerator {
         return procedures;
     }
 
-    private void document(Map<String, Procedure> communityProcedures, Map<String, Procedure> enterpriseProcedures) {
+    private void document(Map<String,Procedure> communityProcedures, Map<String,Procedure> enterpriseProcedures) {
         enterpriseProcedures.values().forEach(
                 proc -> proc.setEnterpriseOnly(!proc.equals(communityProcedures.get(proc.name())))
         );
@@ -139,7 +135,8 @@ public class ProcedureReferenceGenerator {
                     it.mode()
             );
             if (includeRolesColumn) {
-                out.printf(" |%s", null == it.roles() ? "N/A" : String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", String.join(", ", it.roles())));
+                out.printf(" |%s",
+                        null == it.roles() ? "N/A" : String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", String.join(", ", it.roles())));
             }
             out.printf("%n");
         });
@@ -152,7 +149,8 @@ public class ProcedureReferenceGenerator {
         private String mode;
         private List<String> roles;
         private Boolean enterpriseOnly;
-        Procedure(Map<String, Object> row) {
+
+        Procedure(Map<String,Object> row) {
             setName((String) row.get("name"));
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
@@ -164,32 +162,49 @@ public class ProcedureReferenceGenerator {
         String name() {
             return name;
         }
+
         void setName(String name) {
             this.name = name.endsWith("()") ? name : name + "()";
         }
+
         String signature() {
             return signature;
         }
+
         String description() {
             return description;
         }
+
         String mode() {
             return mode;
         }
+
         List<String> roles() {
             return roles;
         }
-        Boolean enterpriseOnly() { return enterpriseOnly; }
-        void setEnterpriseOnly(Boolean enterpriseOnly) { this.enterpriseOnly = enterpriseOnly; }
+
+        Boolean enterpriseOnly() {
+            return enterpriseOnly;
+        }
+
+        void setEnterpriseOnly(Boolean enterpriseOnly) {
+            this.enterpriseOnly = enterpriseOnly;
+        }
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             Procedure procedure = (Procedure) o;
 
-            if (!name.equals(procedure.name)) return false;
+            if (!name.equals(procedure.name)) {
+                return false;
+            }
             return signature.equals(procedure.signature);
         }
 
@@ -208,5 +223,4 @@ public class ProcedureReferenceGenerator {
                     '}';
         }
     }
-
 }

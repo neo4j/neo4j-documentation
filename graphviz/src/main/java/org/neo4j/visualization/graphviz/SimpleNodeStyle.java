@@ -21,58 +21,47 @@ package org.neo4j.visualization.graphviz;
 
 import java.io.IOException;
 import java.util.Iterator;
-
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 
-public class SimpleNodeStyle extends DefaultNodeStyle
-{
+public class SimpleNodeStyle extends DefaultNodeStyle {
     boolean hasLabels = false;
 
-    SimpleNodeStyle( DefaultStyleConfiguration configuration )
-    {
-        super( configuration );
+    SimpleNodeStyle(DefaultStyleConfiguration configuration) {
+        super(configuration);
     }
 
     @Override
-    public void emitNodeStart( Appendable stream, Node node )
-            throws IOException
-    {
+    public void emitNodeStart(Appendable stream, Node node)
+            throws IOException {
         stream.append("  N").append(String.valueOf(node.getId())).append(" [\n");
-        config.emit( node, stream );
-        stream.append( "    label = \"" );
+        config.emit(node, stream);
+        stream.append("    label = \"");
         Iterator<Label> labels = node.getLabels().iterator();
         hasLabels = labels.hasNext();
-        if ( hasLabels )
-        {
+        if (hasLabels) {
             hasLabels = labels.hasNext();
-            if ( hasLabels )
-            {
-                stream.append( "{" );
-                while ( labels.hasNext() )
-                {
-                    stream.append( labels.next()
-                            .name() );
-                    if ( labels.hasNext() )
-                    {
-                        stream.append( ", " );
+            if (hasLabels) {
+                stream.append("{");
+                while (labels.hasNext()) {
+                    stream.append(labels.next()
+                            .name());
+                    if (labels.hasNext()) {
+                        stream.append(", ");
                     }
                 }
-                stream.append( "|" );
+                stream.append("|");
             }
         }
     }
 
     @Override
-    public void emitEnd( Appendable stream ) throws IOException
-    {
-        if ( hasLabels )
-        {
-            stream.append( "}\"\n  ]\n" );
+    public void emitEnd(Appendable stream) throws IOException {
+        if (hasLabels) {
+            stream.append("}\"\n  ]\n");
         }
-        else
-        {
-            stream.append( "\"\n  ]\n" );
+        else {
+            stream.append("\"\n  ]\n");
         }
     }
 }

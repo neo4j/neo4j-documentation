@@ -21,13 +21,12 @@ package org.neo4j.visualization.graphviz;
 
 import org.neo4j.graphdb.Entity;
 
-interface TitleGetter<E extends Entity>
-{
+interface TitleGetter<E extends Entity> {
     /**
      * Get the title for a node or a relationship.
-     * @param container
-     *            the node or relationship to get the title for.
+     *
+     * @param container the node or relationship to get the title for.
      * @return the title for the node/relationship.
      */
-    String getTitle( E container );
+    String getTitle(E container);
 }

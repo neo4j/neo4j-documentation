@@ -29,7 +29,6 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.neo4j.configuration.SettingImpl;
 import org.neo4j.function.Predicates;
 import org.neo4j.internal.helpers.Args;
@@ -70,57 +69,59 @@ public class ConfigDocsTool {
                 }
                 System.out.println("Saving docs in '" + outFile.toFile().getAbsolutePath() + "'.");
                 Files.write(outFile, doc.getBytes());
-            } else {
+            }
+            else {
                 System.out.println(doc);
             }
-        } catch (NoSuchElementException | NoSuchFileException e) {
+        }
+        catch (NoSuchElementException | NoSuchFileException e) {
             e.printStackTrace();
             throw e;
         }
     }
 
     /**
-     * Create a combined filter to apply to "all settings" based on arguments.
-     * For each of the filters that can be specified as an argument to this tool, create a {@code Predicate<ConfigValue>}.
-     * Combine these predicates and pass along to the {@code ConfigDocsGenerator}.
+     * Create a combined filter to apply to "all settings" based on arguments. For each of the filters that can be specified as an argument to this tool, create
+     * a {@code Predicate<ConfigValue>}. Combine these predicates and pass along to the {@code ConfigDocsGenerator}.
+     *
      * @param arguments Arguments passed to this tool.
      * @return A Predicate used for filtering which settings to document.
      */
     private static Predicate<SettingImpl<Object>> filters(Args arguments) {
         Predicate<SettingImpl<Object>> filters = Predicates.all(arguments.asMap().entrySet().stream()
                 .<Predicate<SettingImpl<Object>>>flatMap(e -> {
-            switch (e.getKey()) {
-                // Include deprecated settings?
-                // If true, no filter is added. If false, require {@code SettingImpl<Object#isDeprecated()} to be false.
-                case "deprecated":
-                    return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
-                            ? Stream.empty()
-                            : Stream.of(v -> !v.deprecated());
-                // Include only deprecated settings.
-                case "deprecated-only":
-                    return Stream.of(SettingImpl::deprecated);
-                // Include internal settings?
-                // If true, no filter is added. If false, require {@code SettingImpl<Object#isInternal()} to be false.
-                case "internal":
-                    return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
-                            ? Stream.of( SettingImpl::internal )
-                            : Stream.of(v -> !v.internal());
-                // Include only the setting matching this name.
-                case "name":
-                    return Stream.of(v -> v.name().equals(e.getValue()));
-                // Include settings matching any of these names.
-                case "names":
-                    return Stream.of(v -> Arrays.asList(e.getValue().split(",")).contains(v.name()));
-                // Include settings matching this prefix (that are in this namespace).
-                case "prefix":
-                    return Stream.of(v -> v.name().startsWith(e.getValue()));
-                // Include only dynamic settings
-                case "dynamic-only":
-                    return Stream.of(SettingImpl::dynamic);
-                default:
-                    return Stream.empty();
-            }
-        }).collect(Collectors.toList()));
+                    switch (e.getKey()) {
+                    // Include deprecated settings?
+                    // If true, no filter is added. If false, require {@code SettingImpl<Object#isDeprecated()} to be false.
+                    case "deprecated":
+                        return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
+                                ? Stream.empty()
+                                : Stream.of(v -> !v.deprecated());
+                    // Include only deprecated settings.
+                    case "deprecated-only":
+                        return Stream.of(SettingImpl::deprecated);
+                    // Include internal settings?
+                    // If true, no filter is added. If false, require {@code SettingImpl<Object#isInternal()} to be false.
+                    case "internal":
+                        return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
+                                ? Stream.of(SettingImpl::internal)
+                                : Stream.of(v -> !v.internal());
+                    // Include only the setting matching this name.
+                    case "name":
+                        return Stream.of(v -> v.name().equals(e.getValue()));
+                    // Include settings matching any of these names.
+                    case "names":
+                        return Stream.of(v -> Arrays.asList(e.getValue().split(",")).contains(v.name()));
+                    // Include settings matching this prefix (that are in this namespace).
+                    case "prefix":
+                        return Stream.of(v -> v.name().startsWith(e.getValue()));
+                    // Include only dynamic settings
+                    case "dynamic-only":
+                        return Stream.of(SettingImpl::dynamic);
+                    default:
+                        return Stream.empty();
+                    }
+                }).collect(Collectors.toList()));
         return arguments.has("unsupported") ? filters : filters.and(v -> !v.internal());
     }
 
@@ -145,7 +146,5 @@ public class ConfigDocsTool {
         System.out.printf("    %-30s%s [%s]%n", "--names=<name1>,<name2>", "Multiple settings by name", "");
         System.out.printf("    %-30s%s [%s]%n", "--prefix=<prefix>", "All settings whose namespace match <prefix>", "");
         System.out.printf("    %-30s%s [%s]%n", "--unsupported", "Include internal/unsupported settings", false);
-
     }
-
 }

@@ -18,8 +18,9 @@
  */
 package org.neo4j.examples;
 
-import java.io.IOException;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
+import java.io.IOException;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.Direction;
@@ -34,91 +35,82 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.io.fs.FileUtils;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-
-public class NewMatrix
-{
+public class NewMatrix {
 
     private DatabaseManagementService managementService;
 
-    public enum RelTypes implements RelationshipType
-    {
+    public enum RelTypes implements RelationshipType {
         NEO_NODE,
         KNOWS,
         CODED_BY
     }
 
-    private static final java.nio.file.Path MATRIX_DB = java.nio.file.Path.of( "target/matrix-new-db" );
+    private static final java.nio.file.Path MATRIX_DB = java.nio.file.Path.of("target/matrix-new-db");
     private GraphDatabaseService graphDb;
     private long matrixNodeId;
 
-    public static void main( String[] args ) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         NewMatrix matrix = new NewMatrix();
         matrix.setUp();
-        System.out.println( matrix.printNeoFriends() );
-        System.out.println( matrix.printMatrixHackers() );
+        System.out.println(matrix.printNeoFriends());
+        System.out.println(matrix.printMatrixHackers());
         matrix.shutdown();
     }
 
-    public void setUp() throws IOException
-    {
-        FileUtils.deleteDirectory( MATRIX_DB );
-        managementService = new DatabaseManagementServiceBuilder( MATRIX_DB ).build();
-        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+    public void setUp() throws IOException {
+        FileUtils.deleteDirectory(MATRIX_DB);
+        managementService = new DatabaseManagementServiceBuilder(MATRIX_DB).build();
+        graphDb = managementService.database(DEFAULT_DATABASE_NAME);
         registerShutdownHook();
         createNodespace();
     }
 
-    public void shutdown()
-    {
+    public void shutdown() {
         managementService.shutdown();
     }
 
-    private void createNodespace()
-    {
-        try ( Transaction tx = graphDb.beginTx() )
-        {
+    private void createNodespace() {
+        try (Transaction tx = graphDb.beginTx()) {
             // Create matrix node
             Node matrix = tx.createNode();
             matrixNodeId = matrix.getId();
 
             // Create Neo
             Node thomas = tx.createNode();
-            thomas.setProperty( "name", "Thomas Anderson" );
-            thomas.setProperty( "age", 29 );
+            thomas.setProperty("name", "Thomas Anderson");
+            thomas.setProperty("age", 29);
 
             // connect Neo/Thomas to the matrix node
-            matrix.createRelationshipTo( thomas, RelTypes.NEO_NODE );
+            matrix.createRelationshipTo(thomas, RelTypes.NEO_NODE);
 
             Node trinity = tx.createNode();
-            trinity.setProperty( "name", "Trinity" );
-            Relationship rel = thomas.createRelationshipTo( trinity,
-                    RelTypes.KNOWS );
-            rel.setProperty( "age", "3 days" );
+            trinity.setProperty("name", "Trinity");
+            Relationship rel = thomas.createRelationshipTo(trinity,
+                    RelTypes.KNOWS);
+            rel.setProperty("age", "3 days");
             Node morpheus = tx.createNode();
-            morpheus.setProperty( "name", "Morpheus" );
-            morpheus.setProperty( "rank", "Captain" );
-            morpheus.setProperty( "occupation", "Total badass" );
-            thomas.createRelationshipTo( morpheus, RelTypes.KNOWS );
-            rel = morpheus.createRelationshipTo( trinity, RelTypes.KNOWS );
-            rel.setProperty( "age", "12 years" );
+            morpheus.setProperty("name", "Morpheus");
+            morpheus.setProperty("rank", "Captain");
+            morpheus.setProperty("occupation", "Total badass");
+            thomas.createRelationshipTo(morpheus, RelTypes.KNOWS);
+            rel = morpheus.createRelationshipTo(trinity, RelTypes.KNOWS);
+            rel.setProperty("age", "12 years");
             Node cypher = tx.createNode();
-            cypher.setProperty( "name", "Cypher" );
-            cypher.setProperty( "last name", "Reagan" );
-            trinity.createRelationshipTo( cypher, RelTypes.KNOWS );
-            rel = morpheus.createRelationshipTo( cypher, RelTypes.KNOWS );
-            rel.setProperty( "disclosure", "public" );
+            cypher.setProperty("name", "Cypher");
+            cypher.setProperty("last name", "Reagan");
+            trinity.createRelationshipTo(cypher, RelTypes.KNOWS);
+            rel = morpheus.createRelationshipTo(cypher, RelTypes.KNOWS);
+            rel.setProperty("disclosure", "public");
             Node smith = tx.createNode();
-            smith.setProperty( "name", "Agent Smith" );
-            smith.setProperty( "version", "1.0b" );
-            smith.setProperty( "language", "C++" );
-            rel = cypher.createRelationshipTo( smith, RelTypes.KNOWS );
-            rel.setProperty( "disclosure", "secret" );
-            rel.setProperty( "age", "6 months" );
+            smith.setProperty("name", "Agent Smith");
+            smith.setProperty("version", "1.0b");
+            smith.setProperty("language", "C++");
+            rel = cypher.createRelationshipTo(smith, RelTypes.KNOWS);
+            rel.setProperty("disclosure", "secret");
+            rel.setProperty("age", "6 months");
             Node architect = tx.createNode();
-            architect.setProperty( "name", "The Architect" );
-            smith.createRelationshipTo( architect, RelTypes.CODED_BY );
+            architect.setProperty("name", "The Architect");
+            smith.createRelationshipTo(architect, RelTypes.CODED_BY);
 
             tx.commit();
         }
@@ -127,30 +119,26 @@ public class NewMatrix
     /**
      * Get the Neo node. (a.k.a. Thomas Anderson node)
      *
-     * @return the Neo node
      * @param transaction
+     * @return the Neo node
      */
-    private Node getNeoNode( Transaction transaction )
-    {
-        return transaction.getNodeById( matrixNodeId )
-                .getSingleRelationship( RelTypes.NEO_NODE, Direction.OUTGOING )
+    private Node getNeoNode(Transaction transaction) {
+        return transaction.getNodeById(matrixNodeId)
+                .getSingleRelationship(RelTypes.NEO_NODE, Direction.OUTGOING)
                 .getEndNode();
     }
 
-    public String printNeoFriends()
-    {
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-            Node neoNode = getNeoNode( tx );
+    public String printNeoFriends() {
+        try (Transaction tx = graphDb.beginTx()) {
+            Node neoNode = getNeoNode(tx);
             // tag::friends-usage[]
             int numberOfFriends = 0;
-            String output = neoNode.getProperty( "name" ) + "'s friends:\n";
-            Traverser friendsTraverser = getFriends( tx, neoNode );
-            for ( Path friendPath : friendsTraverser )
-            {
+            String output = neoNode.getProperty("name") + "'s friends:\n";
+            Traverser friendsTraverser = getFriends(tx, neoNode);
+            for (Path friendPath : friendsTraverser) {
                 output += "At depth " + friendPath.length() + " => "
-                          + friendPath.endNode()
-                                  .getProperty( "name" ) + "\n";
+                        + friendPath.endNode()
+                        .getProperty("name") + "\n";
                 numberOfFriends++;
             }
             output += "Number of friends found: " + numberOfFriends + "\n";
@@ -160,29 +148,25 @@ public class NewMatrix
     }
 
     // tag::get-friends[]
-    private Traverser getFriends( Transaction transaction, final Node person )
-    {
+    private Traverser getFriends(Transaction transaction, final Node person) {
         TraversalDescription td = transaction.traversalDescription()
                 .breadthFirst()
-                .relationships( RelTypes.KNOWS, Direction.OUTGOING )
-                .evaluator( Evaluators.excludeStartPosition() );
-        return td.traverse( person );
+                .relationships(RelTypes.KNOWS, Direction.OUTGOING)
+                .evaluator(Evaluators.excludeStartPosition());
+        return td.traverse(person);
     }
     // end::get-friends[]
 
-    public String printMatrixHackers()
-    {
-        try ( Transaction tx = graphDb.beginTx() )
-        {
+    public String printMatrixHackers() {
+        try (Transaction tx = graphDb.beginTx()) {
             // tag::find--hackers-usage[]
             String output = "Hackers:\n";
             int numberOfHackers = 0;
-            Traverser traverser = findHackers( tx, getNeoNode( tx ) );
-            for ( Path hackerPath : traverser )
-            {
+            Traverser traverser = findHackers(tx, getNeoNode(tx));
+            for (Path hackerPath : traverser) {
                 output += "At depth " + hackerPath.length() + " => "
-                          + hackerPath.endNode()
-                                  .getProperty( "name" ) + "\n";
+                        + hackerPath.endNode()
+                        .getProperty("name") + "\n";
                 numberOfHackers++;
             }
             output += "Number of hackers found: " + numberOfHackers + "\n";
@@ -192,20 +176,18 @@ public class NewMatrix
     }
 
     // tag::find-hackers[]
-    private Traverser findHackers( Transaction transaction, final Node startNode )
-    {
+    private Traverser findHackers(Transaction transaction, final Node startNode) {
         TraversalDescription td = transaction.traversalDescription()
                 .breadthFirst()
-                .relationships( RelTypes.CODED_BY, Direction.OUTGOING )
-                .relationships( RelTypes.KNOWS, Direction.OUTGOING )
+                .relationships(RelTypes.CODED_BY, Direction.OUTGOING)
+                .relationships(RelTypes.KNOWS, Direction.OUTGOING)
                 .evaluator(
-                        Evaluators.includeWhereLastRelationshipTypeIs( RelTypes.CODED_BY ) );
-        return td.traverse( startNode );
+                        Evaluators.includeWhereLastRelationshipTypeIs(RelTypes.CODED_BY));
+        return td.traverse(startNode);
     }
     // end::find-hackers[]
 
-    private void registerShutdownHook()
-    {
+    private void registerShutdownHook() {
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)

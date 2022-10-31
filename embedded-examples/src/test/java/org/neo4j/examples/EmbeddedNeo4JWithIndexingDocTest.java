@@ -19,14 +19,11 @@
 package org.neo4j.examples;
 
 import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-public class EmbeddedNeo4JWithIndexingDocTest
-{
+class EmbeddedNeo4JWithIndexingDocTest {
     @Test
-    public void justExecuteIt() throws IOException
-    {
-        EmbeddedNeo4jWithIndexing.main( null );
+    void justExecuteIt() throws IOException {
+        EmbeddedNeo4jWithIndexing.main(null);
     }
 }

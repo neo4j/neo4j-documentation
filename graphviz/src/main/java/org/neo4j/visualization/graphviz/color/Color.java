@@ -20,25 +20,22 @@
 package org.neo4j.visualization.graphviz.color;
 
 /**
- * Color palette from: http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
- * The palette is in public domain.
+ * Color palette from: http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines The palette is in public domain.
  */
-public enum Color
-{
-    GREY( "#2e3436", "#888a85" ),
-    GREEN( "#4e9a06", "#73d216" ),
-    RED( "#a40000", "#cc0000" ),
-    BLUE( "#204a87", "#3465a4" ),
-    BROWN( "#8f5902", "#c17d11" ),
-    PURPLE( "#5c3566", "#75507b" ),
-    YELLOW( "#c4a000", "#edd400" ),
-    ORANGE( "#ce5c00", "#f57900" );
+public enum Color {
+    GREY("#2e3436", "#888a85"),
+    GREEN("#4e9a06", "#73d216"),
+    RED("#a40000", "#cc0000"),
+    BLUE("#204a87", "#3465a4"),
+    BROWN("#8f5902", "#c17d11"),
+    PURPLE("#5c3566", "#75507b"),
+    YELLOW("#c4a000", "#edd400"),
+    ORANGE("#ce5c00", "#f57900");
 
     String dark;
     String light;
 
-    Color( String dark, String light )
-    {
+    Color(String dark, String light) {
         this.dark = dark;
         this.light = light;
     }

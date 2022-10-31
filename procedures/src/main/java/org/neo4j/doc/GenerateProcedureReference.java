@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
-
 import org.neo4j.function.Predicates;
 import org.neo4j.internal.helpers.Args;
 
@@ -67,10 +66,12 @@ public class GenerateProcedureReference {
                 }
                 System.out.println("Saving docs in '" + outFile.toFile().getAbsolutePath() + "'.");
                 Files.write(outFile, doc.getBytes());
-            } else {
+            }
+            else {
                 System.out.println(doc);
             }
-        } catch (NoSuchElementException | NoSuchFileException e) {
+        }
+        catch (NoSuchElementException | NoSuchFileException e) {
             e.printStackTrace();
             throw e;
         }
@@ -88,7 +89,8 @@ public class GenerateProcedureReference {
         System.out.printf("Options:%n");
         System.out.printf("    %-30s%s [%s]%n", "--id", "ID to use for procedures reference", DEFAULT_ID);
         System.out.printf("    %-30s%s [%s]%n", "--title", "Title to use for procedures reference", DEFAULT_TITLE);
-        System.out.printf("    %-30s%s [%s]%n", "--filter", "Filter to apply, for example '^db.index.explicit.*` to only include procedures in that namespace", DEFAULT_TITLE);
+        System.out.printf("    %-30s%s [%s]%n", "--filter", "Filter to apply, for example '^db.index.explicit.*` to only include procedures in that namespace",
+                DEFAULT_TITLE);
         System.out.printf("    %-30s%s [%s]%n", "--edition", "Which Neo4j Edition to use. One of 'enterprise', 'community' or 'both'", DEFAULT_EDITION);
     }
 
@@ -98,5 +100,4 @@ public class GenerateProcedureReference {
         }
         return Predicates.alwaysTrue();
     }
-
 }

@@ -19,13 +19,12 @@
  */
 package org.neo4j.visualization.graphviz;
 
-interface PropertyFilter
-{
+interface PropertyFilter {
     /**
      * Determine if a property should be emitted.
-     * @param key
-     *            the key of the property.
+     *
+     * @param key the key of the property.
      * @return <code>true</code> if the property should be emitted.
      */
-    boolean acceptProperty( String key );
+    boolean acceptProperty(String key);
 }

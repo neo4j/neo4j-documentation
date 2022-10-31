@@ -59,7 +59,7 @@
                         <configuration>
                             <target>
                                 <java classname="org.neo4j.doc.server.rest.transactional.error.ErrorDocumentationGenerator"
-                                    classpathref="maven.test.classpath" failonerror="true">
+                                      classpathref="maven.test.classpath" failonerror="true">
                                     <arg value="${project.build.directory}/docs/status-codes"/>
                                 </java>
                             </target>

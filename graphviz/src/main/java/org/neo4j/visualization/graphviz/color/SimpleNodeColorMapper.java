@@ -24,36 +24,31 @@ import java.util.Map;
 import org.neo4j.graphdb.Node;
 
 /**
- * Wrap a {@code Map<Object, Color>} to expose it as a {@code ColorMapper<Node>} from a property
- * value.
+ * Wrap a {@code Map<Object, Color>} to expose it as a {@code ColorMapper<Node>} from a property value.
  */
-public class SimpleNodeColorMapper implements ColorMapper<Node>
-{
-    private final Map<Object, Color> mappings;
+public class SimpleNodeColorMapper implements ColorMapper<Node> {
+    private final Map<Object,Color> mappings;
     private final String propertyKey;
 
     /**
      * Map from property values to colors.
      *
      * @param propertyKey the key to the value we will map
-     * @param mappings property values to color mappings
+     * @param mappings    property values to color mappings
      */
-    public SimpleNodeColorMapper( String propertyKey,
-            Map<Object, Color> mappings )
-    {
+    public SimpleNodeColorMapper(String propertyKey,
+            Map<Object,Color> mappings) {
         this.propertyKey = propertyKey;
         this.mappings = mappings;
     }
 
     @Override
-    public Color getColor( Node entity )
-    {
-        return mappings.get( entity.getProperty( propertyKey, null ) );
+    public Color getColor(Node entity) {
+        return mappings.get(entity.getProperty(propertyKey, null));
     }
 
     @Override
-    public Collection<Color> getColors()
-    {
+    public Collection<Color> getColors() {
         return mappings.values();
     }
 }

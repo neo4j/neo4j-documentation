@@ -26,28 +26,24 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.string.UTF8;
 
 // tag::HelloWorldResource[]
-@Path( "/helloworld" )
-public class HelloWorldResource
-{
+@Path("/helloworld")
+public class HelloWorldResource {
     private final DatabaseManagementService dbms;
 
-    public HelloWorldResource( @Context DatabaseManagementService dbms )
-    {
+    public HelloWorldResource(@Context DatabaseManagementService dbms) {
         this.dbms = dbms;
     }
 
     @GET
-    @Produces( MediaType.TEXT_PLAIN )
-    @Path( "/{nodeId}" )
-    public Response hello( @PathParam( "nodeId" ) long nodeId )
-    {
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/{nodeId}")
+    public Response hello(@PathParam("nodeId") long nodeId) {
         // Do stuff with the database
-        return Response.status( Status.OK ).entity( UTF8.encode( "Hello World, nodeId=" + nodeId ) ).build();
+        return Response.status(Status.OK).entity(UTF8.encode("Hello World, nodeId=" + nodeId)).build();
     }
 }
 // end::HelloWorldResource[]

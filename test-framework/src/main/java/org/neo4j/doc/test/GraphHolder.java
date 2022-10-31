@@ -20,7 +20,6 @@ package org.neo4j.doc.test;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 
-public interface GraphHolder
-{
+public interface GraphHolder {
     GraphDatabaseService graphdb();
 }
