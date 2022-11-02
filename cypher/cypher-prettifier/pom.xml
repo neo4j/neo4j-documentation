@@ -7,7 +7,7 @@
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-cypher-docs-parent</artifactId>
         <version>5.2.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>neo4j-cypher-prettifier</artifactId>
     <name>Neo4j - Cypher prettifier</name>
@@ -49,6 +49,20 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+
+        <!-- scala test dependencies -->
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <!-- neo4j-cypher -->
         <dependency>

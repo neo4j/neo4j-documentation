@@ -298,7 +298,9 @@ class PatternTest extends DocumentingTest {
           |This is a typical example of finding first and second degree friends.""".stripMargin
       )
       p("Note that variable length relationships cannot be used with `CREATE` and `MERGE`.")
-      p("Under certain circumstances variable length relationships can be planned with an optimisation, see the <<query-plan-varlength-expand-pruning, VarLength Expand Pruning>> query plan.")
+      p(
+        "Under certain circumstances variable length relationships can be planned with an optimisation, see the <<query-plan-varlength-expand-pruning, VarLength Expand Pruning>> query plan."
+      )
     }
 
     section("Assigning to path variables", "cypher-pattern-path-variables") {

@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class CallSubqueryTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -33,9 +34,9 @@ class CallSubqueryTest extends RefcardTest with QueryStatisticsTestSupport {
     "A" -> Map("name" -> "Alice"),
     "B" -> Map("name" -> "Bob"),
     "C" -> Map("name" -> "Chuck")
-    )
+  )
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "itWorks" =>
         assert(result.toList === Seq(Map("p.name" -> "Alice", "count(other)" -> 2)))
@@ -44,8 +45,8 @@ class CallSubqueryTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override def parameters(name: String): Map[String, Any] =
     name match {
-      case "parameters=arg" => Map("input" ->"foo")
-      case "" => Map.empty
+      case "parameters=arg" => Map("input" -> "foo")
+      case ""               => Map.empty
     }
 
   def text = """
@@ -65,4 +66,3 @@ This calls a subquery with two union parts.
 The result of the subquery can afterwards be post-processed.
 """
 }
-

@@ -19,11 +19,13 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import java.io.File
-
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
-import org.neo4j.cypher.docgen.{CsvFile, RefcardTest}
+import org.neo4j.cypher.docgen.CsvFile
+import org.neo4j.cypher.docgen.RefcardTest
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
+
+import java.io.File
 
 class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
@@ -37,32 +39,37 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
     Seq("1", "ABBA", "1992"),
     Seq("2", "Roxette", "1986"),
     Seq("3", "Europe", "1979"),
-    Seq("4", "The Cardigans", "1992"))
+    Seq("4", "The Cardigans", "1992")
+  )
 
   private val artistWithHeaders = new CsvFile("artists-with-headers.csv").withContentsF(
     Seq("Id", "Name", "Year"),
     Seq("1", "ABBA", "1992"),
     Seq("2", "Roxette", "1986"),
     Seq("3", "Europe", "1979"),
-    Seq("4", "The Cardigans", "1992"))
+    Seq("4", "The Cardigans", "1992")
+  )
 
   private val artistFieldTerminator = new CsvFile("artists-fieldterminator.csv", ';').withContentsF(
     Seq("1", "ABBA", "1992"),
     Seq("2", "Roxette", "1986"),
     Seq("3", "Europe", "1979"),
-    Seq("4", "The Cardigans", "1992"))
+    Seq("4", "The Cardigans", "1992")
+  )
 
   filePaths = Map(
     "%ARTIST%" -> CsvFile.urify(artist),
     "%ARTIS_WITH_HEADER%" -> CsvFile.urify(artistWithHeaders),
-    "%ARTIST_WITH_FIELD_DELIMITER%" -> CsvFile.urify(artistFieldTerminator))
+    "%ARTIST_WITH_FIELD_DELIMITER%" -> CsvFile.urify(artistFieldTerminator)
+  )
 
   urls = Map(
     "%ARTIST%" -> (baseUrl + artist.getName),
     "%ARTIS_WITH_HEADER%" -> (baseUrl + artistWithHeaders.getName),
-    "%ARTIST_WITH_FIELD_DELIMITER%" -> (baseUrl + artistFieldTerminator.getName))
+    "%ARTIST_WITH_FIELD_DELIMITER%" -> (baseUrl + artistFieldTerminator.getName)
+  )
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "created" =>
         assertStats(result, nodesCreated = 4, labelsAdded = 4, propertiesWritten = 8)

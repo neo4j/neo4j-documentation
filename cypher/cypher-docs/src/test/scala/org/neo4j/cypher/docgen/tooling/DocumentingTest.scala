@@ -19,19 +19,21 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import java.io._
-
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.ResourceManager
+import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
-import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
+import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
 import org.neo4j.cypher.internal.util.test_helpers.CypherFunSuite
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
-import org.scalatest.{Assertions, Matchers}
+import org.scalatest.Assertions
+import org.scalatest.matchers.should.Matchers
+
+import java.io._
 
 /**
  * Base class for documentation classes
@@ -51,6 +53,7 @@ import org.scalatest.{Assertions, Matchers}
  * disk as a single AsciiDoc file.
  */
 trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with GraphIcing {
+
   /**
    * Make sure this is implemented as a def and not a val. Since we are using it in the trait constructor,
    * and that runs before the class constructor, if it is a val, it will not have been initialised when we need it
@@ -74,7 +77,7 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 
     val asciiDocTree = document.asciiDoc
 
-    val outputPathWithSeparator = if(outputPath.endsWith(File.separator)) outputPath else outputPath + File.separator
+    val outputPathWithSeparator = if (outputPath.endsWith(File.separator)) outputPath else outputPath + File.separator
     val dir = new File(outputPathWithSeparator)
     if (!dir.exists())
       dir.mkdirs()
@@ -97,7 +100,7 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
     var count = 0
 
     def testName(q: String) = {
-      count +=1
+      count += 1
       s"$count: $q".replaceAll(System.lineSeparator(), " ")
     }
 
@@ -114,12 +117,13 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
       case ExecutionPlanRunResult(q, _, Right(_)) =>
         test(testName(q))({})
 
-      case _:GraphVizRunResult => // Nothing to report here, unless we got a failure
+      case _: GraphVizRunResult => // Nothing to report here, unless we got a failure
     }
   }
 
   private def runQueries(doc: Document): TestRunResult = {
-    val builder = (db: GraphDatabaseQueryService, tx: InternalTransaction) => new QueryResultContentBuilder(new ValueFormatter(db, tx))
+    val builder = (db: GraphDatabaseQueryService, tx: InternalTransaction) =>
+      new QueryResultContentBuilder(new ValueFormatter(db, tx))
     val runner = new QueryRunner(builder)
     val result = runner.runQueries(contentsWithInit = doc.contentWithQueries, doc.title)
     result
@@ -128,25 +132,29 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 
 // Used to format values coming from Cypher. Maps, lists, nodes, relationships and paths all have custom
 // formatting applied to them
-class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String) with CypherSerializer with GraphIcing {
-  val contextFactory = Neo4jTransactionalContextFactory.create( db )
+class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String)
+    with CypherSerializer with GraphIcing {
+  val contextFactory = Neo4jTransactionalContextFactory.create(db)
+
   def apply(x: Any): String = {
 
     val transactionalContext = TransactionalContextWrapper(
-      contextFactory.newContext(tx, "QUERY", EMPTY_MAP )
+      contextFactory.newContext(tx, "QUERY", EMPTY_MAP)
     )
-    val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
+    val QUIET_MONITOR: IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
     val ctx = new TransactionBoundQueryContext(transactionalContext, new ResourceManager())(QUIET_MONITOR)
     serialize(x, ctx)
   }
 }
 
 class LimitedValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends ValueFormatter(db, tx) {
+
   override def apply(x: Any): String = x match {
     case LimitedValueFormatter.NO_VALUE => ""
-    case _ => super.apply(x)
+    case _                              => super.apply(x)
   }
 }
+
 object LimitedValueFormatter {
   object NO_VALUE
 }

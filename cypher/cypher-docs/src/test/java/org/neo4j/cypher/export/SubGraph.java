@@ -24,13 +24,12 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 
-public interface SubGraph
-{
+public interface SubGraph {
     Iterable<Node> getNodes();
 
     Iterable<Relationship> getRelationships();
 
-    boolean contains( Relationship relationship );
+    boolean contains(Relationship relationship);
 
     Iterable<IndexDefinition> getIndexes();
 

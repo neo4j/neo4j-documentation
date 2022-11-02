@@ -19,14 +19,17 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
 import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
 
 class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql"
 
   override def doc = new DocBuilder {
     doc("FOREACH", "query-foreach")
+
     initQueries("""CREATE
                   #  (a:Person {name: 'A'}),
                   #  (b:Person {name: 'B'}),
@@ -35,26 +38,41 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
                   #  (a)-[:KNOWS]->(b),
                   #  (b)-[:KNOWS]->(c),
                   #  (c)-[:KNOWS]->(d)""".stripMargin('#'))
-    synopsis("The `FOREACH` clause is used to update data within a collection whether components of a path, or result of aggregation.")
+
+    synopsis(
+      "The `FOREACH` clause is used to update data within a collection whether components of a path, or result of aggregation."
+    )
+
     section("Introduction", "query-foreach-introduction") {
       p("""Lists and paths are key concepts in Cypher.
-          #The `FOREACH` clause can be used to update data, such as executing update commands on elements in a path, or on a list created by aggregation.""".stripMargin('#'))
+          #The `FOREACH` clause can be used to update data, such as executing update commands on elements in a path, or on a list created by aggregation.""".stripMargin(
+        '#'
+      ))
       p("""The variable context within the `FOREACH` parenthesis is separate from the one outside it.
-          #This means that if you `CREATE` a node variable within a `FOREACH`, you will _not_ be able to use it outside of the foreach statement, unless you match to find it.""".stripMargin('#'))
-      p("Within the `FOREACH` parentheses, you can do any of the updating commands -- `SET`, `REMOVE`, `CREATE`, `MERGE`, `DELETE`, and `FOREACH`.")
-      p("If you want to execute an additional `MATCH` for each element in a list then the <<query-unwind,`UNWIND`>> clause would be a more appropriate command.")
+          #This means that if you `CREATE` a node variable within a `FOREACH`, you will _not_ be able to use it outside of the foreach statement, unless you match to find it.""".stripMargin(
+        '#'
+      ))
+      p(
+        "Within the `FOREACH` parentheses, you can do any of the updating commands -- `SET`, `REMOVE`, `CREATE`, `MERGE`, `DELETE`, and `FOREACH`."
+      )
+      p(
+        "If you want to execute an additional `MATCH` for each element in a list then the <<query-unwind,`UNWIND`>> clause would be a more appropriate command."
+      )
       graphViz()
     }
+
     section("Mark all nodes along a path", "foreach-mark-all-nodes-along-a-path") {
       p("This query will set the property `marked` to `true` on all nodes along a path.")
-      query("""MATCH p=(start)-[*]->(finish)
-              #WHERE start.name = 'A' AND finish.name = 'D'
-              #FOREACH (n IN nodes(p) | SET n.marked = true)""".stripMargin('#'),
-      ResultAssertions((r) => {
-          r.toList.length should equal(0);  assertStats(r, propertiesWritten = 4)
-        })) {
+      query(
+        """MATCH p=(start)-[*]->(finish)
+          #WHERE start.name = 'A' AND finish.name = 'D'
+          #FOREACH (n IN nodes(p) | SET n.marked = true)""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList.length should equal(0); assertStats(r, propertiesWritten = 4)
+        })
+      ) {
         resultTable()
-        //statsOnlyResultTable()
+        // statsOnlyResultTable()
       }
     }
   }.build()

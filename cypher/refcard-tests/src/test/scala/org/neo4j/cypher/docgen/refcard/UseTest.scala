@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class UseTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class UseTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "USE"
   override val linkId = "clauses/use"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {}
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {}
 
   def text = """
 ###dontrun

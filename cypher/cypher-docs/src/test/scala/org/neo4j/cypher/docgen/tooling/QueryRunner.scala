@@ -25,7 +25,9 @@ import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 
 import scala.collection.immutable.Iterable
-import scala.util.{Failure, Success, Try}
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 /**
  * QueryRunner is used to actually run queries and produce either errors or
@@ -36,19 +38,21 @@ import scala.util.{Failure, Success, Try}
  * we drop the database and create a new one. This way we can make sure that two queries don't affect each other more than
  * necessary.
  */
-class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
+class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content)
+    extends GraphIcing {
   val statsOnly: DocsExecutionResult => Content = new StatsOnlyQueryResultContentBuilder()
   val errorOnly: Throwable => Content = new ErrorOnlyQueryResultContentBuilder()
 
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
     val groupedByInits: Map[RunnableInitialization, Seq[(DatabaseQuery, QueryResultPlaceHolder)]] =
-      contentsWithInit.groupBy(_.initKey).view.mapValues(_.map(cwi => cwi.queryToPresent -> cwi.queryResultPlaceHolder)).toMap
+      contentsWithInit.groupBy(_.initKey).view.mapValues(
+        _.map(cwi => cwi.queryToPresent -> cwi.queryResultPlaceHolder)
+      ).toMap
     var graphVizCounter = 0
 
     val results: Iterable[RunResult] = groupedByInits.flatMap {
       case (init, placeHolders) =>
-
         val dbms = new RestartableDatabase(init)
         try {
           if (dbms.failures.nonEmpty) {
@@ -64,7 +68,10 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
                     graphVizCounter = graphVizCounter + 1
                     Try(dbms.executeWithParams(query)) match {
                       case Success(inner) =>
-                        GraphVizRunResult(gv, captureStateAsGraphViz(dbms.getInnerDb, title, graphVizCounter, gv.options))
+                        GraphVizRunResult(
+                          gv,
+                          captureStateAsGraphViz(dbms.getInnerDb, title, graphVizCounter, gv.options)
+                        )
                       case Failure(error) =>
                         QueryRunResult(query.prettified, gv, Left(error))
                     }
@@ -92,18 +99,31 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     TestRunResult(results.toSeq)
   }
 
-  private def runSingleQuery(dbms: RestartableDatabase, query: DatabaseQuery, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
-    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => content match {
-      case _: StatsOnlyTablePlaceHolder => statsOnly(_)
-      case l: LimitedTablePlaceHolder => new LimitedQueryResultContentBuilder(l.maybeWantedColumns, l.rows, new LimitedValueFormatter(dbms.getInnerDb, tx))
-      case _ => formatter(dbms.getInnerDb, tx)(_)
-    }
+  private def runSingleQuery(
+    dbms: RestartableDatabase,
+    query: DatabaseQuery,
+    assertions: QueryAssertions,
+    content: TablePlaceHolder
+  ): QueryRunResult = {
+    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) =>
+      content match {
+        case _: StatsOnlyTablePlaceHolder => statsOnly(_)
+        case l: LimitedTablePlaceHolder => new LimitedQueryResultContentBuilder(
+            l.maybeWantedColumns,
+            l.rows,
+            new LimitedValueFormatter(dbms.getInnerDb, tx)
+          )
+        case _ => formatter(dbms.getInnerDb, tx)(_)
+      }
 
     dbms.login(query.login)
     val tx: InternalTransaction = dbms.beginTx(query.database)
     try {
       val result: Either[Throwable, InternalTransaction => Content] =
-        (assertions, Try(dbms.executeWithParams(tx, query.runnable, content.params.toMap, query.databaseStateBehavior))) match {
+        (
+          assertions,
+          Try(dbms.executeWithParams(tx, query.runnable, content.params.toMap, query.databaseStateBehavior))
+        ) match {
           // *** Success conditions
 
           case (ResultAssertions(f), Success(r)) =>
@@ -122,7 +142,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
             val errorResult = Try(f(exception))
             errorResult match {
               case Success(_) => Right(_ => errorOnly(exception))
-              case _ => Left(exception)
+              case _          => Left(exception)
             }
 
           case (_, Failure(exception: Throwable)) =>
@@ -140,10 +160,12 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     }
   }
 
-  private def explainSingleQuery(database: RestartableDatabase,
-                                 query: DatabaseQuery,
-                                 assertions: QueryAssertions,
-                                 placeHolder: QueryResultPlaceHolder): RunResult = {
+  private def explainSingleQuery(
+    database: RestartableDatabase,
+    query: DatabaseQuery,
+    assertions: QueryAssertions,
+    placeHolder: QueryResultPlaceHolder
+  ): RunResult = {
     val result: Either[Throwable, ExecutionPlan] =
       (assertions, Try(database.executeWithParams(query.explain))) match {
         case (ResultAssertions(f), Success(inner)) =>
@@ -166,29 +188,31 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     ExecutionPlanRunResult(query.prettified, placeHolder, result)
   }
 
-  private def profileSingleQuery(database: RestartableDatabase,
-                                 query: DatabaseQuery,
-                                 assertions: QueryAssertions,
-                                 placeHolder: QueryResultPlaceHolder): ExecutionPlanRunResult = {
+  private def profileSingleQuery(
+    database: RestartableDatabase,
+    query: DatabaseQuery,
+    assertions: QueryAssertions,
+    placeHolder: QueryResultPlaceHolder
+  ): ExecutionPlanRunResult = {
     val result: Either[Throwable, String] =
       (assertions, Try(database.executeWithParams(query.profile))) match {
-      case (ResultAssertions(f), Success(result)) =>
-        f(result)
-        Right(result.executionPlanDescription().toString)
+        case (ResultAssertions(f), Success(result)) =>
+          f(result)
+          Right(result.executionPlanDescription().toString)
 
-      case (ResultAndDbAssertions(f), Success(result)) =>
-        f(result, database.getInnerDb)
-        Right(result.executionPlanDescription().toString)
+        case (ResultAndDbAssertions(f), Success(result)) =>
+          f(result, database.getInnerDb)
+          Right(result.executionPlanDescription().toString)
 
-      case (NoAssertions, Success(inner)) =>
-        Right(inner.executionPlanDescription().toString)
+        case (NoAssertions, Success(inner)) =>
+          Right(inner.executionPlanDescription().toString)
 
-      case (_, Failure(exception: Throwable)) =>
-        Left(exception)
+        case (_, Failure(exception: Throwable)) =>
+          Left(exception)
 
-      case x =>
-        Left(new InternalException(s"Did not see this one coming $x"))
-    }
+        case x =>
+          Left(new InternalException(s"Did not see this one coming $x"))
+      }
     ExecutionPlanRunResult(query.prettified, placeHolder, result.map(ExecutionPlan))
   }
 }
@@ -200,7 +224,8 @@ sealed trait RunResult {
   def newFailure: Option[Throwable]
 }
 
-case class QueryRunResult(queryText: String, original: QueryResultPlaceHolder, testResult: Either[Throwable, Content]) extends RunResult {
+case class QueryRunResult(queryText: String, original: QueryResultPlaceHolder, testResult: Either[Throwable, Content])
+    extends RunResult {
   override def success = testResult.isRight
 
   override def newContent: Option[Content] = testResult.right.toOption
@@ -214,7 +239,11 @@ case class GraphVizRunResult(original: GraphVizPlaceHolder, graphViz: GraphViz) 
   override def newFailure = None
 }
 
-case class ExecutionPlanRunResult(queryText: String, original: QueryResultPlaceHolder, testResult: Either[Throwable, ExecutionPlan]) extends RunResult {
+case class ExecutionPlanRunResult(
+  queryText: String,
+  original: QueryResultPlaceHolder,
+  testResult: Either[Throwable, ExecutionPlan]
+) extends RunResult {
 
   override def success: Boolean = testResult.isRight
 

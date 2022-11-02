@@ -29,13 +29,15 @@ class ShowProceduresTest extends DocumentingTest {
     doc("SHOW PROCEDURES", "query-listing-procedures")
     synopsis("This section explains the `SHOW PROCEDURES` command.")
     p("Listing the available procedures can be done with `SHOW PROCEDURES`.")
+
     p("""
-    #[NOTE]
-    #====
-    #The command `SHOW PROCEDURES` returns only the default output. For a full output use the optional `YIELD` command.
-    #Full output: `SHOW PROCEDURES YIELD *`.
-    #====""".stripMargin('#'))
+        #[NOTE]
+        #====
+        #The command `SHOW PROCEDURES` returns only the default output. For a full output use the optional `YIELD` command.
+        #Full output: `SHOW PROCEDURES YIELD *`.
+        #====""".stripMargin('#'))
     p("This command will produce a table with the following columns:")
+
     p("""
 .List procedures output
 [options="header", cols="4,6"]
@@ -81,6 +83,7 @@ Is `null` without the <<access-control-dbms-administration-role-management,`SHOW
 |a| Map of extra output, e.g. if the procedure is deprecated.
 ||===
 """)
+
     section("Syntax") {
       p("""
 List all procedures::
@@ -131,30 +134,40 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
 ====
 """.stripMargin('#'))
     }
+
     section("Listing all procedures") {
       p(
         """To list all available procedures with the default output columns, the `SHOW PROCEDURES` command can be used.
-          #If all columns are required, use `SHOW PROCEDURES YIELD *`.""".stripMargin('#'))
-      query("SHOW PROCEDURES", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
-      })) {
+          #If all columns are required, use `SHOW PROCEDURES YIELD *`.""".stripMargin('#')
+      )
+      query(
+        "SHOW PROCEDURES",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
+        })
+      ) {
         limitedResultTable(15)
       }
     }
+
     section("Listing procedures with filtering on output columns") {
       p(
         """The listed procedures can be filtered in multiple ways, one way is to use the `WHERE` clause.
-          #For example, returning the names of all admin procedures:""".stripMargin('#'))
-      query("""
-        #SHOW PROCEDURES YIELD name, admin
-        #WHERE admin""".stripMargin('#'),
-      ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "admin")
-        p.columnAs[Boolean]("admin").foreach(_ should be(true))
-      })) {
+          #For example, returning the names of all admin procedures:""".stripMargin('#')
+      )
+      query(
+        """
+          #SHOW PROCEDURES YIELD name, admin
+          #WHERE admin""".stripMargin('#'),
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "admin")
+          p.columnAs[Boolean]("admin").foreach(_ should be(true))
+        })
+      ) {
         limitedResultTable(7)
       }
     }
+
     section("Listing procedures with other filtering") {
       database("system")
       initQueries(
@@ -163,23 +176,47 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
       database("neo4j")
       p("""The listed procedures can also be filtered by whether a user can execute them.
           #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin('#'))
+          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin(
+        '#'
+      ))
       p("""There are two options, how to use the `EXECUTABLE` clause.
           #The first option, is to filter for the current user:""".stripMargin('#'))
       login("jake", "abc123")
-      query("SHOW PROCEDURES EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem", "signature", "argumentDescription", "returnDescription", "admin", "rolesExecution", "rolesBoostedExecution", "option")
-        p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
-        p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
-      })) {
-        limitedResultTable(maybeWantedColumns = Some(List("name", "description", "rolesExecution", "rolesBoostedExecution")))
+      query(
+        "SHOW PROCEDURES EXECUTABLE BY CURRENT USER YIELD *",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array(
+            "name",
+            "description",
+            "mode",
+            "worksOnSystem",
+            "signature",
+            "argumentDescription",
+            "returnDescription",
+            "admin",
+            "rolesExecution",
+            "rolesBoostedExecution",
+            "option"
+          )
+          p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
+          p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
+        })
+      ) {
+        limitedResultTable(maybeWantedColumns =
+          Some(List("name", "description", "rolesExecution", "rolesBoostedExecution"))
+        )
       }
-      p("Note that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,SHOW ROLE>> privilege.")
+      p(
+        "Note that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,SHOW ROLE>> privilege."
+      )
       logout()
       p("The second option, filters the list to only contain procedures executable by a specific user:")
-      query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
-      })) {
+      query(
+        "SHOW PROCEDURES EXECUTABLE BY jake",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
+        })
+      ) {
         limitedResultTable()
       }
     }

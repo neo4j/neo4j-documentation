@@ -19,7 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
 
 class UserDefinedFunctionTest extends DocumentingTest {
 
@@ -31,7 +33,8 @@ class UserDefinedFunctionTest extends DocumentingTest {
     registerUserDefinedFunctions(classOf[org.neo4j.function.example.JoinFunction])
 
     initQueries(
-      """UNWIND ["John", "Paul", "George", "Ringo"] as name CREATE (:Member {name: name})""")
+      """UNWIND ["John", "Paul", "George", "Ringo"] as name CREATE (:Member {name: name})"""
+    )
 
     p("""
         |For each incoming row the function takes parameters and returns a single result.""")
@@ -42,13 +45,20 @@ class UserDefinedFunctionTest extends DocumentingTest {
     section("Call a user-defined function") {
       p("This calls the user-defined function `org.neo4j.procedure.example.join()`.")
 
-      query("MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members", ResultAssertions((r) =>
-        assert(r.toList === List(Map("members" -> "John,Paul,George,Ringo"))))) {
+      query(
+        "MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members",
+        ResultAssertions((r) =>
+          assert(r.toList === List(Map("members" -> "John,Paul,George,Ringo")))
+        )
+      ) {
         resultTable()
       }
     }
-    p("""
-        |For developing and deploying user-defined functions in Neo4j, see <<java-reference#extending-neo4j-functions, Extending Neo4j -> User-defined functions>>.""")
+
+    p(
+      """
+        |For developing and deploying user-defined functions in Neo4j, see <<java-reference#extending-neo4j-functions, Extending Neo4j -> User-defined functions>>."""
+    )
 
   }.build()
 }

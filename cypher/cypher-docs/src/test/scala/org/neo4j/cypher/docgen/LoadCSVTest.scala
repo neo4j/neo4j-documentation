@@ -19,12 +19,13 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.Admonitions.Note
-import org.neo4j.cypher.docgen.tooling.{Paragraph, QueryStatisticsTestSupport}
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
+import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.visualization.graphviz.GraphStyle
+
 import java.io.File
-import org.junit.Assert._
 
 class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
 
@@ -58,9 +59,8 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
     Seq("4", "The Cardigans", "1992")
   )
 
-  private val artistsWithEscapeChar = new CsvFile("artists-with-escaped-char.csv").withContentsF(quoted = true,
-    Seq("1", "The \"\"Symbol\"\"", "1992")
-  )
+  private val artistsWithEscapeChar =
+    new CsvFile("artists-with-escaped-char.csv").withContentsF(quoted = true, Seq("1", "The \"\"Symbol\"\"", "1992"))
 
   filePaths = Map(
     "%ARTIST%" -> CsvFile.urify(artist),
@@ -89,9 +89,11 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
                #----""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST%' AS line
                     #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
-      optionalResultExplanation = """A new node with the `Artist` label is created for each row in the CSV file.
-                                    #In addition, two columns from the CSV file are set as properties on the nodes.""".stripMargin('#'),
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      optionalResultExplanation =
+        """A new node with the `Artist` label is created for each row in the CSV file.
+          #In addition, two columns from the CSV file are set as properties on the nodes.""".stripMargin('#'),
+      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4)
+    )
   }
 
   @Test def should_import_data_from_remote_csv() {
@@ -110,25 +112,32 @@ Note that this applies to all variations of CSV files (see examples below for ot
 4,The Cardigans,1992
 ----
 """,
-      queryText = s"LOAD CSV FROM 'https://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
-      assertions = p => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      queryText =
+        s"LOAD CSV FROM 'https://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
+      assertions = p => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4)
+    )
   }
 
   @Test def should_import_data_from_a_csv_file_with_headers() {
     testQuery(
       title = "Import data from a CSV file containing headers",
-      text = """When your CSV file has headers, you can view each row in the file as a map instead of as an array of strings.
-               #
-               #.artists-with-headers.csv
-               #[source]
-               #----
-               #include::csv-files/artists-with-headers.csv[]
-               #----""".stripMargin('#'),
+      text =
+        """When your CSV file has headers, you can view each row in the file as a map instead of as an array of strings.
+          #
+          #.artists-with-headers.csv
+          #[source]
+          #----
+          #include::csv-files/artists-with-headers.csv[]
+          #----""".stripMargin('#'),
       queryText = """LOAD CSV WITH HEADERS FROM '%ARTIS_WITH_HEADER%' AS line
                     #CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})""".stripMargin('#'),
-      optionalResultExplanation = """This time, the file starts with a single row containing column names.
-                                    #Indicate this using `WITH HEADERS` and you can access specific fields by their corresponding column name.""".stripMargin('#'),
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      optionalResultExplanation =
+        """This time, the file starts with a single row containing column names.
+          #Indicate this using `WITH HEADERS` and you can access specific fields by their corresponding column name.""".stripMargin(
+          '#'
+        ),
+      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4)
+    )
   }
 
   @Test def should_import_data_from_a_csv_file_with_custom_field_terminator() {
@@ -148,24 +157,29 @@ Note that this applies to all variations of CSV files (see examples below for ot
                #""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';'
                     #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
-      optionalResultExplanation = "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      optionalResultExplanation =
+        "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
+      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4)
+    )
   }
 
   @Test def should_import_data_from_a_csv_file_with_call_in_transactions() {
     testQuery(
       title = "Importing large amounts of data",
-      text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `CALL {} IN TRANSACTIONS` can be used to instruct Neo4j to commit a transaction after a number of rows.
-               #This reduces the memory overhead of the transaction state.
-               #Note that `CALL {} IN TRANSACTIONS` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
-               #For more information, see <<subquery-call-in-transactions>>.""".stripMargin('#'),
+      text =
+        """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `CALL {} IN TRANSACTIONS` can be used to instruct Neo4j to commit a transaction after a number of rows.
+          #This reduces the memory overhead of the transaction state.
+          #Note that `CALL {} IN TRANSACTIONS` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
+          #For more information, see <<subquery-call-in-transactions>>.""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST%' AS line
                     #CALL {
                     #  WITH line
                     #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
                     #} IN TRANSACTIONS""".stripMargin('#'),
       optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1))
+      assertions =
+        (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1)
+    )
   }
 
   @Test def should_import_data_from_a_csv_file_with_call_in_transactions_after_500_rows() {
@@ -178,27 +192,31 @@ Note that this applies to all variations of CSV files (see examples below for ot
                     #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
                     #} IN TRANSACTIONS OF 500 ROWS""".stripMargin('#'),
       optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1))
+      assertions =
+        (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1)
+    )
   }
 
   @Test def should_import_data_from_a_csv_file_which_uses_the_escape_char() {
     testQuery(
       title = "Import data containing escaped characters",
-      text = """In this example, we both have additional quotes around the values, as well as escaped quotes inside one value.
-               #
-               #.artists-with-escaped-char.csv
-               #[source]
-               #----
-               #include::csv-files/artists-with-escaped-char.csv[]
-               #----""".stripMargin('#'),
+      text =
+        """In this example, we both have additional quotes around the values, as well as escaped quotes inside one value.
+          #
+          #.artists-with-escaped-char.csv
+          #[source]
+          #----
+          #include::csv-files/artists-with-escaped-char.csv[]
+          #----""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line
                     #CREATE (a:Artist {name: line[1], year: toInteger(line[2])})
                     #RETURN
                     #  a.name AS name,
                     #  a.year AS year,
                     #  size(a.name) AS size""".stripMargin('#'),
-      optionalResultExplanation = """Note that strings are wrapped in quotes in the output here.
-                                    #You can see that when comparing to the length of the string in this case!""".stripMargin('#'),
+      optionalResultExplanation =
+        """Note that strings are wrapped in quotes in the output here.
+          #You can see that when comparing to the length of the string in this case!""".stripMargin('#'),
       assertions = (p) => assertEquals(List(Map("name" -> """The "Symbol"""", "year" -> 1992, "size" -> 12)), p.toList)
     )
   }
@@ -206,25 +224,29 @@ Note that this applies to all variations of CSV files (see examples below for ot
   @Test def should_use_csv_function_linenumber() {
     testQuery(
       title = "Using linenumber() with LOAD CSV",
-      text = """For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
-               #The `linenumber()` function provides exactly that or `null` if called without a `LOAD CSV` context.
-               #
-               #.artists.csv
-               #[source]
-               #----
-               #include::csv-files/artists.csv[]
-               #----
-               #""".stripMargin('#'),
+      text =
+        """For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
+          #The `linenumber()` function provides exactly that or `null` if called without a `LOAD CSV` context.
+          #
+          #.artists.csv
+          #[source]
+          #----
+          #include::csv-files/artists.csv[]
+          #----
+          #""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST%' AS line
                     #RETURN linenumber() AS number, line""".stripMargin('#'),
       optionalResultExplanation = "",
       assertions = p =>
-        assertEquals(List(
-          Map("number" -> 1, "line" -> List("1", "ABBA", "1992")),
-          Map("number" -> 2, "line" -> List("2", "Roxette", "1986")),
-          Map("number" -> 3, "line" -> List("3", "Europe", "1979")),
-          Map("number" -> 4, "line" -> List("4", "The Cardigans", "1992"))
-        ), p.toList)
+        assertEquals(
+          List(
+            Map("number" -> 1, "line" -> List("1", "ABBA", "1992")),
+            Map("number" -> 2, "line" -> List("2", "Roxette", "1986")),
+            Map("number" -> 3, "line" -> List("3", "Europe", "1979")),
+            Map("number" -> 4, "line" -> List("4", "The Cardigans", "1992"))
+          ),
+          p.toList
+        )
     )
   }
 

@@ -19,9 +19,10 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import java.io
-
-import org.neo4j.cypher.docgen.tooling.Admonitions.{Caution, Important, Note, Tip}
+import org.neo4j.cypher.docgen.tooling.Admonitions.Caution
+import org.neo4j.cypher.docgen.tooling.Admonitions.Important
+import org.neo4j.cypher.docgen.tooling.Admonitions.Note
+import org.neo4j.cypher.docgen.tooling.Admonitions.Tip
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 
 import scala.collection.mutable
@@ -32,7 +33,7 @@ import scala.collection.mutable
  */
 trait DocBuilder {
 
-  import DocBuilder._
+  import org.neo4j.cypher.docgen.tooling.DocBuilder._
 
   def build(): Document = {
     current match {
@@ -51,7 +52,7 @@ trait DocBuilder {
 
   def initCode(code: InitializationFunction): Unit = current.setInitCode(code)
 
-  def initQueries(queries: String*): Unit = current.setInitQueries(queries.map{ query =>
+  def initQueries(queries: String*): Unit = current.setInitQueries(queries.map { query =>
     val mayBeDatabase: Option[String] = scope.collectFirst {
       case s: Scope if (s._database.isDefined) => s._database.get
     }
@@ -60,13 +61,14 @@ trait DocBuilder {
 
   def registerUserDefinedFunctions(udfs: java.lang.Class[_]*): Unit = current.setUserDefinedFunctions(udfs)
 
-  def registerUserDefinedAggregationFunctions(udafs: java.lang.Class[_]*): Unit = current.setUserDefinedAggregationFunctions(udafs)
+  def registerUserDefinedAggregationFunctions(udafs: java.lang.Class[_]*): Unit =
+    current.setUserDefinedAggregationFunctions(udafs)
 
   def registerProcedures(procedures: java.lang.Class[_]*): Unit = current.setProcedures(procedures)
 
   def p(text: String): Unit = current.addContent(Paragraph(text.stripMargin))
 
-  private def formattedSyntax(syntax: String) : String = {
+  private def formattedSyntax(syntax: String): String = {
     if (!syntax.isEmpty) "*Syntax:* `" + syntax + "`" else ""
   }
 
@@ -79,7 +81,8 @@ trait DocBuilder {
   }
 
   def functionWithCypherStyleFormatting(syntax: String, arguments: (String, String)*): Unit = {
-    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher, role=noplay]", syntax).mkString("\n", "\n", "") else ""
+    val formattedSyntax =
+      if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher, role=noplay]", syntax).mkString("\n", "\n", "") else ""
     current.addContent(Function(formattedSyntax, "", arguments))
   }
 
@@ -94,32 +97,32 @@ trait DocBuilder {
   def database(name: String): Unit = {
     scope.collectFirst {
       case section: SectionScope => section
-      case doc: DocScope => doc
-      case query: QueryScope => query
+      case doc: DocScope         => doc
+      case query: QueryScope     => query
     }.get.setDatabase(name)
   }
 
   def runtime(name: String): Unit = {
     scope.collectFirst {
       case section: SectionScope => section
-      case doc: DocScope => doc
-      case query: QueryScope => query
+      case doc: DocScope         => doc
+      case query: QueryScope     => query
     }.get.setRuntime(name)
   }
 
   def login(name: String, password: String): Unit = {
     scope.collectFirst {
       case section: SectionScope => section
-      case doc: DocScope => doc
-      case query: QueryScope => query
+      case doc: DocScope         => doc
+      case query: QueryScope     => query
     }.get.setLogin((name, password))
   }
 
   def logout(): Unit = {
     scope.collectFirst {
       case section: SectionScope => section
-      case doc: DocScope => doc
-      case query: QueryScope => query
+      case doc: DocScope         => doc
+      case query: QueryScope     => query
     }.get.unsetLogin()
   }
 
@@ -127,7 +130,7 @@ trait DocBuilder {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new TablePlaceHolder(queryScope.assertions, queryScope.params:_*))
+    queryScope.addContent(new TablePlaceHolder(queryScope.assertions, queryScope.params: _*))
   }
 
   /** Print a smaller version of the result without changing the query.
@@ -143,14 +146,19 @@ trait DocBuilder {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new LimitedTablePlaceHolder(maybeWantedColumns, rows, queryScope.assertions, queryScope.params: _*))
+    queryScope.addContent(new LimitedTablePlaceHolder(
+      maybeWantedColumns,
+      rows,
+      queryScope.assertions,
+      queryScope.params: _*
+    ))
   }
 
   def statsOnlyResultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new StatsOnlyTablePlaceHolder(queryScope.assertions, queryScope.params:_*))
+    queryScope.addContent(new StatsOnlyTablePlaceHolder(queryScope.assertions, queryScope.params: _*))
   }
 
   def hardcodedResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: String): Unit = {
@@ -164,7 +172,7 @@ trait DocBuilder {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new ErrorOnlyTablePlaceHolder(queryScope.assertions, queryScope.params:_*))
+    queryScope.addContent(new ErrorOnlyTablePlaceHolder(queryScope.assertions, queryScope.params: _*))
   }
 
   def executionPlan(): Unit = {
@@ -220,7 +228,8 @@ trait DocBuilder {
     pop
   }
 
-  def section(title: String, id: String, role: String)(f: => Unit) = inScope(SectionScope(title, Some(id), Some(role)), f)
+  def section(title: String, id: String, role: String)(f: => Unit) =
+    inScope(SectionScope(title, Some(id), Some(role)), f)
   def section(title: String, id: String)(f: => Unit) = inScope(SectionScope(title, Some(id)), f)
   def section(title: String)(f: => Unit) = inScope(SectionScope(title, None), f)
 
@@ -237,21 +246,25 @@ trait DocBuilder {
     assertions: QueryAssertions,
     databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError,
     parameters: Seq[(String, Any)] = Seq(),
-    replacements: Seq[QueryTextReplacement] = Seq(),
+    replacements: Seq[QueryTextReplacement] = Seq()
   )(innerBlockOfCode: => Unit): Unit =
-    inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters, databaseStateBehavior, replacements), {
-      innerBlockOfCode
-      consoleData() // Always append console data
-    })
+    inScope(
+      PreformattedQueryScope(q.stripMargin, assertions, parameters, databaseStateBehavior, replacements), {
+        innerBlockOfCode
+        consoleData() // Always append console data
+      }
+    )
 
   /**
    * Show Transactions is special because we need some transactions to be running in the background so that we have something
    * to show. `backgroundQueries` are the queries to run in the background.
    */
   def backgroundQueries(backgroundQueries: List[String], parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
-    inScope(BackgroundQueriesScope(backgroundQueries.map(_.stripMargin), parameters), {
-      innerBlockOfCode
-    })
+    inScope(
+      BackgroundQueriesScope(backgroundQueries.map(_.stripMargin), parameters), {
+        innerBlockOfCode
+      }
+    )
 }
 
 object DocBuilder {
@@ -281,18 +294,20 @@ object DocBuilder {
 
     def setUserDefinedAggregationFunctions(udafs: Seq[Class[_]]): Unit = {
       _initializations = _initializations.copy(
-        userDefinedAggregationFunctions = _initializations.userDefinedAggregationFunctions ++ udafs)
+        userDefinedAggregationFunctions = _initializations.userDefinedAggregationFunctions ++ udafs
+      )
     }
 
     def setProcedures(procedures: Seq[Class[_]]): Unit = {
       _initializations = _initializations.copy(
-        procedures = _initializations.procedures ++ procedures)
+        procedures = _initializations.procedures ++ procedures
+      )
     }
 
     def addContent(newContent: Content) {
       _content = _content match {
         case NoContent => newContent
-        case _ => ContentChain(content, newContent)
+        case _         => ContentChain(content, newContent)
       }
     }
 
@@ -342,6 +357,7 @@ object DocBuilder {
     databaseStateBehavior: DatabaseStateBehavior,
     replacements: Seq[QueryTextReplacement]
   ) extends QueryScope {
+
     override def toContent = Query(
       queryText,
       assertions,
@@ -352,10 +368,12 @@ object DocBuilder {
       database = _database,
       login = _login,
       replacements = replacements,
-      databaseStateBehavior = databaseStateBehavior)
+      databaseStateBehavior = databaseStateBehavior
+    )
   }
 
   case class BackgroundQueriesScope(beforeQueries: List[String], params: Seq[(String, Any)]) extends Scope {
+
     override def toContent: Content =
       BackgroundQueries(beforeQueries, content, params, runtime = _runtime, database = _database, login = _login)
   }
@@ -367,7 +385,7 @@ object DocBuilder {
   case class QueryTextReplacement(
     placeholder: String,
     renderedValue: String,
-    executedValue: String,
+    executedValue: String
   )
 }
 

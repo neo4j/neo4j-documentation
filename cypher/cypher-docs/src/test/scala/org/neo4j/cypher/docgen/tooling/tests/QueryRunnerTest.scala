@@ -20,23 +20,25 @@
 package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.exceptions.SyntaxException
-import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling._
+import org.neo4j.exceptions.SyntaxException
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
 import org.scalatest.Suite
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.matchers.{MatchResult, Matcher}
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.MatchResult
+import org.scalatest.matchers.Matcher
+import org.scalatest.matchers.should.Matchers
 
 class QueryRunnerTest extends Suite
-                      with FunSuiteLike
-                      with Assertions
-                      with Matchers
-                      with GraphIcing  {
+    with AnyFunSuiteLike
+    with Assertions
+    with Matchers
+    with GraphIcing {
+
   test("invalid query fails") {
     val query = "MATCH n RETURN x"
     val result = runQuery(query)
@@ -65,10 +67,12 @@ class QueryRunnerTest extends Suite
     runQueriesWithBehavior(Seq(
       queryContent(
         query = "CREATE ({prop: 123})",
-        databaseStateBehavior = KeepState),
+        databaseStateBehavior = KeepState
+      ),
       queryContent(
         query = "MATCH (n) RETURN n.prop",
-        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))),
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))
+      )
     ))
   }
 
@@ -76,14 +80,17 @@ class QueryRunnerTest extends Suite
     runQueriesWithBehavior(Seq(
       queryContent(
         query = "CREATE ({prop: 123})",
-        databaseStateBehavior = KeepState),
+        databaseStateBehavior = KeepState
+      ),
       queryContent(
         query = "MATCH (n) RETURN n.prop",
         databaseStateBehavior = ClearState,
-        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))),
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))
+      ),
       queryContent(
         query = "MATCH (n) RETURN n.prop",
-        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set.empty))),
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set.empty))
+      )
     ))
   }
 
@@ -92,7 +99,10 @@ class QueryRunnerTest extends Suite
 
   private def run(init: RunnableInitialization, queryText: String, content: QueryResultPlaceHolder): TestRunResult = {
     val runner = new QueryRunner(noContentFormatter)
-    runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(InitializationQuery(queryText)), content)), "title")
+    runner.runQueries(
+      contentsWithInit = Seq(ContentWithInit(init, Some(InitializationQuery(queryText)), content)),
+      "title"
+    )
   }
 
   private def runQueriesWithBehavior(content: Seq[ContentWithInit]): TestRunResult =
@@ -121,11 +131,12 @@ class QueryRunnerTest extends Suite
   private def haveFailureFor(query: String) =
     new HasFailure(query)
 
-  private def noContentFormatter(qg: GraphDatabaseQueryService, tx: InternalTransaction)(r: DocsExecutionResult) = NoContent
+  private def noContentFormatter(qg: GraphDatabaseQueryService, tx: InternalTransaction)(r: DocsExecutionResult) =
+    NoContent
 }
 
 class HasATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Class[EXCEPTION]))
-  extends Matcher[TestRunResult] {
+    extends Matcher[TestRunResult] {
 
   def apply(result: TestRunResult) = {
 
@@ -148,16 +159,16 @@ class HasATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Cla
   }
 
   private def matchesDirectlyOrThroughCause(expected: Class[EXCEPTION], actual: Throwable): Boolean = {
-    if(expected == actual.getClass)
+    if (expected == actual.getClass)
       true
-    else if(actual.getCause != null) {
+    else if (actual.getCause != null) {
       matchesDirectlyOrThroughCause(expected, actual.getCause)
     } else false
   }
 }
 
 class HasFailure(query: String)
-  extends Matcher[TestRunResult] {
+    extends Matcher[TestRunResult] {
 
   def apply(result: TestRunResult) = {
     val testFailure = QueryRunnerTest.errorForQuery(result, query)
@@ -172,6 +183,7 @@ class HasFailure(query: String)
 }
 
 object QueryRunnerTest {
+
   def errorForQuery(result: TestRunResult, query: String) = result.queryResults.collectFirst {
     case QueryRunResult(q, _, r) if query == q => r.left.toOption
   }.flatten

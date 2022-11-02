@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "MATCH"
   override val linkId = "clauses/match"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "related" =>
         assertStats(result, nodesCreated = 0)
@@ -46,7 +47,8 @@ class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Alice"),
     "B" -> Map("name" -> "Bob"),
-    "C" -> Map("name" -> "Chuck"))
+    "C" -> Map("name" -> "Chuck")
+  )
 
   def text = """
 ###assertion=related

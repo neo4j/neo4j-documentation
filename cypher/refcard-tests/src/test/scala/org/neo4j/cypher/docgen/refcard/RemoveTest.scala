@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class RemoveTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class RemoveTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "REMOVE"
   override val linkId = "clauses/remove"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "remove-label" =>
         assertStats(result, labelsRemoved = 1)
@@ -52,7 +53,8 @@ class RemoveTest extends RefcardTest with QueryStatisticsTestSupport {
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("value" -> 10),
     "B" -> Map("value" -> 20),
-    "C" -> Map("value" -> 30))
+    "C" -> Map("value" -> 30)
+  )
 
   def text = """
 ###assertion=remove-label

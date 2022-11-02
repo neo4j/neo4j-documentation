@@ -19,17 +19,24 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.junit.Ignore
+import org.junit.jupiter.api.Disabled
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
-@Ignore
+@Disabled
 class ExampleTest extends RefcardTest with QueryStatisticsTestSupport {
-  val graphDescription = List("ROOT:Person FRIEND A:Person", "A:Person FRIEND B:Person", "B:Person FRIEND C:Person", "C:Person FRIEND ROOT:Person")
+
+  val graphDescription = List(
+    "ROOT:Person FRIEND A:Person",
+    "A:Person FRIEND B:Person",
+    "B:Person FRIEND C:Person",
+    "C:Person FRIEND ROOT:Person"
+  )
   val title = "Query Structure"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "friends" =>
         assertStats(result, nodesCreated = 0)
@@ -50,7 +57,8 @@ class ExampleTest extends RefcardTest with QueryStatisticsTestSupport {
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Bob"),
     "B" -> Map("value" -> 20),
-    "C" -> Map("value" -> 30))
+    "C" -> Map("value" -> 30)
+  )
 
   def text = """
 ###assertion=friends parameters=name

@@ -7,7 +7,7 @@
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-manual-parent</artifactId>
         <version>5.2.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>neo4j-cypher-docs-parent</artifactId>
@@ -23,9 +23,9 @@
     </properties>
 
     <modules>
-<!--        <module>cypher-docs</module>-->
+        <!-- <module>cypher-docs</module> -->
         <module>cypher-prettifier</module>
-<!--        <module>refcard-tests</module>-->
+        <module>refcard-tests</module>
     </modules>
 
     <build>
@@ -61,12 +61,19 @@
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest_${scala.binary.version}</artifactId>
-                <version>3.0.9</version>
+                <version>3.2.13</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -78,6 +85,12 @@
                         <groupId>org.scala-lang</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.scalatestplus</groupId>
+                <artifactId>junit-4-13_${scala.binary.version}</artifactId>
+                <version>3.2.14.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.scalautils</groupId>

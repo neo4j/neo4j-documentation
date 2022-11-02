@@ -29,7 +29,7 @@ class TransactionCommandsTest extends RefcardTest with QueryStatisticsTestSuppor
   val title = "SHOW and TERMINATE TRANSACTIONS"
   override val linkId = "clauses/transaction-clauses"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "show" =>
         assert(result.toList.size === 1)

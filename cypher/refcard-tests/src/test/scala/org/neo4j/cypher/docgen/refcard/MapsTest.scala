@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "Maps"
   override val linkId = "syntax/maps"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-two" =>
         assertStats(result, nodesCreated = 0)
@@ -57,7 +58,8 @@ class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Alice", "coll" -> Array(1, 2, 3)),
-    "B" -> Map("name" -> "Bob", "coll" -> Array(1, 2, 3)))
+    "B" -> Map("name" -> "Bob", "coll" -> Array(1, 2, 3))
+  )
 
   def text = """
 ###assertion=returns-one
@@ -119,5 +121,5 @@ RETURN
 
 data.name, data.address.city, data.children[0]
 
- */
+   */
 }

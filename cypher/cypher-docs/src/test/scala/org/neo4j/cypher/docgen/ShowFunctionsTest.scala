@@ -29,13 +29,15 @@ class ShowFunctionsTest extends DocumentingTest {
     doc("SHOW FUNCTIONS", "query-listing-functions")
     synopsis("This section explains the `SHOW FUNCTIONS` command.")
     p("Listing the available functions can be done with `SHOW FUNCTIONS`.")
+
     p("""
-    #[NOTE]
-    #====
-    #The command `SHOW FUNCTIONS` returns only the default output. For a full output use the optional `YIELD` command.
-    #Full output: `SHOW FUNCTIONS YIELD *`.
-    #====""".stripMargin('#'))
+        #[NOTE]
+        #====
+        #The command `SHOW FUNCTIONS` returns only the default output. For a full output use the optional `YIELD` command.
+        #Full output: `SHOW FUNCTIONS YIELD *`.
+        #====""".stripMargin('#'))
     p("This command will produce a table with the following columns:")
+
     p("""
 .List functions output
 [options="header", cols="4,6"]
@@ -77,6 +79,7 @@ Is `null` without the <<access-control-dbms-administration-role-management,`SHOW
 List of roles permitted to use boosted mode when executing this function.
 Is `null` without the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.
 ||===""")
+
     section("Syntax") {
       p("""
 List functions, either all or only built-in or user-defined::
@@ -127,32 +130,41 @@ This command cannot be used for LDAP users.
 When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 ====""".stripMargin('#'))
     }
+
     section("Listing all functions") {
       p("""To list all available functions with the default output columns, the `SHOW FUNCTIONS` command can be used.
           #If all columns are required, use `SHOW FUNCTIONS YIELD *`.""".stripMargin('#'))
-      query("SHOW FUNCTIONS", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "category", "description")
-      })) {
+      query(
+        "SHOW FUNCTIONS",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "category", "description")
+        })
+      ) {
         limitedResultTable(20)
       }
     }
+
     section("Listing functions with filtering on output columns") {
       p(
         """The listed functions can be filtered in multiple ways.
           #One way is through the type keywords, `BUILT IN` and `USER DEFINED`.
           #A more flexible way is to use the `WHERE` clause.
-          #For example, getting the name of all built-in functions starting with the letter 'a':""".stripMargin('#'))
-      query("""
+          #For example, getting the name of all built-in functions starting with the letter 'a':""".stripMargin('#')
+      )
+      query(
+        """
           #SHOW BUILT IN FUNCTIONS YIELD name, isBuiltIn
           #WHERE name STARTS WITH 'a'""".stripMargin('#'),
-      ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "isBuiltIn")
-        p.columnAs[String]("name").foreach(_ should startWith("a"))
-        p.columnAs[Boolean]("isBuiltIn").foreach(_ should be(true))
-      })) {
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "isBuiltIn")
+          p.columnAs[String]("name").foreach(_ should startWith("a"))
+          p.columnAs[Boolean]("isBuiltIn").foreach(_ should be(true))
+        })
+      ) {
         limitedResultTable(15)
       }
     }
+
     section("Listing functions with other filtering") {
       database("system")
       initQueries(
@@ -162,24 +174,49 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
       p(
         """The listed functions can also be filtered on whether a user can execute them.
           #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin('#'))
+          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin(
+          '#'
+        )
+      )
       p(
         """There are two options, how to use the `EXECUTABLE` clause.
-          #The first option, is to filter for the current user:""".stripMargin('#'))
+          #The first option, is to filter for the current user:""".stripMargin('#')
+      )
       login("jake", "abc123")
-      query("SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "category", "description", "signature", "isBuiltIn", "argumentDescription", "returnDescription", "aggregating", "rolesExecution", "rolesBoostedExecution")
-        p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
-        p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
-      })) {
-        limitedResultTable(maybeWantedColumns = Some(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution")))
+      query(
+        "SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array(
+            "name",
+            "category",
+            "description",
+            "signature",
+            "isBuiltIn",
+            "argumentDescription",
+            "returnDescription",
+            "aggregating",
+            "rolesExecution",
+            "rolesBoostedExecution"
+          )
+          p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
+          p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
+        })
+      ) {
+        limitedResultTable(maybeWantedColumns =
+          Some(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution"))
+        )
       }
-      p("Notice that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.")
+      p(
+        "Notice that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege."
+      )
       logout()
       p("The second option, is to filter for a specific user:")
-      query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {
-        p.columns should contain theSameElementsAs Array("name", "category", "description")
-      })) {
+      query(
+        "SHOW FUNCTIONS EXECUTABLE BY jake",
+        ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("name", "category", "description")
+        })
+      ) {
         limitedResultTable()
       }
     }

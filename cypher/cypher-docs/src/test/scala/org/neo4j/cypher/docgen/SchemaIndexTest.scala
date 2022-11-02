@@ -19,14 +19,10 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matcher
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
-import org.junit.Assert.assertTrue
-import org.junit.Test
-import org.neo4j.configuration.GraphDatabaseInternalSettings
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
@@ -35,7 +31,6 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.exceptions.CypherExecutionException
-import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MIN
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
@@ -45,29 +40,20 @@ import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_3D_MIN
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
 import org.neo4j.graphdb.schema.IndexType
+import org.neo4j.kernel.api.impl.schema.TextIndexProvider
+import org.neo4j.kernel.api.impl.schema.trigram.TrigramIndexProvider
 import org.neo4j.kernel.impl.index.schema.PointIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
-import org.neo4j.kernel.api.impl.schema.TextIndexProvider
-import org.neo4j.kernel.api.impl.schema.trigram.TrigramIndexProvider
 
-import java.util
 import scala.jdk.CollectionConverters.IterableHasAsScala
-import scala.jdk.CollectionConverters.MapHasAsJava
-import scala.jdk.CollectionConverters.MapHasAsScala
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
-  // can be removed once we use Neo4j 5.1 and not 5.0 snapshot
-  override def databaseConfig(): util.Map[Setting[_], Object] = {
-    val config = super.databaseConfig().asScala
-    (config ++ Map(GraphDatabaseInternalSettings.trigram_index -> java.lang.Boolean.TRUE)).asJava
-  }
-
-  //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
+  // need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
     (1 to 20 map (_ => """CREATE ()-[:REL]->()""")).toList ++
-    //some additional data
+    // some additional data
     Seq("create ()-[:KNOWS {since: 1992, metIn: 'Malmo', lastMet: 2021, lastMetIn: 'Stockholm'}]->()")
 
   override def graphDescription = List(
@@ -75,8 +61,22 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andy" -> Map("firstname" -> "Andy", "middlename"-> "Mark", "surname" -> "Jones", "age" -> 40, "country" -> "Sweden", "highScore" -> 12345),
-    "john" -> Map("firstname" -> "John", "middlename"-> "Ron", "surname" -> "Smith", "age" -> 35, "country" -> "UK", "highScore" -> 54321)
+    "andy" -> Map(
+      "firstname" -> "Andy",
+      "middlename" -> "Mark",
+      "surname" -> "Jones",
+      "age" -> 40,
+      "country" -> "Sweden",
+      "highScore" -> 12345
+    ),
+    "john" -> Map(
+      "firstname" -> "John",
+      "middlename" -> "Ron",
+      "surname" -> "Smith",
+      "age" -> 35,
+      "country" -> "UK",
+      "highScore" -> 54321
+    )
   )
 
   override val setupConstraintQueries = List(
@@ -97,16 +97,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a single-property range index for nodes",
-      text = "A named range index on a single property for all nodes with a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named range index on a single property for all nodes with a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE INDEX node_range_index_name FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_range_index_name", "Person", List("surname"))
     )
     testQuery(
       title = "Create a single-property range index for relationships",
-      text = "A named range index on a single property for all relationships with a particular relationship type can be created with `CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named range index on a single property for all relationships with a particular relationship type can be created with `CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE INDEX rel_range_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_range_index_name", "KNOWS", List("since"))
@@ -115,7 +117,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a range index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
       queryText = "CREATE RANGE INDEX node_range_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
-      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
+      optionalResultExplanation =
+        "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
       assertions = _ => assertIndexWithNameExists("node_range_index_name", "Person", List("surname"))
     )
     testQuery(
@@ -123,7 +126,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         s"""To create a range index with a specific index provider, the `OPTIONS` clause is used.
            |Only one valid value exists for the index provider, `$rangeProvider`, which is the default value.""".stripMargin,
-      queryText = s"CREATE INDEX range_index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$rangeProvider'}",
+      queryText =
+        s"CREATE INDEX range_index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$rangeProvider'}",
       optionalResultExplanation = "There is no supported index configuration for range indexes.",
       assertions = _ => assertIndexWithNameExists("range_index_with_provider", "TYPE", List("prop1"))
     )
@@ -166,16 +170,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a node label lookup index",
-      text = "A named token lookup index for all nodes with one or more labels can be created with `CREATE LOOKUP INDEX index_name FOR (n) ON EACH labels(n)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named token lookup index for all nodes with one or more labels can be created with `CREATE LOOKUP INDEX index_name FOR (n) ON EACH labels(n)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)",
       optionalResultExplanation = "Note that it can only be created once and that the index name must be unique.",
       assertions = _ => assertTokenLookupIndexExists("node_label_lookup_index", isNodeIndex = true)
     )
     testQuery(
       title = "Create a relationship type lookup index",
-      text = "A named token lookup index for all relationships with any relationship type can be created with `CREATE LOOKUP INDEX index_name FOR ()-[r]-() ON EACH type(r)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named token lookup index for all relationships with any relationship type can be created with `CREATE LOOKUP INDEX index_name FOR ()-[r]-() ON EACH type(r)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]-() ON EACH type(r)",
       optionalResultExplanation = "Note that it can only be created once and that the index name must be unique.",
       assertions = _ => assertTokenLookupIndexExists("rel_type_lookup_index", isNodeIndex = false)
@@ -185,7 +191,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "Token lookup indexes allow setting the index provider using the `OPTIONS` clause. " +
         s"Only one valid value exists for the index provider, `$tokenProvider`, which is the default value.",
       prepare = _ => executePreparationQueries(List("DROP INDEX node_label_lookup_index IF EXISTS")),
-      queryText = s"CREATE LOOKUP INDEX node_label_lookup_index_2 FOR (n) ON EACH labels(n) OPTIONS {indexProvider: '$tokenProvider'}",
+      queryText =
+        s"CREATE LOOKUP INDEX node_label_lookup_index_2 FOR (n) ON EACH labels(n) OPTIONS {indexProvider: '$tokenProvider'}",
       optionalResultExplanation = "There is no supported index configuration for token lookup indexes.",
       assertions = _ => assertTokenLookupIndexExists("node_label_lookup_index_2", isNodeIndex = true)
     )
@@ -197,33 +204,39 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a node text index",
-      text = "A named text index on a single property for all nodes with a particular label can be created with `CREATE TEXT INDEX index_name FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named text index on a single property for all nodes with a particular label can be created with `CREATE TEXT INDEX index_name FOR (n:Label) ON (n.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE TEXT INDEX node_index_name FOR (n:Person) ON (n.nickname)",
-      optionalResultExplanation = "Note that text indexes only recognize string values, do not support multiple properties, and that the index name must be unique.",
+      optionalResultExplanation =
+        "Note that text indexes only recognize string values, do not support multiple properties, and that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("nickname"))
     )
     testQuery(
       title = "Create a relationship text index",
-      text = "A named text index on a single property for all relationships with a particular relationship type can be created with `CREATE TEXT INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named text index on a single property for all relationships with a particular relationship type can be created with `CREATE TEXT INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE TEXT INDEX rel_index_name FOR ()-[r:KNOWS]-() ON (r.interest)",
-      optionalResultExplanation = "Note that text indexes only recognize string values, do not support multiple properties, and that the index name must be unique.",
+      optionalResultExplanation =
+        "Note that text indexes only recognize string values, do not support multiple properties, and that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_index_name", "KNOWS", List("interest"))
     )
     testQuery(
       title = "Create a text index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
       queryText = "CREATE TEXT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.nickname)",
-      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
+      optionalResultExplanation =
+        "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("nickname"))
     )
     testQuery(
       title = "Create a text index specifying the index provider",
       text =
         s"""To create a text index with a specific index provider, the `OPTIONS` clause is used.
-          |The valid values for the index provider are `$textProvider` and `$oldTextProvider` (deprecated). The default provider is $textProvider.""".stripMargin,
-      queryText = s"CREATE TEXT INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$textProvider'}",
+           |The valid values for the index provider are `$textProvider` and `$oldTextProvider` (deprecated). The default provider is $textProvider.""".stripMargin,
+      queryText =
+        s"CREATE TEXT INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$textProvider'}",
       optionalResultExplanation = "There is no supported index configuration for text indexes.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
     )
@@ -242,25 +255,30 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a node point index",
-      text = "A named point index on a single property for all nodes with a particular label can be created with `CREATE POINT INDEX index_name FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named point index on a single property for all nodes with a particular label can be created with `CREATE POINT INDEX index_name FOR (n:Label) ON (n.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE POINT INDEX node_index_name FOR (n:Person) ON (n.sublocation)",
-      optionalResultExplanation = "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
+      optionalResultExplanation =
+        "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("sublocation"))
     )
     testQuery(
       title = "Create a relationship point index",
-      text = "A named point index on a single property for all relationships with a particular relationship type can be created with `CREATE POINT INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
+      text =
+        "A named point index on a single property for all relationships with a particular relationship type can be created with `CREATE POINT INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+          "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE POINT INDEX rel_index_name FOR ()-[r:STREET]-() ON (r.intersection)",
-      optionalResultExplanation = "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
+      optionalResultExplanation =
+        "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_index_name", "STREET", List("intersection"))
     )
     testQuery(
       title = "Create a point index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
       queryText = "CREATE POINT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.sublocation)",
-      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
+      optionalResultExplanation =
+        "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("sublocation"))
     )
     testQuery(
@@ -268,7 +286,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         s"""To create a point index with a specific index provider, the `OPTIONS` clause is used.
            |Only one valid value exists for the index provider, `$pointProvider`, which is the default value.""".stripMargin,
-      queryText = s"CREATE POINT INDEX index_with_provider FOR (n:Label) ON (n.prop1) OPTIONS {indexProvider: '$pointProvider'}",
+      queryText =
+        s"CREATE POINT INDEX index_with_provider FOR (n:Label) ON (n.prop1) OPTIONS {indexProvider: '$pointProvider'}",
       optionalResultExplanation = "Can be combined with specifying index configuration.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "Label", List("prop1"))
     )
@@ -365,7 +384,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
     testQuery(
       title = "Drop a non-existing index",
-      text = "If it is uncertain if an index exists and you want to drop it if it does but not get an error should it not, use: ",
+      text =
+        "If it is uncertain if an index exists and you want to drop it if it does but not get an error should it not, use: ",
       queryText = "DROP INDEX missing_index_name IF EXISTS",
       assertions = _ => assertIndexWithNameDoesNotExists("missing_index_name")
     )
@@ -376,7 +396,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     execute("CREATE INDEX preExistingIndex IF NOT EXISTS FOR (book:Book) ON (book.title)")
     execute("CREATE INDEX indexOnBooks IF NOT EXISTS FOR (book:Book) ON (book.wordCount)")
     execute("CREATE CONSTRAINT booksShouldHaveUniqueIsbn IF NOT EXISTS FOR (book:Book) REQUIRE book.isbn IS UNIQUE")
-    execute("CREATE CONSTRAINT bookRecommendations IF NOT EXISTS FOR (book:Book) REQUIRE (book.recommendations) IS NOT NULL")
+    execute(
+      "CREATE CONSTRAINT bookRecommendations IF NOT EXISTS FOR (book:Book) REQUIRE (book.recommendations) IS NOT NULL"
+    )
 
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an already existing index",
@@ -386,21 +408,27 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an index with the same name as an already existing index",
-      text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when an index with that name already exists.",
+      text =
+        "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when an index with that name already exists.",
       queryText = "CREATE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
-      optionalResultExplanation = "In this case the index can't be created because there already exists an index with that name."
+      optionalResultExplanation =
+        "In this case the index can't be created because there already exists an index with that name."
     )
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an index when a constraint already exists",
-      text = "Create an index on the property `isbn` on nodes with the `Book` label, when an index-backed constraint already exists on that schema.",
+      text =
+        "Create an index on the property `isbn` on nodes with the `Book` label, when an index-backed constraint already exists on that schema.",
       queryText = "CREATE INDEX bookIsbnIndex FOR (book:Book) ON (book.isbn)",
-      optionalResultExplanation = "In this case the index can't be created because a index-backed constraint already exists on that label and property combination."
+      optionalResultExplanation =
+        "In this case the index can't be created because a index-backed constraint already exists on that label and property combination."
     )
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an index with the same name as an already existing constraint",
-      text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when a constraint with that name already exists.",
+      text =
+        "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when a constraint with that name already exists.",
       queryText = "CREATE INDEX bookRecommendations FOR (book:Book) ON (book.recommendations)",
-      optionalResultExplanation = "In this case the index can't be created because there already exists a constraint with that name."
+      optionalResultExplanation =
+        "In this case the index can't be created because there already exists a constraint with that name."
     )
   }
 
@@ -408,16 +436,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Node label LOOKUP index example",
       text = "In the example below, a node TOKEN LOOKUP index is available.",
-      prepare = Some(_ => executePreparationQueries(List(
-        "CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)",
-      ))),
+      prepare = Some(_ =>
+        executePreparationQueries(List(
+          "CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)"
+        ))
+      ),
       queryText = "MATCH (person:Person) RETURN person",
       assertions = {
         p =>
           assertEquals(42, p.size)
 
           checkPlanDescription(p)("NodeByLabelScan")
-      },
+      }
     )
   }
 
@@ -425,16 +455,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Relationship type LOOKUP index example",
       text = "In the example below, a relationship TOKEN LOOKUP index is available.",
-      prepare = Some(_ => executePreparationQueries(List(
-        "CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]->() ON EACH type(r)",
-      ))),
+      prepare = Some(_ =>
+        executePreparationQueries(List(
+          "CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]->() ON EACH type(r)"
+        ))
+      ),
       queryText = "MATCH ()-[r:KNOWS]->() RETURN r",
       assertions = {
         p =>
           assertEquals(22, p.size)
 
           checkPlanDescription(p)("DirectedRelationshipTypeScan")
-      },
+      }
     )
   }
 
@@ -471,9 +503,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Relationship RANGE index example",
       text = "In this example, a `KNOWS(since)` relationship `RANGE` index is available. ",
       queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
-      prepare = Some(_ => executePreparationQueries(List(
-        "create range index for ()-[r:KNOWS]-() on (r.since)",
-      ))),
+      prepare = Some(_ =>
+        executePreparationQueries(List(
+          "create range index for ()-[r:KNOWS]-() on (r.since)"
+        ))
+      ),
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -488,9 +522,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Relationship TEXT index example",
       text = "In this example, a `KNOWS(lastMetLocation)` relationship `TEXT` index is available. ",
       queryText = "MATCH (person)-[relationship:KNOWS { metIn: 'Malmo' } ]->(friend) RETURN person, friend",
-      prepare = Some(_ => executePreparationQueries(List(
-        "create text index for ()-[r:KNOWS]-() on (r.metIn)",
-      ))),
+      prepare = Some(_ =>
+        executePreparationQueries(List(
+          "create text index for ()-[r:KNOWS]-() on (r.metIn)"
+        ))
+      ),
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -503,8 +539,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_text_over_range_index() {
     profileQuery(
       title = "Multiple available index types",
-      text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `RANGE` index are available. " +
-        "The `RANGE` node index is chosen.",
+      text =
+        "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `RANGE` index are available. " +
+          "The `RANGE` node index is chosen.",
       queryText = "MATCH (person:Person {middlename: 'Ron'}) RETURN person",
       assertions = {
         p =>
@@ -534,7 +571,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def indexes_are_case_sensitive() {
     profileQuery(
       title = "Indexes are case sensitive",
-      text = "Note that indexes are case sensitive, that means we cannot use indexes for queries using `toLower` and `toUpper`. For example, the following query cannot use an index:",
+      text =
+        "Note that indexes are case sensitive, that means we cannot use indexes for queries using `toLower` and `toUpper`. For example, the following query cannot use an index:",
       queryText = "MATCH (person:Person) WHERE toLower(person.firstname) = 'andy' RETURN person",
       assertions = {
         p =>
@@ -555,9 +593,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "The following query will use the composite index defined <<administration-indexes-create-a-composite-range-index-for-nodes, earlier>>: ",
       prepare = _ => executePreparationQueries(List("CREATE RANGE INDEX FOR (p:Person) ON (p.age, p.country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
-      optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
-        "as the query does not contain a predicate on the `country` property. " +
-      "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. ",
+      optionalResultExplanation =
+        "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
+          "as the query does not contain a predicate on the `country` property. " +
+          "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. ",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -572,7 +611,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
     profileQuery(
       title = "Range comparisons using `WHERE` (single-property index)",
-      text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
+      text =
+        "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
       queryText = "MATCH (friend)<-[r:KNOWS]-(person) WHERE r.since < 2011 RETURN friend, person",
       assertions = {
         p =>
@@ -609,8 +649,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }.toList)
     profileQuery(
       title = "Multiple range comparisons using `WHERE` (single-property index)",
-      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
-        "in a single index range seek.",
+      text =
+        "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
+          "in a single index range seek.",
       queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 RETURN person",
       assertions = {
         p =>
@@ -629,16 +670,20 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }.toList)
     profileQuery(
       title = "Multiple range comparisons using `WHERE` (composite index)",
-      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
-        "in a single index range seek. " +
-        "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
-      queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND person.name IS NOT NULL RETURN person",
+      text =
+        "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
+          "in a single index range seek. " +
+          "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
+      queryText =
+        "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND person.name IS NOT NULL RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("RANGE INDEX person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
+          checkPlanDescriptionArgument(p)(
+            "RANGE INDEX person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL"
+          )
       }
     )
   }
@@ -650,7 +695,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "List membership check using `IN` (single-property index)",
       text =
         "The `IN` predicate on `r.since` in the following query will use the single-property index `KNOWS(lastMetIn)` if it exists. ",
-      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.lastMetIn IN ['Malmo', 'Stockholm'] RETURN person, friend",
+      queryText =
+        "MATCH (person)-[r:KNOWS]->(friend) WHERE r.lastMetIn IN ['Malmo', 'Stockholm'] RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -667,7 +713,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "List membership check using `IN` (composite index)",
       text =
         "The `IN` predicates on `r.since` and `r.lastMet` in the following query will use the composite index `KNOWS(since, lastMet)` if it exists. ",
-      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IN [1992, 2017] AND r.lastMet IN [2002, 2021] RETURN person, friend",
+      queryText =
+        "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IN [1992, 2017] AND r.lastMet IN [2002, 2021] RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -694,7 +741,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString(NodeIndexSeek.PLAN_DESCRIPTION_INDEX_SEEK_RANGE_NAME))
+          assertThat(
+            p.executionPlanDescription().toString
+          ).contains(
+            NodeIndexSeek.PLAN_DESCRIPTION_INDEX_SEEK_RANGE_NAME
+          )
       }
     )
   }
@@ -714,16 +765,19 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Prefix search using `STARTS WITH` (composite index)",
       text =
         "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname,surname)` index, if it exists. " +
-        "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter. " +
-        "However, if the predicate on `person.firstname` is a equality check " +
-        "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
-        "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND person.surname IS NOT NULL RETURN person",
+          "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter. " +
+          "However, if the predicate on `person.firstname` is a equality check " +
+          "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
+          "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
+      queryText =
+        "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND person.surname IS NOT NULL RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("RANGE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
+          checkPlanDescriptionArgument(p)(
+            "RANGE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL"
+          )
       }
     )
   }
@@ -736,14 +790,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Suffix search using `ENDS WITH` (single-property index)",
       text =
-      "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn)` text index, if it exists. " +
-        "Text indexes are optimized for `CONTAINS` and `ENDS WITH` and they are the only indexes that can solve those predicates.",
+        "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn)` text index, if it exists. " +
+          "Text indexes are optimized for `CONTAINS` and `ENDS WITH` and they are the only indexes that can solve those predicates.",
       queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' RETURN person, friend",
       optionalResultExplanation = "Text indexes only index String values and therefore do not find other values.",
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexEndsWithScan"))
+          assertThat(p.executionPlanDescription().toString).contains("DirectedRelationshipIndexEndsWithScan")
       }
     )
   }
@@ -759,11 +813,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "this is still faster than not using an index in the first place. " +
           "Any (non-existence check) predicate on `KNOWS.lastMetIn` is also rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' AND r.lastMetIn IS NOT NULL RETURN person, friend",
+      queryText =
+        "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' AND r.lastMetIn IS NOT NULL RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
+          assertThat(p.executionPlanDescription().toString).contains("DirectedRelationshipIndexScan")
       }
     )
   }
@@ -788,7 +843,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
+          assertThat(p.executionPlanDescription().toString).contains("NodeIndexContainsScan")
       }
     )
   }
@@ -816,7 +871,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+          assertThat(p.executionPlanDescription().toString).contains("NodeIndexScan")
       }
     )
   }
@@ -831,7 +886,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
+          assertThat(p.executionPlanDescription().toString).contains("DirectedRelationshipIndexScan")
       }
     )
   }
@@ -846,38 +901,41 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Existence check using `IS NOT NULL` (composite index)",
       text =
         "The `p.firstname IS NOT NULL` and `p.surname IS NOT NULL` predicates in the following query will use the `Person(firstname,surname)` index, if it exists. " +
-        "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter.",
+          "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter.",
       queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL AND p.surname IS NOT NULL RETURN p",
       assertions = {
         p =>
           assertEquals(2, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+          assertThat(p.executionPlanDescription().toString).contains("NodeIndexScan")
       }
     )
   }
 
   @Test def use_index_with_distance_query() {
     executePreparationQueries(
-      (for(_ <- 1 to 300) yield s"CREATE ()-[:SOME_TYPE]->()").toList ++
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE ()-[:KNOWS {lastMetPoint: point({x:$x, y:$y})}]->()").toList)
+      (for (_ <- 1 to 300) yield s"CREATE ()-[:SOME_TYPE]->()").toList ++
+        (for (x <- -10 to 10; y <- -10 to 10)
+          yield s"CREATE ()-[:KNOWS {lastMetPoint: point({x:$x, y:$y})}]->()").toList
+    )
 
     executePreparationQueries(List("CREATE POINT INDEX FOR ()-[r:KNOWS]-() ON (r.lastMetPoint)"))
     profileQuery(
       title = "Spatial distance searches (single-property index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
-      queryText = "MATCH ()-[r:KNOWS]->() WHERE point.distance(r.lastMetPoint, point({x: 1, y: 2})) < 2 RETURN r.lastMetPoint",
+      queryText =
+        "MATCH ()-[r:KNOWS]->() WHERE point.distance(r.lastMetPoint, point({x: 1, y: 2})) < 2 RETURN r.lastMetPoint",
       assertions = {
         p =>
           assertEquals(9, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexSeekByRange"))
+          assertThat(p.executionPlanDescription().toString).contains("DirectedRelationshipIndexSeekByRange")
       }
     )
   }
 
   @Test def use_index_with_bbox_query() {
     executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
+      (for (x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
         "MATCH (n:Person {firstname: 'Andy'}) SET n.location = point({x: 1.2345, y: 5.4321})",
         "MATCH (n:Person {firstname: 'Mark'}) SET n.location = point({y: 1.2345, x: 5.4321})"
       )
@@ -885,7 +943,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Spatial bounding box searches (single-property index)",
       text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types.",
-      queryText = "MATCH (person:Person) WHERE point.withinBBox(person.location, point({x: 1.2, y: 5.4}), point({x: 1.3, y: 5.5})) RETURN person.firstname",
+      queryText =
+        "MATCH (person:Person) WHERE point.withinBBox(person.location, point({x: 1.2, y: 5.4}), point({x: 1.3, y: 5.5})) RETURN person.firstname",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -898,7 +957,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     val transaction = db.beginTx()
     try {
       val indexDef = transaction.schema.getIndexByName(name)
-      val entity = if (indexDef.isNodeIndex) indexDef.getLabels.iterator().next().name() else indexDef.getRelationshipTypes.iterator().next().name()
+      val entity =
+        if (indexDef.isNodeIndex) indexDef.getLabels.iterator().next().name()
+        else indexDef.getRelationshipTypes.iterator().next().name()
       val properties = indexDef.getPropertyKeys.asScala.toSet
       assert(entity.equals(expectedEntity))
       assert(properties === expectedProperties.toSet)
@@ -928,24 +989,33 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   private def checkPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
-   checkPlanDescription(result, containsString(costString))
-  }
-
-  private def checkNotInPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
-    checkPlanDescription(result, not(containsString(costString)))
-  }
-
-  private def checkPlanDescription(result: DocsExecutionResult, costMatcher: Matcher[String]): Unit = {
     val planDescription = result.executionPlanDescription()
     val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
 
     plannerArgument match {
       case Some(Planner(IDPPlannerName.name)) =>
-        assertThat(planDescription.toString, costMatcher)
+        assertThat(planDescription.toString).contains(costString)
       case Some(Planner(DPPlannerName.name)) =>
-        assertThat(planDescription.toString, costMatcher)
+        assertThat(planDescription.toString).contains(costString)
       case Some(Planner(name)) if name.equals("COST") =>
-        assertThat(planDescription.toString, costMatcher)
+        assertThat(planDescription.toString).contains(costString)
+
+      case x =>
+        fail(s"Couldn't determine used planner: $x")
+    }
+  }
+
+  private def checkNotInPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
+    val planDescription = result.executionPlanDescription()
+    val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
+
+    plannerArgument match {
+      case Some(Planner(IDPPlannerName.name)) =>
+        assertThat(planDescription.toString).doesNotContain(costString)
+      case Some(Planner(DPPlannerName.name)) =>
+        assertThat(planDescription.toString).doesNotContain(costString)
+      case Some(Planner(name)) if name.equals("COST") =>
+        assertThat(planDescription.toString).doesNotContain(costString)
 
       case x =>
         fail(s"Couldn't determine used planner: $x")
@@ -959,6 +1029,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       case str: String => str.contains(expected)
     }
 
-    assertTrue(s"Could not find expected string: $expected", res)
+    assertTrue(res, s"Could not find expected string: $expected")
   }
 }

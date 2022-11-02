@@ -19,13 +19,12 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Assert._
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Node
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
-
-import scala.io
+import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.visualization.graphviz.GraphStyle
 
 class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatisticsTestSupport {
   override def graphDescription = List("A KNOWS B", "A BLOCKS C", "D KNOWS A", "B KNOWS E", "C KNOWS E", "B BLOCKS D")
@@ -38,7 +37,8 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     "B" -> Map("name" -> "Bossman"),
     "C" -> Map("name" -> "Caesar"),
     "D" -> Map("name" -> "David"),
-    "E" -> Map("name" -> "George"))
+    "E" -> Map("name" -> "George")
+  )
 
   def section = "InternalTesting"
 
@@ -46,19 +46,26 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     testQuery(
       title = "Test DocumentationTestBase",
       text = "Aggregated results have to pass through a `WITH` clause to be able to filter on.",
-      queryText = """MATCH (david)--(otherPerson)-->() WHERE david.name = 'David' WITH otherPerson, count(*) AS foaf WHERE foaf > 1 RETURN otherPerson""",
-      optionalResultExplanation = """The person connected to *'David'* with the at least more than one outgoing relationship will be returned by the query.""",
-      assertions = (p) => assertNotNull(p.columnAs[Node]("otherPerson").toList))
+      queryText =
+        """MATCH (david)--(otherPerson)-->() WHERE david.name = 'David' WITH otherPerson, count(*) AS foaf WHERE foaf > 1 RETURN otherPerson""",
+      optionalResultExplanation =
+        """The person connected to *'David'* with the at least more than one outgoing relationship will be returned by the query.""",
+      assertions = (p) => assertNotNull(p.columnAs[Node]("otherPerson").toList)
+    )
 
     // ensure that the result/graph is actually printed to the file and not empty.
 
-    val resultSource = io.Source.fromFile("target/docs/dev/ql/internaltesting/includes/internaltesting-test-documentationtestbase.result.asciidoc", "utf-8")
+    val resultSource = io.Source.fromFile(
+      "target/docs/dev/ql/internaltesting/includes/internaltesting-test-documentationtestbase.result.asciidoc",
+      "utf-8"
+    )
     val resultLines = resultSource.mkString
     resultSource.close()
     assert(resultLines.contains("Anders"))
     assert(resultLines.contains("otherPerson"))
 
-    val graphSource = io.Source.fromFile("target/docs/dev/ql/internaltesting/includes/cypher-documentationbase-graph.asciidoc", "utf-8")
+    val graphSource =
+      io.Source.fromFile("target/docs/dev/ql/internaltesting/includes/cypher-documentationbase-graph.asciidoc", "utf-8")
     val graphLines = graphSource.mkString
     graphSource.close()
     assert(graphLines.contains("Anders"))
@@ -79,14 +86,18 @@ Use `UNWIND` to create multiple nodes from a parameter.
       parameters =
         Map("props" -> List(
           Map("name" -> "Andy", "position" -> "Developer"),
-          Map("name" -> "Michael", "position" -> "Developer")))
-      ,
+          Map("name" -> "Michael", "position" -> "Developer")
+        )),
       queryText = "UNWIND $props AS properties CREATE (n) SET n = properties RETURN n",
       optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 2, propertiesWritten = 4))
+      assertions = (p) => assertStats(p, nodesCreated = 2, propertiesWritten = 4)
+    )
 
     // ensure that the parameters are printed
-    val resultSource = io.Source.fromFile("target/docs/dev/ql/internaltesting/create-multiple-nodes-with-parameters-for-properties.asciidoc", "utf-8")
+    val resultSource = io.Source.fromFile(
+      "target/docs/dev/ql/internaltesting/create-multiple-nodes-with-parameters-for-properties.asciidoc",
+      "utf-8"
+    )
     val resultLines = resultSource.mkString
     resultSource.close()
     assert(resultLines.contains("\n.Parameters\n"))

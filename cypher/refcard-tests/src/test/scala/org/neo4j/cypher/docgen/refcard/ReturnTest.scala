@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class ReturnTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class ReturnTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "RETURN"
   override val linkId = "clauses/return"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "all-nodes" =>
         assertStats(result, nodesDeleted = 0, relationshipsCreated = 0, propertiesWritten = 0, relationshipsDeleted = 0)
@@ -62,7 +63,8 @@ class ReturnTest extends RefcardTest with QueryStatisticsTestSupport {
     "ROOT" -> Map("property" -> 0),
     "A" -> Map("property" -> 10),
     "B" -> Map("property" -> 20),
-    "C" -> Map("property" -> 30))
+    "C" -> Map("property" -> 30)
+  )
 
   def text = """
 ###assertion=all-nodes

@@ -24,15 +24,16 @@ import org.neo4j.cypher.docgen.tooling.Admonitions._
 import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling._
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
 import org.scalatest.Suite
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
 class DocumentAsciiDocTest extends Suite
-                           with FunSuiteLike
-                           with Assertions
-                           with Matchers
-                           with GraphIcing  {
+    with AnyFunSuiteLike
+    with Assertions
+    with Matchers
+    with GraphIcing {
+
   test("Simplest possible document") {
     val doc = Document("title", "myId", init = RunnableInitialization.empty, Paragraph("lorem ipsum"))
 
@@ -42,11 +43,13 @@ class DocumentAsciiDocTest extends Suite
         |
         |lorem ipsum
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Heading inside Document") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty, Heading("My heading") ~ Paragraph("lorem ipsum"))
+    val doc =
+      Document("title", "myId", init = RunnableInitialization.empty, Heading("My heading") ~ Paragraph("lorem ipsum"))
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -55,7 +58,8 @@ class DocumentAsciiDocTest extends Suite
         |.My heading
         |lorem ipsum
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Abstract for Document") {
@@ -70,14 +74,22 @@ class DocumentAsciiDocTest extends Suite
         |abstract intro
         |--
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Section inside Section") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
-      Section("outer", None, RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
+      Section(
+        "outer",
+        None,
+        RunnableInitialization.empty,
         Paragraph("first") ~ Section("inner", None, RunnableInitialization.empty, Paragraph("second"))
-      ))
+      )
+    )
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -91,14 +103,22 @@ class DocumentAsciiDocTest extends Suite
         |
         |second
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Section with IDREF") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
-      Section("outer", Some("IDREF1"), RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
+      Section(
+        "outer",
+        Some("IDREF1"),
+        RunnableInitialization.empty,
         Paragraph("first") ~ Section("inner", Some("IDREF2"), RunnableInitialization.empty, Paragraph("second"))
-      ))
+      )
+    )
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -114,11 +134,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |second
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Tip with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Tip(Paragraph("tip text")) ~
         Tip("custom heading", Paragraph("tip text again"))
     )
@@ -142,11 +166,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Note with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Note(Paragraph("tip text")) ~
         Note("custom heading", Paragraph("tip text again"))
     )
@@ -170,11 +198,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Warning with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Warning(Paragraph("tip text")) ~
         Warning("custom heading", Paragraph("tip text again"))
     )
@@ -198,11 +230,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Important section with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Important(Paragraph("important text")) ~
         Important("custom heading", Paragraph("important text again"))
     )
@@ -226,11 +262,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Caution with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Caution(Paragraph("tip text")) ~
         Caution("custom heading", Paragraph("tip text again"))
     )
@@ -254,11 +294,15 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Important with and without heading") {
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
       Important(Paragraph("tip text")) ~
         Important("custom heading", Paragraph("tip text again"))
     )
@@ -282,7 +326,8 @@ class DocumentAsciiDocTest extends Suite
         |
         |====
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("QueryResult that creates data and returns nothing") {
@@ -298,7 +343,8 @@ class DocumentAsciiDocTest extends Suite
         |Relationships created: 1
         ||===
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("QueryResult that creates nothing and but returns data") {
@@ -313,7 +359,8 @@ class DocumentAsciiDocTest extends Suite
         |2+d|1 row
         ||===
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("QueryResult that returns data containing pipes") {
@@ -328,7 +375,8 @@ class DocumentAsciiDocTest extends Suite
         |2+d|1 row
         ||===
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Simple console data") {
@@ -351,15 +399,16 @@ class DocumentAsciiDocTest extends Suite
         |++++
         |endif::nonhtmloutput[]
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 }
 
 class DocumentQueryTest extends Suite
-                        with FunSuiteLike
-                        with Assertions
-                        with Matchers
-                        with GraphIcing  {
+    with AnyFunSuiteLike
+    with Assertions
+    with Matchers
+    with GraphIcing {
 
   class Udf1
   class Udf2
@@ -367,39 +416,74 @@ class DocumentQueryTest extends Suite
   test("finds all queries and the init-queries they need") {
     val tableV = new TablePlaceHolder(NoAssertions)
     val graphV: GraphVizPlaceHolder = new GraphVizPlaceHolder("")
-    val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1")),
-      Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
-      Section("h2", None, RunnableInitialization(initQueries = Seq("3")),
-        Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
-      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
-    ))
+    val doc = Document(
+      "title",
+      "myId",
+      RunnableInitialization(initQueries = Seq("1")),
+      Section(
+        "h1",
+        None,
+        RunnableInitialization(initQueries = Seq("2")),
+        Section(
+          "h2",
+          None,
+          RunnableInitialization(initQueries = Seq("3")),
+          Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
+        ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
+      )
+    )
 
     doc.contentWithQueries should equal(Seq(
       ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3")), Some(InitializationQuery("q")), tableV),
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2")), Some(InitializationQuery("q2")), graphV))
-    )
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2")), Some(InitializationQuery("q2")), graphV)
+    ))
   }
 
   test("finds all queries and the user defined functions they need") {
     val tableV = new TablePlaceHolder(NoAssertions)
     val graphV: GraphVizPlaceHolder = new GraphVizPlaceHolder("")
-    val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1"), userDefinedFunctions = Seq(classOf[Udf1])),
-      Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
-      Section("h2", None, RunnableInitialization(initQueries = Seq("3"), userDefinedFunctions = Seq(classOf[Udf2])),
-        Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
-      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
-    ))
+    val doc = Document(
+      "title",
+      "myId",
+      RunnableInitialization(initQueries = Seq("1"), userDefinedFunctions = Seq(classOf[Udf1])),
+      Section(
+        "h1",
+        None,
+        RunnableInitialization(initQueries = Seq("2")),
+        Section(
+          "h2",
+          None,
+          RunnableInitialization(initQueries = Seq("3"), userDefinedFunctions = Seq(classOf[Udf2])),
+          Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
+        ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
+      )
+    )
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3"), userDefinedFunctions = Seq(classOf[Udf1], classOf[Udf2])), Some(InitializationQuery("q")), tableV),
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2"), userDefinedFunctions = Seq(classOf[Udf1])), Some(InitializationQuery("q2")), graphV))
-    )
+      ContentWithInit(
+        RunnableInitialization(
+          initQueries = Seq("1", "2", "3"),
+          userDefinedFunctions = Seq(classOf[Udf1], classOf[Udf2])
+        ),
+        Some(InitializationQuery("q")),
+        tableV
+      ),
+      ContentWithInit(
+        RunnableInitialization(initQueries = Seq("1", "2"), userDefinedFunctions = Seq(classOf[Udf1])),
+        Some(InitializationQuery("q2")),
+        graphV
+      )
+    ))
   }
 
   test("Simplest possible document with a query in it") {
     val query = "match (n) return n"
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
-      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), Seq.empty))
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
+      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), Seq.empty)
+    )
 
     val asciiDocResult = doc.asciiDoc
     asciiDocResult should equal(
@@ -416,15 +500,19 @@ class DocumentQueryTest extends Suite
         |
         |hello world
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
-
 
   test("Document with a query and parameters") {
     val query = "MATCH (n) SET n.name = $name RETURN n.name"
     val parameters = Seq[(String, Any)]("name" -> "John")
-    val doc = Document("title", "myId", init = RunnableInitialization.empty,
-      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), parameters))
+    val doc = Document(
+      "title",
+      "myId",
+      init = RunnableInitialization.empty,
+      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), parameters)
+    )
 
     val asciiDocResult = doc.asciiDoc
     asciiDocResult should equal(
@@ -451,11 +539,17 @@ class DocumentQueryTest extends Suite
         |
         |hello world
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
   }
 
   test("Document with a query with replacements") {
-    val query = Query("match (@foo) return @foo", NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), Seq.empty,
+    val query = Query(
+      "match (@foo) return @foo",
+      NoAssertions,
+      RunnableInitialization.empty,
+      Paragraph("hello world"),
+      Seq.empty,
       replacements = Seq(QueryTextReplacement("foo", "in_doc", "in_exec"))
     )
     val doc = Document("title", "myId", init = RunnableInitialization.empty, query)
@@ -474,7 +568,8 @@ class DocumentQueryTest extends Suite
         |
         |hello world
         |
-        |""".stripMargin)
+        |""".stripMargin
+    )
 
     query.runnable should equal("match (in_exec) return in_exec")
   }

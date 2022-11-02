@@ -19,19 +19,20 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import java.time._
-
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 import org.neo4j.values.storable.DurationValue
+
+import java.time._
 
 class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
   val title = "Duration functions"
   override val linkId = "functions/temporal/duration/"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-one" =>
         assertStats(result, nodesCreated = 0)
@@ -50,12 +51,24 @@ class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport 
         assertStats(result, nodesCreated = 0)
         val results = result.toList
         assert(results.size === 1)
-        assert(results.head === Map("d.years" -> 1, "d.months" -> 14, "d.days" -> 10, "d.hours" -> 12, "d.minutes" -> 765))
+        assert(results.head === Map(
+          "d.years" -> 1,
+          "d.months" -> 14,
+          "d.days" -> 10,
+          "d.hours" -> 12,
+          "d.minutes" -> 765
+        ))
       case "returns-duration-accessors2" =>
         assertStats(result, nodesCreated = 0)
         val results = result.toList
         assert(results.size === 1)
-        assert(results.head === Map("d.years" -> 1, "d.monthsOfYear" -> 2, "d.days" -> 10, "d.hours" -> 12, "d.minutesOfHour" -> 45))
+        assert(results.head === Map(
+          "d.years" -> 1,
+          "d.monthsOfYear" -> 2,
+          "d.days" -> 10,
+          "d.hours" -> 12,
+          "d.minutesOfHour" -> 45
+        ))
 
     }
   }

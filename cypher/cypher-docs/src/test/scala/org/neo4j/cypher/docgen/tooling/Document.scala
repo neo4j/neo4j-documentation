@@ -24,49 +24,57 @@ import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
-import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.cypher.internal.util.Eagerly
 import org.neo4j.exceptions.InternalException
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Result
 import org.neo4j.internal.kernel.api.security.LoginContext
+import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.test.DoubleLatch
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
-
-case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQuery], queryResultPlaceHolder: QueryResultPlaceHolder) {
+case class ContentWithInit(
+  init: RunnableInitialization,
+  query: Option[DatabaseQuery],
+  queryResultPlaceHolder: QueryResultPlaceHolder
+) {
 
   assert(init.initQueries.nonEmpty || query.nonEmpty, "Should never produce ContentWithInit with empty queries")
 
   // In the DSL it is assumed that the last init query will be presented if the place holder is not inside an explicit query,
   // e.g. a graphViz() to show the graph created by initQueries().
   // The key is used to group queries by their initialization requirements (to minimize database creations by the query runner)
-  val initKey: RunnableInitialization = if (query.nonEmpty) init else init.copy(initQueries = init.initQueries.dropRight(1))
+  val initKey: RunnableInitialization =
+    if (query.nonEmpty) init else init.copy(initQueries = init.initQueries.dropRight(1))
   val queryToPresent: DatabaseQuery = if (query.isDefined) query.get else init.initQueries.last
 }
 
-object  RunnableInitialization {
+object RunnableInitialization {
   type InitializationFunction = (GraphDatabaseService, GraphDatabaseCypherService) => Unit
 
   def empty = RunnableInitialization()
 
   def apply(initQueries: Seq[String], userDefinedFunctions: Seq[Class[_]]): RunnableInitialization =
-    new RunnableInitialization(initQueries = initQueries.map(InitializationQuery(_)), userDefinedFunctions = userDefinedFunctions)
+    new RunnableInitialization(
+      initQueries = initQueries.map(InitializationQuery(_)),
+      userDefinedFunctions = userDefinedFunctions
+    )
 
   def apply(initQueries: Seq[String]): RunnableInitialization =
     new RunnableInitialization(initQueries = initQueries.map(InitializationQuery(_)))
 }
 
-case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.empty,
-                                  initQueries: Seq[DatabaseQuery] = Seq.empty,
-                                  userDefinedFunctions: Seq[java.lang.Class[_]] = Seq.empty,
-                                  userDefinedAggregationFunctions: Seq[java.lang.Class[_]] = Seq.empty,
-                                  procedures: Seq[java.lang.Class[_]] = Seq.empty,
-                                  postExecutionCode: Seq[InitializationFunction] = Seq.empty
-                                 ) {
+case class RunnableInitialization(
+  initCode: Seq[InitializationFunction] = Seq.empty,
+  initQueries: Seq[DatabaseQuery] = Seq.empty,
+  userDefinedFunctions: Seq[java.lang.Class[_]] = Seq.empty,
+  userDefinedAggregationFunctions: Seq[java.lang.Class[_]] = Seq.empty,
+  procedures: Seq[java.lang.Class[_]] = Seq.empty,
+  postExecutionCode: Seq[InitializationFunction] = Seq.empty
+) {
 
   def ++(other: RunnableInitialization): RunnableInitialization = {
     RunnableInitialization(
@@ -80,15 +88,13 @@ case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.em
   }
 }
 
-case class Document(title: String, id: String,
-                    private val init: RunnableInitialization,
-                    content: Content) {
+case class Document(title: String, id: String, private val init: RunnableInitialization, content: Content) {
 
   def asciiDoc =
-      s"""[[$id]]
-         |= $title
-         |
-         |""".stripMargin + content.asciiDoc(0)
+    s"""[[$id]]
+       |= $title
+       |
+       |""".stripMargin + content.asciiDoc(0)
 
   def contentWithQueries: Seq[ContentWithInit] = content.runnableContent(init, None)
 }
@@ -122,6 +128,7 @@ case class ContentChain(a: Content, b: Content) extends Content {
 }
 
 case class Abstract(s: String) extends Content with NoQueries {
+
   override def asciiDoc(level: Int) =
     s"""[abstract]
        |--
@@ -140,37 +147,60 @@ case class Paragraph(s: String) extends Content with NoQueries {
 }
 
 case class Function(syntax: String, returns: String, arguments: Seq[(String, String)]) extends Content with NoQueries {
+
   override def asciiDoc(level: Int) = {
     val args = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", NewLine, "")
-    val formattedReturn = if (!returns.isEmpty) Array("*Returns:*", "|===", "|", returns, "|===").mkString(NewLine, NewLine, "") else ""
-    val formattedArguments = if(arguments.nonEmpty) Array("*Arguments:*", "[options=\"header\"]", "|===", "| Name | Description", args, "|===").mkString(NewLine, NewLine, "") else ""
+    val formattedReturn =
+      if (!returns.isEmpty) Array("*Returns:*", "|===", "|", returns, "|===").mkString(NewLine, NewLine, "") else ""
+    val formattedArguments =
+      if (arguments.nonEmpty) Array(
+        "*Arguments:*",
+        "[options=\"header\"]",
+        "|===",
+        "| Name | Description",
+        args,
+        "|==="
+      ).mkString(NewLine, NewLine, "")
+      else ""
     String.format(
       """%s
         |%s%n
         |%s%n
-        |""".stripMargin, syntax, formattedReturn, formattedArguments)
+        |""".stripMargin,
+      syntax,
+      formattedReturn,
+      formattedArguments
+    )
   }
 
 }
 
 case class Consideration(lines: Seq[(String)]) extends Content with NoQueries {
+
   override def asciiDoc(level: Int) = {
     val items = lines.map(x => "|" + x).mkString("", NewLine, "")
-    val formattedLines = if(lines.nonEmpty) Array("*Considerations:*", "|===", items, "|===").mkString(NewLine, NewLine, "") else ""
+    val formattedLines =
+      if (lines.nonEmpty) Array("*Considerations:*", "|===", items, "|===").mkString(NewLine, NewLine, "") else ""
     String.format(
       """%s%n
-        |""".stripMargin, formattedLines)
+        |""".stripMargin,
+      formattedLines
+    )
   }
 
 }
 
 case class EnumTable(title: String, entries: Seq[(String, String)]) extends Content with NoQueries {
+
   override def asciiDoc(level: Int) = {
     val entryLines = entries.map(x => "| `" + x._1 + "` | " + x._2).mkString("", NewLine, "")
-    val formattedLines = Array("*" + title + ":*", "[options=\"header\"]", "|===", entryLines, "|===").mkString(NewLine, NewLine, "")
+    val formattedLines =
+      Array("*" + title + ":*", "[options=\"header\"]", "|===", entryLines, "|===").mkString(NewLine, NewLine, "")
     String.format(
       """%s%n
-        |""".stripMargin, formattedLines)
+        |""".stripMargin,
+      formattedLines
+    )
   }
 }
 
@@ -234,30 +264,29 @@ trait Admonitions extends Content with NoQueries {
     s"[$name]" + NewLine + head +
       s"""====
          |$inner
-          |====
-          |
-          |""".
-        stripMargin
+         |====
+         |
+         |""".stripMargin
   }
 }
 
 case class ResultRow(values: Seq[String])
 
 case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: String) extends Content with NoQueries {
+
   override def asciiDoc(level: Int): String = {
 
     val header = if (rows.nonEmpty) "header," else ""
     val cols = if (columns.isEmpty) 1 else columns.size
-    val rowsOutput: String = if (rows.isEmpty) s"$cols+|(empty result)"
-    else {
-      val columnHeader = columns.map(escape).mkString("| ", " | ", "")
-      val tableRows =
-        rows.
-          map(row => row.values.map(escape).mkString("|| ", " | ", "")).
-          mkString("\n")
+    val rowsOutput: String =
+      if (rows.isEmpty) s"$cols+|(empty result)"
+      else {
+        val columnHeader = columns.map(escape).mkString("| ", " | ", "")
+        val tableRows =
+          rows.map(row => row.values.map(escape).mkString("|| ", " | ", "")).mkString("\n")
 
-      s"$columnHeader\n$tableRows"
-    }
+        s"$columnHeader\n$tableRows"
+      }
 
     // Remove trailing white space, then add <space>+ at the end of all rows (except the last one)
     val footerRows = footer.replaceAll("\\s+$", "").replaceAllLiterally("\n", " +\n")
@@ -278,6 +307,7 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
 trait SimpleQueryResultTable extends Content with NoQueries {
   val role: String
   val text: String
+
   override def asciiDoc(level: Int): String = {
     // Remove trailing white space, then add <space>+ at the end of all rows (except the last one)
     val formattedText = text.replaceAll("\\s+$", "").replaceAllLiterally("\n", " +\n")
@@ -297,7 +327,11 @@ case class ErrorOnlyQueryResultTable(text: String) extends SimpleQueryResultTabl
   val role: String = "erroronlyqueryresult"
 }
 
-sealed abstract class DatabaseStateBehavior(val clearAfterUpdate: Boolean, val clearAfterError: Boolean, val clearAlways: Boolean)
+sealed abstract class DatabaseStateBehavior(
+  val clearAfterUpdate: Boolean,
+  val clearAfterError: Boolean,
+  val clearAlways: Boolean
+)
 case object ClearStateAfterUpdateOrError extends DatabaseStateBehavior(true, true, false)
 case object KeepState extends DatabaseStateBehavior(false, false, false)
 case object ClearState extends DatabaseStateBehavior(false, false, true)
@@ -309,27 +343,31 @@ sealed trait DatabaseQuery {
   def login: Option[(String, String)]
   def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database, login)
   def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database, login)
-  def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
+  def runnable: String = if (runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
   def databaseStateBehavior: DatabaseStateBehavior
 }
 
-case class InitializationQuery(prettified: String,
-                               runtime: Option[String] = None,
-                               database: Option[String] = None,
-                               login: Option[(String, String)] = None) extends DatabaseQuery {
+case class InitializationQuery(
+  prettified: String,
+  runtime: Option[String] = None,
+  database: Option[String] = None,
+  login: Option[(String, String)] = None
+) extends DatabaseQuery {
   def databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError
 }
 
-case class Query(original: String,
-                 assertions: QueryAssertions,
-                 myInit: RunnableInitialization,
-                 content: Content,
-                 params: Seq[(String, Any)],
-                 runtime: Option[String] = None,
-                 database: Option[String] = None,
-                 login: Option[(String, String)] = None,
-                 replacements: Seq[QueryTextReplacement] = Seq(),
-                 databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError) extends Content with DatabaseQuery {
+case class Query(
+  original: String,
+  assertions: QueryAssertions,
+  myInit: RunnableInitialization,
+  content: Content,
+  params: Seq[(String, Any)],
+  runtime: Option[String] = None,
+  database: Option[String] = None,
+  login: Option[(String, String)] = None,
+  replacements: Seq[QueryTextReplacement] = Seq(),
+  databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError
+) extends Content with DatabaseQuery {
 
   override def prettified: String = replacements.foldLeft(original) {
     case (q, rep) => q.replaceAll(rep.placeholder, rep.renderedValue)
@@ -339,7 +377,8 @@ case class Query(original: String,
     case (q, rep) => q.replaceAll(rep.placeholder, rep.executedValue)
   }
 
-  val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
+  val parameterText: String =
+    if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
     val source =
@@ -367,12 +406,13 @@ case class Query(original: String,
 }
 
 case class BackgroundQueries(
-                 beforeQueryText: List[String],
-                 content: Content,
-                 params: Seq[(String, Any)],
-                 runtime: Option[String] = None,
-                 database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends Content {
+  beforeQueryText: List[String],
+  content: Content,
+  params: Seq[(String, Any)],
+  runtime: Option[String] = None,
+  database: Option[String] = None,
+  login: Option[(String, String)] = None
+) extends Content {
 
   private val latch: DoubleLatch = new DoubleLatch(beforeQueryText.size + 1)
 
@@ -386,7 +426,9 @@ case class BackgroundQueries(
   val before: InitializationFunction = (graph: GraphDatabaseService, cypherService: GraphDatabaseCypherService) =>
     if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
       import scala.concurrent.ExecutionContext.Implicits.global
-      cypherService.executeTransactionally(s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'true')")
+      cypherService.executeTransactionally(
+        s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'true')"
+      )
 
       beforeQueryText.foreach(query =>
         // Start each background transaction in a Future
@@ -412,33 +454,40 @@ case class BackgroundQueries(
           } finally {
             if (tx != null) tx.close()
           }
-        })
+        }
+      )
 
       // Start the main query
       latch.startAndWaitForAllToStart()
     }
 
-  val after: InitializationFunction = (graph, cypherService) => if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
-    cypherService.executeTransactionally(s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'false')")
-    latch.finishAndWaitForAllToFinish()
-  }
+  val after: InitializationFunction = (graph, cypherService) =>
+    if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+      cypherService.executeTransactionally(
+        s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'false')"
+      )
+      latch.finishAndWaitForAllToFinish()
+    }
 
 }
 
 object ConsoleData {
+
   def of(globalInitQueries: Seq[String], localInitQueries: Seq[String], query: String): ConsoleData =
     ConsoleData(globalInitQueries.map(InitializationQuery(_)), localInitQueries.map(InitializationQuery(_)), query)
 }
 
-case class ConsoleData(globalInitQueries: Seq[DatabaseQuery], localInitQueries: Seq[DatabaseQuery], query: String) extends Content with NoQueries {
+case class ConsoleData(globalInitQueries: Seq[DatabaseQuery], localInitQueries: Seq[DatabaseQuery], query: String)
+    extends Content with NoQueries {
+
   override def asciiDoc(level: Int): String = {
     val globalInitQueryRows = globalInitQueries.map(_.prettified).mkString(NewLine)
     val localInitQueryRows = localInitQueries.map(_.prettified).mkString(NewLine)
     val initQueries =
       if (globalInitQueryRows.isEmpty && localInitQueryRows.isEmpty)
-          "none"
-        else
-          globalInitQueryRows + "\n" + localInitQueryRows
+        "none"
+      else
+        globalInitQueryRows + "\n" + localInitQueryRows
     s"""ifndef::nonhtmloutput[]
        |[subs="none"]
        |++++
@@ -461,12 +510,19 @@ case class GraphViz(s: String) extends Content with NoQueries {
 }
 
 case class ExecutionPlan(planString: String) extends Content with NoQueries {
+
   override def asciiDoc(level: Int) = {
     s".Query plan\n[source]\n----\n$planString\n----\n\n"
   }
 }
 
-case class Section(heading: String, id: Option[String], init: RunnableInitialization, content: Content, role: Option[String] = None) extends Content {
+case class Section(
+  heading: String,
+  id: Option[String],
+  init: RunnableInitialization,
+  content: Content,
+  role: Option[String] = None
+) extends Content {
 
   override def asciiDoc(level: Int) = {
     val roleRef = role.map("[role=" + _ + "]\n").getOrElse("")
@@ -475,7 +531,8 @@ case class Section(heading: String, id: Option[String], init: RunnableInitializa
     roleRef + idRef + levelIndent + " " + heading + NewLine + NewLine + content.asciiDoc(level + 1)
   }
 
-  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit] = content.runnableContent(init ++ this.init, None)
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit] =
+    content.runnableContent(init ++ this.init, None)
 }
 
 sealed trait QueryAssertions
@@ -492,16 +549,30 @@ case object NoAssertions extends QueryAssertions
 // dynamic content should be inserted
 trait QueryResultPlaceHolder {
   self: Content =>
+
   override def asciiDoc(level: Int) =
     throw new InternalException(s"This object should have been rewritten away already ${this.getClass.getSimpleName}")
-  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) = Seq(ContentWithInit(init, queryText, this))
+
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) =
+    Seq(ContentWithInit(init, queryText, this))
 }
 
 // NOTE: These must _not_ be case classes, otherwise they will not be compared by identity
-class TablePlaceHolder(val assertions: QueryAssertions, val params: (String, Any)*) extends Content with QueryResultPlaceHolder
-class LimitedTablePlaceHolder(val maybeWantedColumns: Option[List[String]], val rows: Int, assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
-class StatsOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
-class ErrorOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
+class TablePlaceHolder(val assertions: QueryAssertions, val params: (String, Any)*) extends Content
+    with QueryResultPlaceHolder
+
+class LimitedTablePlaceHolder(
+  val maybeWantedColumns: Option[List[String]],
+  val rows: Int,
+  assertions: QueryAssertions,
+  params: (String, Any)*
+) extends TablePlaceHolder(assertions, params: _*)
+
+class StatsOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*)
+    extends TablePlaceHolder(assertions, params: _*)
+
+class ErrorOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*)
+    extends TablePlaceHolder(assertions, params: _*)
 class GraphVizPlaceHolder(val options: String) extends Content with QueryResultPlaceHolder
 class ErrorPlaceHolder() extends Content with QueryResultPlaceHolder
 class ExecutionPlanPlaceHolder(val assertions: QueryAssertions) extends Content with QueryResultPlaceHolder

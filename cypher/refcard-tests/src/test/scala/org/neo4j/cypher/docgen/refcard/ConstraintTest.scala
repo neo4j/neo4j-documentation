@@ -31,9 +31,9 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   override val linkId = "constraints"
   private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
-  //noinspection RedundantDefaultArgument
+  // noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-unique-property-constraint" =>
         assertStats(result, uniqueConstraintsAdded = 1)
@@ -64,7 +64,8 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Alice", "firstname" -> "Alice", "surname" -> "Johnson", "age" -> 15),
-    "B" -> Map("name" -> "Bobo", "firstname" -> "Bobo", "surname" -> "Baumann", "age" -> 11))
+    "B" -> Map("name" -> "Bobo", "firstname" -> "Bobo", "surname" -> "Baumann", "age" -> 11)
+  )
 
   override def parameters(name: String): Map[String, Any] =
     name match {
@@ -160,7 +161,8 @@ SHOW UNIQUE CONSTRAINTS YIELD *
 
 List all unique constraints.
 
-""".concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else s"""
+""".concat(if (!versionFenceAllowsThisTest("3.2.9")) ""
+  else s"""
 ###assertion=create-node-key-constraint
 //
 

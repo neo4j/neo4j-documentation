@@ -20,43 +20,35 @@
 package org.neo4j.cypher.internal.javacompat;
 
 import java.lang.annotation.Annotation;
-
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphDescription.NODE;
 import org.neo4j.doc.test.GraphDescription.REL;
 
-
-public class GraphImpl implements Graph
-{
+public class GraphImpl implements Graph {
 
     private final String[] value;
 
-    public GraphImpl(String[] value)
-    {
+    public GraphImpl(String[] value) {
         this.value = value;
-
     }
+
     @Override
-    public Class<? extends Annotation> annotationType()
-    {
+    public Class<? extends Annotation> annotationType() {
         return null;
     }
 
     @Override
-    public String[] value()
-    {
+    public String[] value() {
         return value;
     }
 
     @Override
-    public NODE[] nodes()
-    {
+    public NODE[] nodes() {
         return new NODE[]{};
     }
 
     @Override
-    public REL[] relationships()
-    {
+    public REL[] relationships() {
         return new REL[]{};
     }
 }

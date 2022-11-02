@@ -20,26 +20,24 @@
 package org.neo4j.cypher.docgen.tooling
 
 import com.neo4j.configuration.EnterpriseEditionInternalSettings
-
-import java.lang.Boolean.{FALSE, TRUE}
-import java.nio.file.Path
 import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.configuration.SecuritySettings
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
-import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.ResultSubscriber
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.connectioninfo.ClientConnectionInfo
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
-import org.neo4j.io.fs.FileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 import org.neo4j.kernel.api.security.AuthToken
@@ -48,13 +46,16 @@ import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.string.SecureString
 import org.neo4j.test.utils.TestDirectory
 
-import scala.jdk.CollectionConverters.MapHasAsJava
+import java.lang.Boolean.FALSE
+import java.lang.Boolean.TRUE
+import java.nio.file.Path
 import scala.collection.mutable
+import scala.jdk.CollectionConverters.MapHasAsJava
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
 class RestartableDatabase(init: RunnableInitialization)
-  extends GraphIcing with ExecutionEngineHelper {
+    extends GraphIcing with ExecutionEngineHelper {
 
   var managementService: DatabaseManagementService = _
   var authManager: EnterpriseAuthManager = _
@@ -83,12 +84,15 @@ class RestartableDatabase(init: RunnableInitialization)
         GraphDatabaseSettings.auth_enabled -> TRUE,
         EnterpriseEditionInternalSettings.replication_enabled -> FALSE,
         OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-        OnlineBackupSettings.online_backup_enabled ->  FALSE,
-        SecuritySettings.keystore_path -> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+        OnlineBackupSettings.online_backup_enabled -> FALSE,
+        SecuritySettings.keystore_path -> java.nio.file.Path.of(
+          getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI
+        ),
         SecuritySettings.keystore_password -> new SecureString("test24"),
         SecuritySettings.key_name -> "256bitkey"
       )
-      managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder).setFileSystem(fs).setConfig(config.asJava).build()
+      managementService =
+        new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder).setFileSystem(fs).setConfig(config.asJava).build()
 
       //    managementService = graphDatabaseFactory(Files.createTempDirectory("test").getParent.toFile).impermanent().setConfig(config.asJava).setInternalLogProvider(logProvider).build()
       managementService.listDatabases().toArray().foreach { name =>
@@ -130,7 +134,8 @@ class RestartableDatabase(init: RunnableInitialization)
     createAndStartIfNecessary()
     selectDatabase(database)
     val loginContext = _login match {
-      case Some((name, password)) => authManager.login(AuthToken.newBasicAuthToken(name, password), ClientConnectionInfo.EMBEDDED_CONNECTION)
+      case Some((name, password)) =>
+        authManager.login(AuthToken.newBasicAuthToken(name, password), ClientConnectionInfo.EMBEDDED_CONNECTION)
       case _ => AUTH_DISABLED
     }
     graph.beginTransaction(Type.IMPLICIT, loginContext)
@@ -147,23 +152,31 @@ class RestartableDatabase(init: RunnableInitialization)
     }
   }
 
-  def executeWithParams(tx: InternalTransaction, q: String, params: Map[String, Any], databaseStateBehavior: DatabaseStateBehavior): DocsExecutionResult = {
-    val executionResult: DocsExecutionResult = try {
-      val txContext = graph.transactionalContext(tx, query = q -> params)
-      val subscriber = new ResultSubscriber(txContext)
-      val execution = eengine.execute(q,
-        ValueUtils.asParameterMapValue(ExecutionEngineHelper.asJavaMapDeep(params)),
-        txContext,
-        profile = false,
-        prePopulate = false,
-        subscriber)
-      subscriber.init(execution)
-      DocsExecutionResult(subscriber, txContext)
-    } catch {
-      case e: Throwable =>
-        _markedForRestart |= databaseStateBehavior.clearAfterError
-        throw e
-    }
+  def executeWithParams(
+    tx: InternalTransaction,
+    q: String,
+    params: Map[String, Any],
+    databaseStateBehavior: DatabaseStateBehavior
+  ): DocsExecutionResult = {
+    val executionResult: DocsExecutionResult =
+      try {
+        val txContext = graph.transactionalContext(tx, query = q -> params)
+        val subscriber = new ResultSubscriber(txContext)
+        val execution = eengine.execute(
+          q,
+          ValueUtils.asParameterMapValue(ExecutionEngineHelper.asJavaMapDeep(params)),
+          txContext,
+          profile = false,
+          prePopulate = false,
+          subscriber
+        )
+        subscriber.init(execution)
+        DocsExecutionResult(subscriber, txContext)
+      } catch {
+        case e: Throwable =>
+          _markedForRestart |= databaseStateBehavior.clearAfterError
+          throw e
+      }
     _markedForRestart |= databaseStateBehavior.clearAfterUpdate && executionResult.queryStatistics().containsUpdates
     _markedForRestart |= databaseStateBehavior.clearAlways
     executionResult
@@ -199,13 +212,13 @@ class RestartableDatabase(init: RunnableInitialization)
 
       // Execute queries
       val results = init.initQueries.filter(x => x.database.isEmpty || x.database.get == database).flatMap { query =>
-        //TODO: Consider supporting login for initQueries
+        // TODO: Consider supporting login for initQueries
         val q = query.prettified
         val result = Try(execute(q, Seq.empty: _*))
         result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
       }
 
-      //wait for any new indexes created to come online
+      // wait for any new indexes created to come online
       graph.awaitIndexesOnline()
       results
     }

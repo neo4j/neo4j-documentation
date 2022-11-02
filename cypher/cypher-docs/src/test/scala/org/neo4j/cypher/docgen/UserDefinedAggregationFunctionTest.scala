@@ -19,7 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
 
 class UserDefinedAggregationFunctionTest extends DocumentingTest {
 
@@ -28,9 +30,11 @@ class UserDefinedAggregationFunctionTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("User-defined aggregation functions", "query-functions-user-defined-aggregation")
     registerUserDefinedAggregationFunctions(classOf[org.neo4j.function.example.LongestString])
+
     initQueries(
       """UNWIND ['John', 'Paul', 'George', 'Ringe'] AS beatle
-        |CREATE (:Member {name: beatle})""".stripMargin)
+        |CREATE (:Member {name: beatle})""".stripMargin
+    )
     p("Aggregating functions consume many rows and produces a single aggregated result.")
     p("This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.")
 
@@ -41,7 +45,8 @@ class UserDefinedAggregationFunctionTest extends DocumentingTest {
           |RETURN org.neo4j.function.example.longestString(n.name) AS member""".stripMargin,
         ResultAssertions((r) => {
           assert(r.toList === List(Map("member" -> "George")))
-        })) {
+        })
+      ) {
         resultTable()
       }
     }

@@ -20,13 +20,15 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.internal.util.Rewritable._
-import org.neo4j.cypher.internal.util.{Rewriter, bottomUp}
+import org.neo4j.cypher.internal.util.Rewriter
+import org.neo4j.cypher.internal.util.bottomUp
 
 /**
  * Takes the document tree and the execution results and rewrites the
  * tree to include the result content
  */
 object contentAndResultMerger {
+
   def apply(originalContent: Document, result: TestRunResult): Document = {
     val rewritesToDo = for {
       runResult <- result.queryResults

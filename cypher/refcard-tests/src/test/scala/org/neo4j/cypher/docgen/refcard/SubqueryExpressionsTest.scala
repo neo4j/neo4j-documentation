@@ -20,12 +20,15 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class SubqueryExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
+
   def graphDescription = List(
-    "A KNOWS B")
+    "A KNOWS B"
+  )
   val title = "Subquery Expressions"
   override val linkId = "syntax/expressions"
 

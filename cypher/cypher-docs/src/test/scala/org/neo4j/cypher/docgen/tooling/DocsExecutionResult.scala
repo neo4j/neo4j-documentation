@@ -22,8 +22,9 @@ package org.neo4j.cypher.docgen.tooling
 import org.neo4j.cypher.internal.plandescription.InternalPlanDescription
 import org.neo4j.cypher.internal.result.string.ResultStringBuilder
 import org.neo4j.cypher.internal.runtime._
+import org.neo4j.graphdb.Notification
+import org.neo4j.graphdb.Result
 import org.neo4j.graphdb.Result.ResultVisitor
-import org.neo4j.graphdb.{Notification, Result}
 import org.neo4j.kernel.impl.query.TransactionalContext
 
 import scala.collection.JavaConverters._
@@ -35,12 +36,14 @@ import scala.collection.mutable.ArrayBuffer
   * This class was forked form the Neo4j repo RewindableExecutionResult, to remove the
   * test-dependency between the repositories.
   */
-class DocsExecutionResult(val columns: Array[String],
-                          result: Seq[Map[String, Any]],
-                          val resultAsString: String,
-                          planDescription: InternalPlanDescription,
-                          statistics: QueryStatistics,
-                          val notifications: Iterable[Notification]) {
+class DocsExecutionResult(
+  val columns: Array[String],
+  result: Seq[Map[String, Any]],
+  val resultAsString: String,
+  planDescription: InternalPlanDescription,
+  statistics: QueryStatistics,
+  val notifications: Iterable[Notification]
+) {
 
   def columnAs[T](column: String): Iterator[T] = result.iterator.map(row => row(column).asInstanceOf[T])
   def toList: List[Map[String, Any]] = result.toList
@@ -80,8 +83,8 @@ object DocsExecutionResult {
     })
 
     val statistics = in.getQueryStatistics match {
-      case s:QueryStatistics => s
-      case s => QueryStatistics(s)
+      case s: QueryStatistics => s
+      case s                  => QueryStatistics(s)
     }
 
     new DocsExecutionResult(
@@ -91,6 +94,6 @@ object DocsExecutionResult {
       in.getExecutionPlanDescription.asInstanceOf[InternalPlanDescription],
       statistics,
       in.getNotifications.asScala
-      )
+    )
   }
 }

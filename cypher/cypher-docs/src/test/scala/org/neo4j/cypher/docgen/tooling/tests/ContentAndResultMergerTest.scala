@@ -22,15 +22,15 @@ package org.neo4j.cypher.docgen.tooling.tests
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling._
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
 import org.scalatest.Suite
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
 class ContentAndResultMergerTest extends Suite
-                                 with FunSuiteLike
-                                 with Assertions
-                                 with Matchers
-                                 with GraphIcing {
+    with AnyFunSuiteLike
+    with Assertions
+    with Matchers
+    with GraphIcing {
 
   val GRAPHVIZ_RESULT = GraphViz("APA")
   val TABLE_RESULT = Paragraph("14")
@@ -49,7 +49,8 @@ class ContentAndResultMergerTest extends Suite
 
     // then
     result should equal(
-      Document("title", "myId", init = RunnableInitialization.empty, TABLE_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, TABLE_RESULT)
+    )
   }
 
   test("simple doc with GraphVizBefore") {
@@ -63,7 +64,8 @@ class ContentAndResultMergerTest extends Suite
 
     // then
     result should equal(
-      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT)
+    )
   }
 
   test("doc with GraphVizBefore and Result Table without Query") {
@@ -80,12 +82,14 @@ class ContentAndResultMergerTest extends Suite
 
     // then
     result should equal(
-      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT ~ TABLE_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT ~ TABLE_RESULT)
+    )
   }
 
   test("doc with GraphVizBefore and Result Table within Query") {
     // given
-    val queryObj = Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER, Seq.empty)
+    val queryObj =
+      Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER, Seq.empty)
     val doc = Document("title", "myId", init = RunnableInitialization.empty, queryObj)
 
     val testResult = TestRunResult(Seq(
@@ -98,6 +102,12 @@ class ContentAndResultMergerTest extends Suite
 
     // then
     result should equal(
-      Document("title", "myId", init = RunnableInitialization.empty, Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT, Seq.empty)))
+      Document(
+        "title",
+        "myId",
+        init = RunnableInitialization.empty,
+        Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT, Seq.empty)
+      )
+    )
   }
 }
