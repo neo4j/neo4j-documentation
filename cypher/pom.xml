@@ -23,9 +23,9 @@
     </properties>
 
     <modules>
-        <module>cypher-docs</module>
+<!--        <module>cypher-docs</module>-->
         <module>cypher-prettifier</module>
-        <module>refcard-tests</module>
+<!--        <module>refcard-tests</module>-->
     </modules>
 
     <build>
@@ -60,25 +60,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
