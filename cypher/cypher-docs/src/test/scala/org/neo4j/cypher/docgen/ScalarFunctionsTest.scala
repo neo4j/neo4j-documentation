@@ -167,6 +167,21 @@ class ScalarFunctionsTest extends DocumentingTest {
             #Every relationship in a database has an identifier.
             #The identifier for a relationship is guaranteed to be unique among other relationships' identifiers in the same database, within the scope of a single transaction.""".stripMargin('#'))
       }
+      note {
+        p(
+          """On <<composite-databases, composite databases>> the `id()` function should be used with caution.
+            #It is recommended to use <<functions-element-id, `elementId()`>> instead.
+            #
+            #When called in database-specific subqueries, the resulting id value for a node or relationship is local to that database.
+            #The local id for nodes or relationships from different databases may be the same.
+            #
+            #When called from the root context of a query, the resulting value is an extended id for the node or relationship.
+            #The extended id is likely different from the local id for the same node or relationship.
+            #""".stripMargin(
+            '#'
+          )
+        )
+      }
       function("id(expression)",
         "An Integer.",
         ("expression", "An expression that returns a node or a relationship."))
