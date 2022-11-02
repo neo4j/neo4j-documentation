@@ -30,7 +30,7 @@ class AliasManagementTest extends AdministrationCommandTestBase {
 
   def text: String = {
     setup()
-  """
+    """
 ###assertion=update-one
 //
 

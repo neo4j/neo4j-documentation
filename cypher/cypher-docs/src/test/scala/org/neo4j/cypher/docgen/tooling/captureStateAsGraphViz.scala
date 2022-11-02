@@ -19,13 +19,14 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import java.io.ByteArrayOutputStream
-
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.util._
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphvizWriter}
+import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.visualization.graphviz.GraphvizWriter
 import org.neo4j.walk.Walker
+
+import java.io.ByteArrayOutputStream
 
 /**
  * Run this method to capture the graph state. The Content object sent in will be rewritten
@@ -33,7 +34,8 @@ import org.neo4j.walk.Walker
  */
 object captureStateAsGraphViz extends GraphIcing {
 
-  def apply(db: GraphDatabaseCypherService, name: String, count: Int, options: String): GraphViz = GraphViz(emitGraphviz(s"$name-$count", options, db))
+  def apply(db: GraphDatabaseCypherService, name: String, count: Int, options: String): GraphViz =
+    GraphViz(emitGraphviz(s"$name-$count", options, db))
 
   private def emitGraphviz(testid: String, graphVizOptions: String, db: GraphDatabaseCypherService): String = {
     val out = new ByteArrayOutputStream()

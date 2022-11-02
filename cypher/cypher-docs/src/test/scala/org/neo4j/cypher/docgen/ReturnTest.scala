@@ -19,21 +19,28 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
-import org.neo4j.graphdb.{Node, Path, Relationship}
+import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
+import org.neo4j.graphdb.Node
+import org.neo4j.graphdb.Path
+import org.neo4j.graphdb.Relationship
 
 class ReturnTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql"
 
   override def doc = new DocBuilder {
     doc("RETURN", "query-return")
+
     initQueries(
       """CREATE
         #  (a {name: 'A', happy: 'Yes!', age: 55}),
         #  (b {name: 'B'}),
         #  (a)-[:KNOWS]->(b),
-        #  (a)-[:BLOCKS]->(b)""".stripMargin('#'))
+        #  (a)-[:BLOCKS]->(b)""".stripMargin('#')
+    )
     synopsis("The `RETURN` clause defines what to include in the query result set.")
+
     p("""* <<return-introduction, Introduction>>
         #* <<return-nodes, Return nodes>>
         #* <<return-relationships, Return relationships>>
@@ -44,6 +51,7 @@ class ReturnTest extends DocumentingTest {
         #* <<return-optional-properties, Optional properties>>
         #* <<return-other-expressions, Other expressions>>
         #* <<return-unique-results, Unique results>>""".stripMargin('#'))
+
     section("Introduction", "return-introduction") {
       p("""In the `RETURN` part of your query, you define which parts of the pattern you are interested in.
           #It can be nodes, relationships, or properties on these.""".stripMargin('#'))
@@ -53,106 +61,142 @@ class ReturnTest extends DocumentingTest {
       }
       graphViz()
     }
+
     section("Return nodes", "return-nodes") {
       p("""To return a node, list it in the `RETURN` statement.""")
-      query("""MATCH (n {name: 'B'})
-              #RETURN n""".stripMargin('#'),
-      assertHasNodes(1)) {
+      query(
+        """MATCH (n {name: 'B'})
+          #RETURN n""".stripMargin('#'),
+        assertHasNodes(1)
+      ) {
         p("The example will return the node.")
         resultTable()
       }
     }
+
     section("Return relationships", "return-relationships") {
       p("""To return a relationship, just include it in the `RETURN` list.""")
-      query("""MATCH (n {name: 'A'})-[r:KNOWS]->(c)
-              #RETURN r""".stripMargin('#'),
-      assertHasRelationships(0)) {
+      query(
+        """MATCH (n {name: 'A'})-[r:KNOWS]->(c)
+          #RETURN r""".stripMargin('#'),
+        assertHasRelationships(0)
+      ) {
         p("The relationship is returned by the example.")
         resultTable()
       }
     }
+
     section("Return property", "return-property") {
       p("""To return a property, use the dot separator, like this:""")
-      query("""MATCH (n {name: 'A'})
-              #RETURN n.name""".stripMargin('#'),
-      ResultAssertions((r) => {
+      query(
+        """MATCH (n {name: 'A'})
+          #RETURN n.name""".stripMargin('#'),
+        ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "A")))
-        })) {
+        })
+      ) {
         p("""The value of the property `name` gets returned.""")
         resultTable()
       }
     }
+
     section("Return all elements", "return-all-elements") {
       p("""When you want to return all nodes, relationships and paths found in a query, you can use the `*` symbol.""")
-      query("""MATCH p = (a {name: 'A'})-[r]->(b)
-              #RETURN *""".stripMargin('#'),
-      ResultAssertions((r) => {
+      query(
+        """MATCH p = (a {name: 'A'})-[r]->(b)
+          #RETURN *""".stripMargin('#'),
+        ResultAssertions((r) => {
           r.toList.head.keys should equal(Set("a", "b", "r", "p"))
-        })) {
+        })
+      ) {
         p("""This returns the two nodes, the relationship and the path used in the query.""")
         resultTable()
       }
     }
+
     section("Variable with uncommon characters", "return-variable-with-uncommon-characters") {
-      p("""To introduce a placeholder that is made up of characters that are not contained in the English alphabet, you can use the ``` to enclose the variable, like this:""")
-      query("""MATCH (`This isn\'t a common variable`)
-              #WHERE `This isn\'t a common variable`.name = 'A'
-              #RETURN `This isn\'t a common variable`.happy""".stripMargin('#'),
-      ResultAssertions((r) => {
+      p(
+        """To introduce a placeholder that is made up of characters that are not contained in the English alphabet, you can use the ``` to enclose the variable, like this:"""
+      )
+      query(
+        """MATCH (`This isn\'t a common variable`)
+          #WHERE `This isn\'t a common variable`.name = 'A'
+          #RETURN `This isn\'t a common variable`.happy""".stripMargin('#'),
+        ResultAssertions((r) => {
           r.toList should equal(List(Map("`This isn\\'t a common variable`.happy" -> "Yes!")))
-        })) {
+        })
+      ) {
         p("The node with name \"A\" is returned.")
         resultTable()
       }
     }
+
     section("Column alias", "return-column-alias") {
-      p("""If the name of the column should be different from the expression used, you can rename it by using `AS` <new name>.""")
-      query("""MATCH (a {name: 'A'})
-              #RETURN a.age AS SomethingTotallyDifferent""".stripMargin('#'),
-      ResultAssertions((r) => {
-          r.toList should equal(List(Map("SomethingTotallyDifferent" -> 55l)))
-        })) {
+      p(
+        """If the name of the column should be different from the expression used, you can rename it by using `AS` <new name>."""
+      )
+      query(
+        """MATCH (a {name: 'A'})
+          #RETURN a.age AS SomethingTotallyDifferent""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("SomethingTotallyDifferent" -> 55L)))
+        })
+      ) {
         p("Returns the age property of a node, but renames the column.")
         resultTable()
       }
     }
+
     section("Optional properties", "return-optional-properties") {
       p("""If a property might or might not be there, you can still select it as usual.
           #It will be treated as `null` if it is missing.""".stripMargin('#'))
-      query("""MATCH (n)
-              #RETURN n.age""".stripMargin('#'),
-      ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.age" -> 55l), Map("n.age" -> null)))
-        })) {
+      query(
+        """MATCH (n)
+          #RETURN n.age""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.age" -> 55L), Map("n.age" -> null)))
+        })
+      ) {
         p("""This example returns the age when the node has that property, or `null` if the property is not there.""")
         resultTable()
       }
     }
+
     section("Other expressions", "return-other-expressions") {
-      p("""Any expression can be used as a return item -- literals, predicates, properties, functions, and everything else.""")
-      query("""MATCH (a {name: 'A'})
-              #RETURN a.age > 30, "I'm a literal", [p=(a)-->() | p] AS `(a)-->()`""".stripMargin('#'),
-      ResultAssertions(r => {
+      p(
+        """Any expression can be used as a return item -- literals, predicates, properties, functions, and everything else."""
+      )
+      query(
+        """MATCH (a {name: 'A'})
+          #RETURN a.age > 30, "I'm a literal", [p=(a)-->() | p] AS `(a)-->()`""".stripMargin('#'),
+        ResultAssertions(r => {
           r.toList.head("a.age > 30") shouldBe true
           r.toList.head("\"I'm a literal\"") shouldBe "I'm a literal"
           r.toList.head("(a)-->()").asInstanceOf[Seq[Path]].size shouldBe 2
-        })) {
+        })
+      ) {
         p("""Returns a predicate, a literal and function call with a pattern expression parameter.""")
         resultTable()
       }
     }
+
     section("Unique results", "return-unique-results") {
       p("""`DISTINCT` retrieves only unique rows depending on the columns that have been selected to output.""")
-      query("""MATCH (a {name: 'A'})-->(b)
-              #RETURN DISTINCT b""".stripMargin('#'),
-      assertHasNodes(1)) {
+      query(
+        """MATCH (a {name: 'A'})-->(b)
+          #RETURN DISTINCT b""".stripMargin('#'),
+        assertHasNodes(1)
+      ) {
         p("The node named \"B\" is returned by the query, but only once.")
         resultTable()
       }
     }
   }.build()
 
-  private def assertHasNodes(nodeIds: Long*) = ResultAssertions(result => result.toList.map(_.head._2.asInstanceOf[Node].getId) should equal(nodeIds.toList))
+  private def assertHasNodes(nodeIds: Long*) =
+    ResultAssertions(result => result.toList.map(_.head._2.asInstanceOf[Node].getId) should equal(nodeIds.toList))
 
-  private def assertHasRelationships(relIds: Long*) = ResultAssertions(result => result.toList.map(_.head._2.asInstanceOf[Relationship].getId) should equal(relIds.toList))
+  private def assertHasRelationships(relIds: Long*) = ResultAssertions(result =>
+    result.toList.map(_.head._2.asInstanceOf[Relationship].getId) should equal(relIds.toList)
+  )
 }

@@ -19,24 +19,28 @@
  */
 package org.neo4j.cypher.docgen.tooling.tests
 
+import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
-import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.ResultSubscriber
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.values.virtual.VirtualValues
 import org.scalatest._
-import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
 class QueryResultContentBuilderTest extends Suite
-                                    with FunSuiteLike
-                                    with Assertions
-                                    with Matchers
-                                    with GraphIcing
-                                    with ExecutionEngineHelper
-                                    with BeforeAndAfterAll {
+    with AnyFunSuiteLike
+    with Assertions
+    with Matchers
+    with GraphIcing
+    with ExecutionEngineHelper
+    with BeforeAndAfterAll {
 
   def graph: GraphDatabaseCypherService = _graph
   var _managementService: DatabaseManagementService = _
@@ -78,17 +82,12 @@ class QueryResultContentBuilderTest extends Suite
       val builder = new QueryResultContentBuilder(x => x.toString)
       val txContext = graph.transactionalContext(transaction.asInstanceOf[InternalTransaction], query = query -> Map())
       val subscriber = new ResultSubscriber(txContext)
-      val execution = eengine.execute(query,
-        VirtualValues.EMPTY_MAP,
-        txContext,
-        profile = false,
-        prePopulate = false,
-        subscriber)
+      val execution =
+        eengine.execute(query, VirtualValues.EMPTY_MAP, txContext, profile = false, prePopulate = false, subscriber)
       subscriber.init(execution)
       val queryResult = DocsExecutionResult(subscriber, txContext)
       builder.apply(queryResult)
-    }
-    finally {
+    } finally {
       transaction.close()
     }
   }

@@ -21,16 +21,19 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
+import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
-import org.neo4j.graphdb.{GraphDatabaseService, Transaction}
+import org.neo4j.graphdb.Transaction
 import org.neo4j.internal.kernel.api.security.LoginContext
 import org.neo4j.kernel.api.KernelTransaction
 
 abstract class AdministrationCommandTestBase extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
 
-  override protected def getGraph: GraphDatabaseService = managementService.database(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)
+  override protected def getGraph: GraphDatabaseService =
+    managementService.database(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)
 
   override protected def cleanGraph(): Unit = {
     val tx = db.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
@@ -51,7 +54,7 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
     }
   }
 
-  //noinspection RedundantDefaultArgument
+  // noinspection RedundantDefaultArgument
   override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "update-one" =>

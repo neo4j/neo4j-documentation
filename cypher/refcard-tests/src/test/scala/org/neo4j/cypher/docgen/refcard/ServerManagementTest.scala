@@ -29,7 +29,7 @@ class ServerManagementTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "(★) Server management"
   override val linkId = "administration/servers"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {}
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {}
 
   def text = """
 ###dontrun

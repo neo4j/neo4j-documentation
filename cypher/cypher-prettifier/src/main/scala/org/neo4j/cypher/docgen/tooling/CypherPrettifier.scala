@@ -26,6 +26,7 @@ import org.neo4j.cypher.internal.ast.prettifier.Prettifier
 import org.neo4j.cypher.internal.util.OpenCypherExceptionFactory
 
 trait Prettifying {
+
   /**
     * @param input the input to prettify
     */

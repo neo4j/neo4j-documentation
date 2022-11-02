@@ -19,25 +19,27 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.{PrintWriter, File}
+import java.io.File
+import java.io.PrintWriter
 import java.nio.charset.StandardCharsets
 
 object CsvFile {
+
   def urify(file: File): String =
     file.toURI.toURL.toString.replace("\\", "\\\\")
 }
 
 class CsvFile(fileName: String, delimiter: Char = ',')(implicit csvFilesDir: File) {
 
-  import CsvFile._
+  import org.neo4j.cypher.docgen.CsvFile._
 
   def withContents(lines: Seq[String]*): String = {
-    val csvFile = withContentsF(false, lines:_*)
+    val csvFile = withContentsF(false, lines: _*)
     urify(csvFile)
   }
 
   def withContentsF(lines: Seq[String]*): File = {
-    withContentsF(false, lines:_*)
+    withContentsF(false, lines: _*)
   }
 
   def withContentsF(quoted: Boolean, lines: Seq[String]*): File = {

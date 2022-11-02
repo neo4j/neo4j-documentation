@@ -20,34 +20,30 @@
 package org.neo4j.function.example;
 
 import java.util.List;
-
 import org.neo4j.procedure.Description;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.UserFunction;
 
 // tag::joinFunction[]
-public class JoinFunction
-{
+public class JoinFunction {
 
     /**
      * Joins a list of strings together using the provided delimiter
      *
-     * @param strings the strings to join
+     * @param strings   the strings to join
      * @param delimiter the delimiter to join with (optional)
      * @return A string composed of the <code>strings</code> joined using the <code>delimiter</code>
      */
     @UserFunction
-    @Description( "org.neo4j.function.example.join(['s1','s2',...], delimiter) - join the given strings with the " +
-                  "given delimiter." )
+    @Description("org.neo4j.function.example.join(['s1','s2',...], delimiter) - join the given strings with the " +
+            "given delimiter.")
     public String join(
-            @Name( "strings" ) List<String> strings,
-            @Name( value = "delimiter", defaultValue = "," ) String delimiter )
-    {
-        if ( strings == null || delimiter == null )
-        {
+            @Name("strings") List<String> strings,
+            @Name(value = "delimiter", defaultValue = ",") String delimiter) {
+        if (strings == null || delimiter == null) {
             return null;
         }
-        return String.join( delimiter, strings );
+        return String.join(delimiter, strings);
     }
 }
 // end::joinFunction[]

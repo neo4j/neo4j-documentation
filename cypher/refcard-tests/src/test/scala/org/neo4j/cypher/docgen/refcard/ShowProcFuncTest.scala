@@ -32,7 +32,7 @@ class ShowProcFuncTest extends RefcardTest with QueryStatisticsTestSupport {
   // just make sure we get results
   // but not the exact number to avoid it breaking
   // when new functions or procedures gets added to Neo4j
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = assert(result.toList.nonEmpty)
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = assert(result.toList.nonEmpty)
 
   def text = """
 ###assertion=result

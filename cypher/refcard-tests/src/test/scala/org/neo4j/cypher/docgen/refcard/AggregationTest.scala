@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "Aggregating functions"
   override val linkId = "functions/aggregating"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-one" =>
         assertStats(result, nodesCreated = 0)
@@ -52,7 +53,8 @@ class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("property" -> 10),
     "B" -> Map("property" -> 20),
-    "C" -> Map("property" -> 30))
+    "C" -> Map("property" -> 30)
+  )
 
   def text = """
 ###assertion=returns-one

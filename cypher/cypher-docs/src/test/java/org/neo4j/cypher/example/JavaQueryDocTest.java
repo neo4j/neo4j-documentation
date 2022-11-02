@@ -19,37 +19,34 @@
  */
 package org.neo4j.cypher.example;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.neo4j.doc.tools.JavaDocsGenerator;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.junit.Assert.assertTrue;
-
-public class JavaQueryDocTest
-{
+class JavaQueryDocTest {
     @Test
-    public void test()
-    {
-        JavaDocsGenerator gen = new JavaDocsGenerator( "java-cypher-queries", "dev/java" );
+    void test() {
+        JavaDocsGenerator gen = new JavaDocsGenerator("java-cypher-queries", "dev/java");
 
         JavaQuery jq = new JavaQuery();
         jq.run();
-        assertTrue( jq.columnsString.contains( "n," ) );
-        assertTrue( jq.columnsString.contains( "n.name" ) );
-        assertTrue( jq.resultString.contains( "Node[" ) );
-        assertTrue( jq.resultString.contains( "name" ) );
-        assertTrue( jq.resultString.contains( "my" ) );
-        assertTrue( jq.resultString.contains( "1 row" ) );
-        assertTrue( jq.nodeResult.contains( "Node[" ) );
-        assertTrue( jq.nodeResult.contains( "my" ) );
-        assertTrue( jq.rows.contains( "n.name: my node; " ) );
-        assertTrue( jq.rows.contains( "Node[" ) );
-        assertTrue( jq.rows.contains( "];" ) );
+        assertTrue(jq.columnsString.contains("n,"));
+        assertTrue(jq.columnsString.contains("n.name"));
+        assertTrue(jq.resultString.contains("Node["));
+        assertTrue(jq.resultString.contains("name"));
+        assertTrue(jq.resultString.contains("my"));
+        assertTrue(jq.resultString.contains("1 row"));
+        assertTrue(jq.nodeResult.contains("Node["));
+        assertTrue(jq.nodeResult.contains("my"));
+        assertTrue(jq.rows.contains("n.name: my node; "));
+        assertTrue(jq.rows.contains("Node["));
+        assertTrue(jq.rows.contains("];"));
 
-        gen.saveToFile( "result", AsciidocHelper.createOutputSnippet( jq.resultString ) );
-        gen.saveToFile( "columns", AsciidocHelper.createOutputSnippet( jq.columnsString ) );
-        gen.saveToFile( "node", AsciidocHelper.createOutputSnippet( jq.nodeResult ) );
-        gen.saveToFile( "rows", AsciidocHelper.createOutputSnippet( jq.rows ) );
+        gen.saveToFile("result", AsciidocHelper.createOutputSnippet(jq.resultString));
+        gen.saveToFile("columns", AsciidocHelper.createOutputSnippet(jq.columnsString));
+        gen.saveToFile("node", AsciidocHelper.createOutputSnippet(jq.nodeResult));
+        gen.saveToFile("rows", AsciidocHelper.createOutputSnippet(jq.rows));
     }
 }

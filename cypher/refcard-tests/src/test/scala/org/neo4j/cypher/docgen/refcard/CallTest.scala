@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
@@ -40,7 +40,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "CALL procedure"
   override val linkId = "clauses/call"
 
-  @Before
+  @BeforeEach
   override def init() {
     super.init()
 
@@ -50,27 +50,31 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
       .out("result", Neo4jTypes.NTString)
 
     val proc = new BasicProcedure(builder.build) {
-      override def apply(ctx: Context, input: Array[AnyValue], resourceTracker: ResourceTracker): RawIterator[Array[AnyValue], ProcedureException] =
+      override def apply(
+        ctx: Context,
+        input: Array[AnyValue],
+        resourceTracker: ResourceTracker
+      ): RawIterator[Array[AnyValue], ProcedureException] =
         RawIterator.of[Array[AnyValue], ProcedureException](input)
     }
     kernel.registerProcedure(proc)
   }
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "labels" =>
         assert(result.toList.size === 1)
       case "arg" =>
         assert(result.toList.size === 1)
-        assert(result.toList == List(Map("result" ->"foo")))
+        assert(result.toList == List(Map("result" -> "foo")))
       case "none" =>
     }
   }
 
   override def parameters(name: String): Map[String, Any] =
     name match {
-      case "parameters=arg" => Map("input" ->"foo")
-      case "" => Map.empty
+      case "parameters=arg" => Map("input" -> "foo")
+      case ""               => Map.empty
     }
 
   def text = """
@@ -110,4 +114,3 @@ Calls the built-in procedure `db.labels` inside a larger query to count all labe
 Calls inside a larger query always requires passing arguments and naming results explicitly with `YIELD`.
 """
 }
-

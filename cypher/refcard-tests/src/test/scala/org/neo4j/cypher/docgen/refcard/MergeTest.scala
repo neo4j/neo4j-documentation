@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "MERGE"
   override val linkId = "clauses/merge"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "merge" =>
         assertStats(result, nodesCreated = 1, propertiesWritten = 2, labelsAdded = 1)
@@ -54,7 +55,8 @@ class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Alice"),
-    "B" -> Map("name" -> "Bob"))
+    "B" -> Map("name" -> "Bob")
+  )
 
   def text = """
 ###assertion=merge parameters=aname

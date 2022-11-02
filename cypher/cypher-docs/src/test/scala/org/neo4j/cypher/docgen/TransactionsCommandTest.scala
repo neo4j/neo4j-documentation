@@ -28,17 +28,21 @@ class TransactionsCommandTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     doc("Transaction commands", "query-transaction-clauses")
     synopsis("This section explains the `SHOW TRANSACTIONS` and `TERMINATION TRANSACTIONS` commands.")
-    section("SHOW TRANSACTIONS", id="query-listing-transactions") {
-      p("The `SHOW TRANSACTIONS` command is used to display running transactions within the instance." +
-        " This also includes fabric transactions." +
-        "For remote database aliases, transactions can be tracked by running `SHOW TRANSACTIONS` when connected to the remote database alias.")
+
+    section("SHOW TRANSACTIONS", id = "query-listing-transactions") {
+      p(
+        "The `SHOW TRANSACTIONS` command is used to display running transactions within the instance." +
+          " This also includes fabric transactions." +
+          "For remote database aliases, transactions can be tracked by running `SHOW TRANSACTIONS` when connected to the remote database alias."
+      )
       p(
         """
           #[NOTE]
           #====
           #The command `SHOW TRANSACTIONS` returns only the default output. For a full output use the optional `YIELD` command.
           #Full output: `SHOW TRANSACTIONS YIELD *`.
-          #====""".stripMargin('#'))
+          #====""".stripMargin('#')
+      )
       p("This command will produce a table with the following columns:")
       p(
         """
@@ -205,8 +209,11 @@ m|LONG
 |m|initializationStackTrace
 |a|The initialization stacktrace for this transaction or an empty string if unavailable.
 |m|STRING
-||===""")
-      p("The `SHOW TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>.")
+||==="""
+      )
+      p(
+        "The `SHOW TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>."
+      )
       section("Syntax") {
         p(
           """
@@ -229,17 +236,33 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
 ====
 A user with the <<access-control-database-administration-transaction, `SHOW TRANSACTION`>> privilege can view the currently executing transactions in accordance with the privilege grants.
 All users may view all of their own currently executing transactions.
-""".stripMargin('#'))
+""".stripMargin('#')
+        )
       }
       section("Listing all transactions") {
         p(
           """To list all available transactions with the default output columns, use the `SHOW TRANSACTIONS` command.
-            #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
+            #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#')
+        )
         backgroundQueries(List("MATCH (n) RETURN n")) {
-          query("SHOW TRANSACTIONS", ResultAssertions(p => {
-            p.columns should contain theSameElementsAs
-              Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime")
-          })) {
+          query(
+            "SHOW TRANSACTIONS",
+            ResultAssertions(p => {
+              p.columns should contain theSameElementsAs
+                Array(
+                  "database",
+                  "transactionId",
+                  "currentQueryId",
+                  "connectionId",
+                  "clientAddress",
+                  "username",
+                  "currentQuery",
+                  "startTime",
+                  "status",
+                  "elapsedTime"
+                )
+            })
+          ) {
             resultTable()
           }
         }
@@ -247,23 +270,29 @@ All users may view all of their own currently executing transactions.
       section("Listing transactions with filtering on output columns") {
         p(
           """The listed transactions can be filtered by using the `WHERE` clause.
-            #For example, getting the databases for all transactions where the currently executing query contains 'Mark':""".stripMargin('#'))
+            #For example, getting the databases for all transactions where the currently executing query contains 'Mark':""".stripMargin(
+            '#'
+          )
+        )
         backgroundQueries(List(
           "MATCH (p:Person) WHERE p.name='Mark' RETURN p",
           "MATCH (n) RETURN n"
         )) {
-          query("""SHOW TRANSACTIONS YIELD database, currentQuery WHERE currentQuery contains 'Mark'""",
+          query(
+            """SHOW TRANSACTIONS YIELD database, currentQuery WHERE currentQuery contains 'Mark'""",
             ResultAssertions(p => {
               p.columns should contain theSameElementsAs Array("database", "currentQuery")
               p.columnAs[String]("database").foreach(_ should be("neo4j"))
               p.columnAs[String]("currentQuery").foreach(_ should include("Mark"))
-            })) {
+            })
+          ) {
             resultTable()
           }
         }
         p(
           """Several of the output columns have the `duration` type, which can be hard to read.
-            #They can instead be returned in a more readable format:""".stripMargin('#'))
+            #They can instead be returned in a more readable format:""".stripMargin('#')
+        )
         backgroundQueries(List(
           "MATCH (n) RETURN n",
           "UNWIND range(1,100000) AS x CREATE (:Number {value: x}) RETURN x"
@@ -293,16 +322,17 @@ All users may view all of their own currently executing transactions.
                 "currentQueryWaitTimeMicros",
                 "currentQueryIdleTimeSeconds"
               )
-            })) {
+            })
+          ) {
             resultTable()
           }
         }
       }
       section("Listing specific transactions") {
         p("""It is possible to specify which transactions to return in the list by transaction ID.""")
-          query("""SHOW TRANSACTIONS "neo4j-transaction-3"""", NoAssertions) { }
-          p(
-            """
+        query("""SHOW TRANSACTIONS "neo4j-transaction-3"""", NoAssertions) {}
+        p(
+          """
               |.Result
               |[role="queryresult",options="header,footer",cols="10*<m"]
               ||===
@@ -310,17 +340,20 @@ All users may view all of their own currently executing transactions.
               || +"neo4j"+ | +"neo4j-transaction-3"+ | +"query-1"+ | +""+ | +""+ | +""+ | +"MATCH (n) RETURN n"+ | +"2021-10-20T08:29:39.423Z"+ | +"Running"+ | +PT2.603S+
               |10+d|Rows: 1
               ||===
-              |""")
+              |"""
+        )
       }
     }
-    section("TERMINATE TRANSACTIONS", id="query-terminate-transactions") {
+
+    section("TERMINATE TRANSACTIONS", id = "query-terminate-transactions") {
       p("The `TERMINATE TRANSACTIONS` command is used to terminate running transactions by their IDs.")
       p(
         """
           #[NOTE]
           #====
           #For the `TERMINATE TRANSACTIONS` command there is no difference between the default output and full output, all columns are default.
-          #====""".stripMargin('#'))
+          #====""".stripMargin('#')
+      )
       p("This command will produce a table with the following columns:")
       p(
         """
@@ -342,8 +375,11 @@ All users may view all of their own currently executing transactions.
 |m|message
 |a|The result of the `TERMINATE TRANSACTION` command as applied to this transaction.
 |m|STRING
-||===""")
-      p("The `TERMINATE TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>.")
+||==="""
+      )
+      p(
+        "The `TERMINATE TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>."
+      )
       section("Syntax") {
         p(
           """
@@ -371,14 +407,19 @@ When using the `WHERE` or `RETURN` clauses, the `YIELD` clause is mandatory and 
 
 A user with the <<access-control-database-administration-transaction, `TERMINATE TRANSACTION`>> privilege can terminate transactions in accordance with the privilege grants.
 All users may terminate their own currently executing transactions.
-""".stripMargin('#'))
+""".stripMargin('#')
+        )
       }
       section("Terminate transactions") {
         p(
-          """To end running transactions without waiting for them to complete on their own, use the `TERMINATE TRANSACTIONS` command.""")
-        query("""TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""", ResultAssertions(p => {
-          p.columns should contain theSameElementsAs Array("transactionId", "username", "message")
-        })) {}
+          """To end running transactions without waiting for them to complete on their own, use the `TERMINATE TRANSACTIONS` command."""
+        )
+        query(
+          """TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""",
+          ResultAssertions(p => {
+            p.columns should contain theSameElementsAs Array("transactionId", "username", "message")
+          })
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="3*<m"]
@@ -387,18 +428,24 @@ All users may terminate their own currently executing transactions.
             || +"neo4j-transaction-1"+ | +"neo4j"+ | +"Transaction terminated."+
             || +"neo4j-transaction-2"+ | +null+ | +"Transaction not found."+
             |3+d|Rows: 2
-            ||===""")
+            ||==="""
+        )
       }
       section("Terminate transactions with filtering on output columns") {
         p(
           """The output from the `TERMINATE TRANSACTIONS` command can be filtered using the `YIELD` and `WHERE` clauses.
-            #For example, returning the transaction ids and message for the transactions that didn't terminate:""".stripMargin('#'))
+            #For example, returning the transaction ids and message for the transactions that didn't terminate:""".stripMargin(
+            '#'
+          )
+        )
         query(
           """TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"
             #YIELD transactionId, message
-            #WHERE message <> "Transaction terminated."""".stripMargin('#'), ResultAssertions(p => {
-          p.columns should contain theSameElementsAs Array("transactionId", "message")
-        })) {}
+            #WHERE message <> "Transaction terminated."""".stripMargin('#'),
+          ResultAssertions(p => {
+            p.columns should contain theSameElementsAs Array("transactionId", "message")
+          })
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="2*<m"]
@@ -406,18 +453,24 @@ All users may terminate their own currently executing transactions.
             || +transactionId+ | +message+
             || +"neo4j-transaction-2"+ | +"Transaction not found."+
             |2+d|Rows: 1
-            ||===""")
+            ||==="""
+        )
         p("""In difference to `SHOW TRANSACTIONS`, `TERMINATE TRANSACTIONS` doesn't allow `WHERE` without `YIELD`:""")
         query(
           """TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"
-            #WHERE message <> "Transaction terminated."""".stripMargin('#'), ErrorAssertions(error =>
-            error.getMessage should startWith("`WHERE` is not allowed by itself, please use `TERMINATE TRANSACTION ... YIELD ... WHERE ...` instead")
-          )) {
+            #WHERE message <> "Transaction terminated."""".stripMargin('#'),
+          ErrorAssertions(error =>
+            error.getMessage should startWith(
+              "`WHERE` is not allowed by itself, please use `TERMINATE TRANSACTION ... YIELD ... WHERE ...` instead"
+            )
+          )
+        ) {
           errorOnlyResultTable()
         }
       }
     }
-    section("Combining transaction commands", id="query-combine-tx-commands") {
+
+    section("Combining transaction commands", id = "query-combine-tx-commands") {
       p(
         """
 In difference to other show commands, the `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
@@ -433,17 +486,21 @@ Instead, the `YIELD` clause needs to explicitly list the yielded columns.
 ====
 At this point in time, no other cypher clauses are allowed to be combined with the transaction commands.
 ====
-""".stripMargin('#'))
+""".stripMargin('#')
+      )
       section("Terminating all transactions by a given user") {
         p(
-          """To terminate all transactions by a user, first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.""")
+          """To terminate all transactions by a user, first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`."""
+        )
         query(
           """SHOW TRANSACTIONS
             #YIELD transactionId AS txId, username AS user
             #WHERE user = "Alice"
             #TERMINATE TRANSACTIONS txId
             #YIELD message
-            #RETURN txId, message""".stripMargin('#'), NoAssertions) {}
+            #RETURN txId, message""".stripMargin('#'),
+          NoAssertions
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="2*<m"]
@@ -452,21 +509,25 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             || +"neo4j-transaction-1"+ | +"Transaction terminated."+
             || +"neo4j-transaction-2"+ | +"Transaction terminated."+
             |2+d|Rows: 2
-            ||===""")
+            ||==="""
+        )
       }
       section("Terminating starving transactions") {
         p(
           """To terminate transactions that have been waiting for more than 30 minutes,
             #first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.
             #
-            #The following example shows a transaction that has been waiting for 40 minutes.""".stripMargin('#'))
+            #The following example shows a transaction that has been waiting for 40 minutes.""".stripMargin('#')
+        )
         query(
           """SHOW TRANSACTIONS
             #YIELD transactionId, waitTime
             #WHERE waitTime > duration({minutes: 30})
             #TERMINATE TRANSACTIONS transactionId
             #YIELD username, message
-            #RETURN *""".stripMargin('#'), NoAssertions) {}
+            #RETURN *""".stripMargin('#'),
+          NoAssertions
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="4*<m"]
@@ -474,19 +535,25 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             || +transactionId+ | +waitTime+ | +username+ | +message+
             || +"neo4j-transaction-1"+ | +PT40M+ | +"Alice"+ | +"Transaction terminated."+
             |4+d|Rows: 1
-            ||===""")
+            ||==="""
+        )
       }
       section("Listing other transactions by the same user that were terminated") {
         p(
           """To list remaining transactions by users whose transactions were terminated,
-            #first terminate the transactions using `TERMINATE TRANSACTIONS`, then filter users through `SHOW TRANSACTIONS`.""".stripMargin('#'))
+            #first terminate the transactions using `TERMINATE TRANSACTIONS`, then filter users through `SHOW TRANSACTIONS`.""".stripMargin(
+            '#'
+          )
+        )
         query(
           """TERMINATE TRANSACTION 'neo4j-transaction-1', 'neo4j-transaction-2'
             #YIELD username AS terminatedUser
             #SHOW TRANSACTIONS
             #YIELD username AS showUser, transactionId AS txId, database, currentQuery, status
             #WHERE showUser = terminatedUser AND NOT status STARTS WITH 'Terminated'
-            #RETURN txId, showUser AS user, database, currentQuery""".stripMargin('#'), NoAssertions) {}
+            #RETURN txId, showUser AS user, database, currentQuery""".stripMargin('#'),
+          NoAssertions
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="4*<m"]
@@ -496,19 +563,25 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             || +"mydb-transaction-1"+ | +"Bob"+ | +"mydb"+ | +"MATCH (n:Label) SET n.prop=false"+
             || +"system-transaction-999"+ | +"Bob"+ | +"system"+ | +"SHOW DATABASES"+
             |4+d|Rows: 2
-            ||===""")
+            ||==="""
+        )
       }
       section("Listing other transactions by the same user as a given transaction") {
         p(
           """To list other transactions by the same user as a given transaction,
-            #first find the transactions using `SHOW TRANSACTIONS`, then filter users through a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
+            #first find the transactions using `SHOW TRANSACTIONS`, then filter users through a second `SHOW TRANSACTIONS`.""".stripMargin(
+            '#'
+          )
+        )
         query(
           """SHOW TRANSACTION 'neo4j-transaction-1'
             #YIELD username AS originalUser, transactionId AS originalTxId
             #SHOW TRANSACTIONS
             #YIELD username AS newUser, transactionId AS txId, database, currentQuery, status
             #WHERE newUser = originalUser AND NOT txId = originalTxId
-            #RETURN txId, newUser AS user, database, currentQuery, status""".stripMargin('#'), NoAssertions) {}
+            #RETURN txId, newUser AS user, database, currentQuery, status""".stripMargin('#'),
+          NoAssertions
+        ) {}
         p(
           """.Result
             |[role="queryresult",options="header,footer",cols="5*<m"]
@@ -517,7 +590,8 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             || +"mydb-transaction-1"+ | +"Bob"+ | +"mydb"+ | +"MATCH (n:Label) SET n.prop=false"+ | +"Running"+
             || +"system-transaction-999"+ | +"Bob"+ | +"system"+ | +"SHOW DATABASES"+ | +"Running"+
             |5+d|Rows: 2
-            ||===""")
+            ||==="""
+        )
       }
     }
   }.build()

@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class ForeachTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class ForeachTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "FOREACH"
   override val linkId = "clauses/foreach"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "foreach" =>
         assertStats(result, nodesCreated = 3, labelsAdded = 3, propertiesWritten = 3)

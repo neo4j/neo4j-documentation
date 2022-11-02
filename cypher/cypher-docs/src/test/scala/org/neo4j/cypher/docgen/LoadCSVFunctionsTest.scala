@@ -28,20 +28,26 @@ class LoadCSVFunctionsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("LOAD CSV functions", "query-functions-load-csv")
     synopsis("LOAD CSV functions can be used to get information about the file that is processed by `LOAD CSV`.")
+
     important {
       p("""The functions described on this page are only useful when run on a query that uses `LOAD CSV`.
           #In all other contexts they will always return `null`.""".stripMargin('#'))
     }
+
     p("""Functions:
         #
         #* <<functions-linenumber, linenumber()>>
         #* <<functions-file, file()>>""".stripMargin('#'))
+
     section("linenumber()", "functions-linenumber") {
       p("`linenumber()` returns the line number that `LOAD CSV` is currently using.")
       function("linenumber()", "An Integer.")
-      considerations("`null` will be returned if this function is called without a `LOAD CSV` context.",
-                     "If the CSV file contains headers, the headers will be `linenumber` 1 and the 1st row of data will have a `linenumber` of 2.")
+      considerations(
+        "`null` will be returned if this function is called without a `LOAD CSV` context.",
+        "If the CSV file contains headers, the headers will be `linenumber` 1 and the 1st row of data will have a `linenumber` of 2."
+      )
     }
+
     section("file()", "functions-file") {
       p("`file()` returns the absolute path of the file that `LOAD CSV` is using.")
       function("file()", "A String.")

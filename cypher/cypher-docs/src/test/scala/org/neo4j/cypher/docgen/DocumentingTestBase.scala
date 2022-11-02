@@ -79,7 +79,6 @@ import java.io.StringWriter
 import java.nio.charset.StandardCharsets
 import java.util
 import java.util.concurrent.TimeUnit
-
 import scala.jdk.CollectionConverters.MapHasAsJava
 import scala.jdk.CollectionConverters.MapHasAsScala
 import scala.jdk.CollectionConverters.SeqHasAsJava
@@ -117,20 +116,25 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
   }
 
   def asciidocSubstitutions: String = null
+
   def createCypherSnippet(query: String): String = {
-    //val escapedQuery = query.trim().replace("\\", "\\\\")
+    // val escapedQuery = query.trim().replace("\\", "\\\\")
     val escapedQuery = query.trim()
-    //Prettifier is broken and not maintained.
-    //val prettifiedQuery = Prettifier(escapedQuery, keepMyNewlines = false)
+    // Prettifier is broken and not maintained.
+    // val prettifiedQuery = Prettifier(escapedQuery, keepMyNewlines = false)
     if (asciidocSubstitutions != null) {
-      AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(escapedQuery, true, asciidocSubstitutions)
+      AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(
+        escapedQuery,
+        true,
+        asciidocSubstitutions
+      )
     } else {
       AsciidocHelper.createCypherSnippetFromPreformattedQuery(escapedQuery, true)
     }
   }
 
   def prepareFormatting(query: String): String = {
-    //val str = Prettifier(query.trim(), keepMyNewlines = false)
+    // val str = Prettifier(query.trim(), keepMyNewlines = false)
     val str = query.trim()
     if ((str takeRight 1) == ";") {
       str
@@ -198,43 +202,80 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue)
 
-  def testQuery(title: String,
-                text: String,
-                queryText: String,
-                optionalResultExplanation: String = null,
-                parameters: Map[String, Any] = Map.empty,
-                planners: Seq[String] = Seq.empty,
-                assertions: DocsExecutionResult => Unit): Unit = {
+  def testQuery(
+    title: String,
+    text: String,
+    queryText: String,
+    optionalResultExplanation: String = null,
+    parameters: Map[String, Any] = Map.empty,
+    planners: Seq[String] = Seq.empty,
+    assertions: DocsExecutionResult => Unit
+  ): Unit = {
 
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
 
-  def testFailingQuery[T <: Exception: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
+  def testFailingQuery[T <: Exception : ClassTag](
+    title: String,
+    text: String,
+    queryText: String,
+    optionalResultExplanation: String = null
+  ) {
     val classTag = implicitly[ClassTag[T]]
-    internalTestQuery(title, text, queryText, optionalResultExplanation, Some(classTag), None, Map.empty, Seq.empty, _ => {})
+    internalTestQuery(
+      title,
+      text,
+      queryText,
+      optionalResultExplanation,
+      Some(classTag),
+      None,
+      Map.empty,
+      Seq.empty,
+      _ => {}
+    )
   }
 
-  def prepareAndTestQuery(title: String, text: String, queryText: String, optionalResultExplanation: String = "",
-                          prepare: GraphDatabaseCypherService => Unit, assertions: DocsExecutionResult => Unit) {
-    internalTestQuery(title, text, queryText, optionalResultExplanation, None, Some(prepare), Map.empty, Seq.empty, assertions)
+  def prepareAndTestQuery(
+    title: String,
+    text: String,
+    queryText: String,
+    optionalResultExplanation: String = "",
+    prepare: GraphDatabaseCypherService => Unit,
+    assertions: DocsExecutionResult => Unit
+  ) {
+    internalTestQuery(
+      title,
+      text,
+      queryText,
+      optionalResultExplanation,
+      None,
+      Some(prepare),
+      Map.empty,
+      Seq.empty,
+      assertions
+    )
   }
 
-  def profileQuery(title: String,
-                   text: String,
-                   queryText: String,
-                   realQuery: Option[String] = None,
-                   prepare: Option[GraphDatabaseCypherService => Unit] = None,
-                   assertions: DocsExecutionResult => Unit): Unit = {
+  def profileQuery(
+    title: String,
+    text: String,
+    queryText: String,
+    realQuery: Option[String] = None,
+    prepare: Option[GraphDatabaseCypherService => Unit] = None,
+    assertions: DocsExecutionResult => Unit
+  ): Unit = {
     internalProfileQuery(title, text, queryText, realQuery, None, prepare, assertions)
   }
 
-  private def internalProfileQuery(title: String,
-                                   text: String,
-                                   queryText: String,
-                                   realQuery: Option[String],
-                                   expectedException: Option[ClassTag[_ <: Neo4jException]],
-                                   prepare: Option[GraphDatabaseCypherService => Unit],
-                                   assertions: DocsExecutionResult => Unit): Unit = {
+  private def internalProfileQuery(
+    title: String,
+    text: String,
+    queryText: String,
+    realQuery: Option[String],
+    expectedException: Option[ClassTag[_ <: Neo4jException]],
+    prepare: Option[GraphDatabaseCypherService => Unit],
+    assertions: DocsExecutionResult => Unit
+  ): Unit = {
     preparationQueries = List()
 
     dumpSetupConstraintsQueries(setupConstraintQueries, dir)
@@ -281,7 +322,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         writer.close()
 
         assertions(queryResult)
-      } )
+      })
     } catch {
       case e: Neo4jException if expectedException.nonEmpty =>
         val expectedExceptionType = expectedException.get
@@ -293,19 +334,19 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     }
   }
 
-
-  private def internalTestQuery(title: String,
-                                text: String,
-                                queryText: String,
-                                optionalResultExplanation: String,
-                                expectedException: Option[ClassTag[_ <: Exception]],
-                                prepare: Option[GraphDatabaseCypherService => Unit],
-                                parameters: Map[String, Any],
-                                planners: Seq[String],
-                                assertions: DocsExecutionResult => Unit)
-  {
+  private def internalTestQuery(
+    title: String,
+    text: String,
+    queryText: String,
+    optionalResultExplanation: String,
+    expectedException: Option[ClassTag[_ <: Exception]],
+    prepare: Option[GraphDatabaseCypherService => Unit],
+    parameters: Map[String, Any],
+    planners: Seq[String],
+    assertions: DocsExecutionResult => Unit
+  ) {
     preparationQueries = List()
-    //dumpGraphViz(dir, graphvizOptions.trim)
+    // dumpGraphViz(dir, graphvizOptions.trim)
     if (!graphvizExecutedAfter) {
       dumpGraphViz(dir, graphvizOptions.trim)
     }
@@ -316,7 +357,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     if (generateConsole) {
       if (generateInitialGraphForConsole) {
         val out = new StringWriter()
-        db.withTx( tx=> {
+        db.withTx(tx => {
           new SubGraphExporter(DatabaseSubGraph.from(tx)).export(new PrintWriter(out))
           consoleData = out.toString
         })
@@ -330,26 +371,46 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val writer: PrintWriter = createWriter(title, dir)
     prepareForTest(title, prepare)
 
-    val query = db.withTx( tx => {
+    val query = db.withTx(tx => {
       keySet.foldLeft(queryText)((acc, key) => acc.replace("%" + key + "%", node(tx, key).getId.toString))
     })
 
     assert(filePaths.size == urls.size)
 
-    val testQuery = filePaths.foldLeft(query)( (acc, entry) => acc.replace(entry._1, entry._2))
-    val docQuery = urls.foldLeft(query)( (acc, entry) => acc.replace(entry._1, entry._2))
+    val testQuery = filePaths.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
+    val docQuery = urls.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
 
     executeWithAllPlannersAndAssert(
       testQuery,
       assertions,
       expectedException,
-      dumpToFileWithException(dir, writer, title, docQuery, optionalResultExplanation, text, _, consoleData, parameters),
+      dumpToFileWithException(
+        dir,
+        writer,
+        title,
+        docQuery,
+        optionalResultExplanation,
+        text,
+        _,
+        consoleData,
+        parameters
+      ),
       parameters,
       planners,
-      prepareForTest(title, prepare))
-    match {
-      case Some(result) => dumpToFileWithResult(dir, writer, title, docQuery, optionalResultExplanation, text, result, consoleData, parameters)
-      case  None =>
+      prepareForTest(title, prepare)
+    ) match {
+      case Some(result) => dumpToFileWithResult(
+          dir,
+          writer,
+          title,
+          docQuery,
+          optionalResultExplanation,
+          text,
+          result,
+          consoleData,
+          parameters
+        )
+      case None =>
     }
   }
 
@@ -361,24 +422,27 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       dumpPreparationQueries(preparationQueries, dir, title)
       dumpPreparationGraphviz(dir, title, graphvizOptions)
     }
-    db.withTx( tx => { tx.schema().awaitIndexesOnline(2, TimeUnit.SECONDS) } )
+    db.withTx(tx => { tx.schema().awaitIndexesOnline(2, TimeUnit.SECONDS) })
   }
 
-  private def executeWithAllPlannersAndAssert(query: String,
-                                              assertions: DocsExecutionResult => Unit,
-                                              expectedException: Option[ClassTag[_ <: Exception]],
-                                              expectedCaught: Exception => Unit,
-                                              parameters: Map[String, Any],
-                                              providedPlanners: Seq[String],
-                                              prepareFunction: => Unit): Option[String] = {
+  private def executeWithAllPlannersAndAssert(
+    query: String,
+    assertions: DocsExecutionResult => Unit,
+    expectedException: Option[ClassTag[_ <: Exception]],
+    expectedCaught: Exception => Unit,
+    parameters: Map[String, Any],
+    providedPlanners: Seq[String],
+    prepareFunction: => Unit
+  ): Option[String] = {
     // COST planner is default. Can't specify it without getting exception thrown if it's unavailable.
     val planners = if (providedPlanners.isEmpty) Seq("") else providedPlanners
 
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
-        val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
+        val parametersValue =
+          ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
 
-        val contextFactory = Neo4jTransactionalContextFactory.create( db )
+        val contextFactory = Neo4jTransactionalContextFactory.create(db)
         def txContext(transaction: InternalTransaction) =
           contextFactory.newContext(
             transaction,
@@ -407,21 +471,24 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
         This transaction is necessary for Core API access in assertion code.
          */
-        val executeTransaction = db.beginTransaction( Type.IMPLICIT, SecurityContext.AUTH_DISABLED )
-        val docsResult = try {
-          val context = txContext(executeTransaction)
-          val subscriber = new ResultSubscriber(context)
-          val result = engine.execute(s"$planner $query",
-            parametersValue,
-            context,
-            profile = false,
-            prePopulate = false,
-            subscriber)
-          subscriber.init(result)
-          val docResult = DocsExecutionResult(subscriber, txContext(executeTransaction))
-          executeTransaction.commit()
-          docResult
-        } finally executeTransaction.close()
+        val executeTransaction = db.beginTransaction(Type.IMPLICIT, SecurityContext.AUTH_DISABLED)
+        val docsResult =
+          try {
+            val context = txContext(executeTransaction)
+            val subscriber = new ResultSubscriber(context)
+            val result = engine.execute(
+              s"$planner $query",
+              parametersValue,
+              context,
+              profile = false,
+              prePopulate = false,
+              subscriber
+            )
+            subscriber.init(result)
+            val docResult = DocsExecutionResult(subscriber, txContext(executeTransaction))
+            executeTransaction.commit()
+            docResult
+          } finally executeTransaction.close()
 
         assertions(docsResult)
         val resultAsString = docsResult.resultAsString
@@ -433,14 +500,15 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         Some(resultAsString)
 
       case s =>
-        val contextFactory = Neo4jTransactionalContextFactory.create( db )
-        val transaction = db.beginTransaction( Type.IMPLICIT, SecurityContext.AUTH_DISABLED )
-        val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
+        val contextFactory = Neo4jTransactionalContextFactory.create(db)
+        val transaction = db.beginTransaction(Type.IMPLICIT, SecurityContext.AUTH_DISABLED)
+        val parametersValue =
+          ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
         val context = contextFactory.newContext(
           transaction,
           query,
           parametersValue
-          )
+        )
 
         var e: Throwable = null
         val subscriber = new QuerySubscriberAdapter {
@@ -449,12 +517,14 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           }
         }
         try {
-          engine.execute(s"$s $query",
-                         parametersValue,
-                         context,
-                         profile = false,
-                         prePopulate = false,
-                         subscriber).consumeAll()
+          engine.execute(
+            s"$s $query",
+            parametersValue,
+            context,
+            profile = false,
+            prePopulate = false,
+            subscriber
+          ).consumeAll()
           if (transaction.isOpen) {
             transaction.commit()
           }
@@ -495,7 +565,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   def parent: Option[String] = None
   def section: String
-  lazy val dir: File = if (parent.isDefined) createDir(new File(path, niceify(parent.get)), section) else createDir(section)
+
+  lazy val dir: File =
+    if (parent.isDefined) createDir(new File(path, niceify(parent.get)), section) else createDir(section)
 
   def graphDescription: List[String] = List()
 
@@ -508,18 +580,45 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   def indexProps: List[String] = List()
 
-  def dumpToFileWithResult(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                 result: String, consoleData: String, parameters: Map[String, Any]) {
+  def dumpToFileWithResult(
+    dir: File,
+    writer: PrintWriter,
+    title: String,
+    query: String,
+    returns: String,
+    text: String,
+    result: String,
+    consoleData: String,
+    parameters: Map[String, Any]
+  ) {
     dumpToFile(dir, writer, title, query, returns, text, Right(result), consoleData, parameters)
   }
 
-  def dumpToFileWithException(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                 failure: Exception, consoleData: String, parameters: Map[String, Any]) {
+  def dumpToFileWithException(
+    dir: File,
+    writer: PrintWriter,
+    title: String,
+    query: String,
+    returns: String,
+    text: String,
+    failure: Exception,
+    consoleData: String,
+    parameters: Map[String, Any]
+  ) {
     dumpToFile(dir, writer, title, query, returns, text, Left(failure), consoleData, parameters)
   }
 
-  private def dumpToFile(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                         result: Either[Exception, String], consoleData: String, parameters: Map[String, Any]) {
+  private def dumpToFile(
+    dir: File,
+    writer: PrintWriter,
+    title: String,
+    query: String,
+    returns: String,
+    text: String,
+    result: Either[Exception, String],
+    consoleData: String,
+    parameters: Map[String, Any]
+  ) {
     val testId = niceify(parent, section, title)
     writer.println("[[" + testId + "]]")
     if (!noTitle) writer.println("== " + title + " ==")
@@ -533,39 +632,46 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   def executePreparationQueries(queries: List[String]) {
     preparationQueries = queries
 
-    graph.withTx( executeQueries(_, queries), Type.IMPLICIT )
+    graph.withTx(executeQueries(_, queries), Type.IMPLICIT)
   }
 
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
-    val contextFactory = Neo4jTransactionalContextFactory.create( db )
-    queries.foreach { query => {
-      engine.execute(
-        query,
-        VirtualValues.EMPTY_MAP,
-        contextFactory.newContext(
-          tx,
+    val contextFactory = Neo4jTransactionalContextFactory.create(db)
+    queries.foreach { query =>
+      {
+        engine.execute(
           query,
-          VirtualValues.EMPTY_MAP
+          VirtualValues.EMPTY_MAP,
+          contextFactory.newContext(
+            tx,
+            query,
+            VirtualValues.EMPTY_MAP
           ),
-        profile = false,
-        prePopulate = false,
-        QuerySubscriber.DO_NOTHING_SUBSCRIBER
+          profile = false,
+          prePopulate = false,
+          QuerySubscriber.DO_NOTHING_SUBSCRIBER
         ).consumeAll()
-    } }
+      }
+    }
   }
 
   protected def indexingService: IndexingService = db.getDependencyResolver.resolveDependency(classOf[IndexingService])
 
-  protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.backgroundRebuildAll(), time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS): Unit = {
+  protected def sampleAllIndexesAndWait(
+    mode: IndexSamplingMode = IndexSamplingMode.backgroundRebuildAll(),
+    time: Long = 10,
+    unit: TimeUnit = TimeUnit.SECONDS
+  ): Unit = {
     indexingService.triggerIndexSampling(mode)
     unit.sleep(time)
   }
 
   protected def getLabelsFromNode(p: DocsExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
 
-  def node(tx: Transaction, name: String): Node = tx.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
-  def nodes(tx:Transaction, names: String*): List[Node] = names.map(name => node(tx,name)).toList
-  def rel(tx:Transaction, id: Long): Relationship = tx.getRelationshipById(id)
+  def node(tx: Transaction, name: String): Node =
+    tx.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
+  def nodes(tx: Transaction, names: String*): List[Node] = names.map(name => node(tx, name)).toList
+  def rel(tx: Transaction, id: Long): Relationship = tx.getRelationshipById(id)
 
   @After
   def tearDown() {
@@ -584,7 +690,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       EnterpriseEditionInternalSettings.replication_enabled -> java.lang.Boolean.FALSE,
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-      SecuritySettings.keystore_path -> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+      SecuritySettings.keystore_path -> java.nio.file.Path.of(
+        getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI
+      ),
       SecuritySettings.keystore_password -> new SecureString("test24"),
       SecuritySettings.key_name -> "256bitkey"
     ).asJava
@@ -594,8 +702,10 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val fs = new EphemeralFileSystemAbstraction()
     val td = TestDirectory.testDirectory(this.getClass, fs)
     dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime()).toFile
-    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).setConfig(databaseConfig()).build()
-    database = AsyncDatabaseOperation.findDatabaseEventually(managementService, DEFAULT_DATABASE_NAME )
+    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).setConfig(
+      databaseConfig()
+    ).build()
+    database = AsyncDatabaseOperation.findDatabaseEventually(managementService, DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(database)
 
     engine = ExecutionEngineFactory.getExecutionEngine(database)
@@ -611,21 +721,24 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val g = new GraphImpl(graphDescription.toArray[String])
     val description = GraphDescription.create(g)
     nodeMap = description.create(database).asScala.map {
-        case (name, node) => name -> node.getId
-      }.toMap
-    db.withTx( tx => {
-      executeQueries(tx, setupQueries)
+      case (name, node) => name -> node.getId
+    }.toMap
+    db.withTx(
+      tx => {
+        executeQueries(tx, setupQueries)
 
-      asNodeMap(tx, properties) foreach {
-        case (n: Node, seq: Map[String, Any]) =>
-          seq foreach { case (k, v) => n.setProperty(k, v) }
-      }
-    }, Type.EXPLICIT )
+        asNodeMap(tx, properties) foreach {
+          case (n: Node, seq: Map[String, Any]) =>
+            seq foreach { case (k, v) => n.setProperty(k, v) }
+        }
+      },
+      Type.EXPLICIT
+    )
 
-    db.withTx( executeQueries(_, setupConstraintQueries), Type.EXPLICIT )
+    db.withTx(executeQueries(_, setupConstraintQueries), Type.EXPLICIT)
   }
 
-  private def asNodeMap[T: ClassTag](tx:InternalTransaction,  m: Map[String, T]): Map[Node, T] =
+  private def asNodeMap[T: ClassTag](tx: InternalTransaction, m: Map[String, T]): Map[Node, T] =
     m map { case (k: String, v: T) => (node(tx, k), v) }
 
   private def mapMapValue(v: Any): Any = v match {
@@ -634,14 +747,16 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     case v: Any       => v
   }
 
-  private def dumpQuery(dir: File,
-                        writer: PrintWriter,
-                        testId: String,
-                        query: String,
-                        returns: String,
-                        result: Either[Exception, String],
-                        consoleData: String,
-                        parameters: Map[String, Any]) {
+  private def dumpQuery(
+    dir: File,
+    writer: PrintWriter,
+    testId: String,
+    query: String,
+    returns: String,
+    result: Either[Exception, String],
+    consoleData: String,
+    parameters: Map[String, Any]
+  ) {
     if (parameters != null && parameters.nonEmpty) {
       writer.append(JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(parameters)))
     }
@@ -688,12 +803,14 @@ trait ResetStrategy {
 }
 
 trait HardReset extends ResetStrategy {
+
   override def reset() {
     hardReset()
   }
 }
 
 trait SoftReset extends ResetStrategy {
+
   override def reset() {
     softReset()
   }

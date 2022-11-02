@@ -29,7 +29,11 @@ class SpatialTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("Spatial values", "cypher-spatial")
-    synopsis("Cypher has built-in support for handling spatial values (points), and the underlying database supports storing these point values as properties on nodes and relationships.")
+
+    synopsis(
+      "Cypher has built-in support for handling spatial values (points), and the underlying database supports storing these point values as properties on nodes and relationships."
+    )
+
     p(
       """* <<cypher-spatial-introduction, Introduction>>
         |* <<cypher-spatial-crs, Coordinate Reference Systems>>
@@ -40,11 +44,18 @@ class SpatialTest extends DocumentingTest {
         | ** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
         |* <<cypher-spatial-index, Point index>>
         |* <<cypher-comparability-orderability, Comparability and orderability>>
-        |""".stripMargin)
-    note{
-      p("""Refer to <<query-functions-spatial>> for information regarding spatial _functions_ allowing for the creation and manipulation of spatial values.""")
-      p("""Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of spatial values.""")
+        |""".stripMargin
+    )
+
+    note {
+      p(
+        """Refer to <<query-functions-spatial>> for information regarding spatial _functions_ allowing for the creation and manipulation of spatial values."""
+      )
+      p(
+        """Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of spatial values."""
+      )
     }
+
     section("Introduction", "cypher-spatial-introduction") {
       p(
         """
@@ -55,8 +66,10 @@ class SpatialTest extends DocumentingTest {
           |* Instances of _Point_ and lists of _Point_ can be assigned to node and relationship properties.
           |* Nodes with _Point_ or _List(Point)_ properties can be indexed using a point index. This is true for all CRS (and for both 2D and 3D).
           |* The <<functions-distance,distance function>> will work on points in all CRS and in both 2D and 3D but only if the two points have the same CRS (and therefore also same dimension).
-        """.stripMargin)
+        """.stripMargin
+      )
     }
+
     section("Coordinate Reference Systems", "cypher-spatial-crs") {
       p(
         """Four Coordinate Reference Systems (CRS) are supported, each of which falls within one of two types: _geographic coordinates_ modeling points on the earth, or _cartesian coordinates_ modeling points in euclidean space:
@@ -67,13 +80,15 @@ class SpatialTest extends DocumentingTest {
           |* <<cypher-spatial-crs-cartesian, Cartesian coordinate reference systems>>
           | ** Cartesian: x, y
           | ** Cartesian 3D: x, y, z
-          |""".stripMargin)
+          |""".stripMargin
+      )
       p(
         """
           |Data within different coordinate systems are entirely incomparable, and cannot be implicitly converted from one to the other.
           |This is true even if they are both cartesian or both geographic. For example, if you search for 3D points using a 2D range, you will get no results.
           |However, they can be ordered, as discussed in more detail in <<cypher-ordering, Ordering and comparison of values>>.
-        """.stripMargin)
+        """.stripMargin
+      )
       section("Geographic coordinate reference systems", "cypher-spatial-crs-geographic") {
         p(
           """Two Geographic Coordinate Reference Systems (CRS) are supported, modeling points on the earth:
@@ -88,7 +103,8 @@ class SpatialTest extends DocumentingTest {
             |  *** `longitude`, `latitude` and either `height` or `z` (if these are specified, and the `crs` is not, then the `crs` is assumed to be `WGS-84-3D`)
             |  *** `x`, `y` and `z` (in this case the `crs` must be specified, or will be assumed to be `Cartesian-3D`)
             | ** Specifying this CRS can be done using either the name 'wgs-84-3d' or the SRID 4979 as described in <<functions-point-wgs84-3d,Point(WGS-84-3D)>>
-            |""".stripMargin)
+            |""".stripMargin
+        )
         p(
           """
             |The units of the `latitude` and `longitude` fields are in decimal degrees, and need to be specified as floating point numbers using Cypher literals.
@@ -98,16 +114,19 @@ class SpatialTest extends DocumentingTest {
             |For example, if the incoming `$height` is a string field in kilometers, you would need to type `height: toFloat($height) * 1000`. Likewise if the
             |results of the `distance` function are expected to be returned in kilometers, an explicit conversion is required.
             |For example: `RETURN point.distance(a,b) / 1000 AS km`. An example demonstrating conversion on incoming and outgoing values is:
-          """.stripMargin)
-        query("""WITH
-                #  point({latitude:toFloat('13.43'), longitude:toFloat('56.21')}) AS p1,
-                #  point({latitude:toFloat('13.10'), longitude:toFloat('56.41')}) AS p2
-                #RETURN toInteger(point.distance(p1, p2)/1000) AS km""".stripMargin('#'),
-        ResultAssertions((r) => {
+          """.stripMargin
+        )
+        query(
+          """WITH
+            #  point({latitude:toFloat('13.43'), longitude:toFloat('56.21')}) AS p1,
+            #  point({latitude:toFloat('13.10'), longitude:toFloat('56.41')}) AS p2
+            #RETURN toInteger(point.distance(p1, p2)/1000) AS km""".stripMargin('#'),
+          ResultAssertions((r) => {
             withClue("Expect the distance function to return an integer value") {
               r.head("km") should be(42)
             }
-          })) {
+          })
+        ) {
           resultTable()
         }
       }
@@ -121,7 +140,8 @@ class SpatialTest extends DocumentingTest {
             |* http://spatialreference.org/ref/sr-org/9157/[Cartesian 3D]
             | ** A 3D point in the _Cartesian_ CRS is specified with a map containing `x`, `y` and `z` coordinate values
             | ** Specifying this CRS can be done using either the name 'cartesian-3d' or the SRID 9157 as described in <<functions-point-cartesian-3d,Point(Cartesian-3D)>>
-            |""".stripMargin)
+            |""".stripMargin
+        )
         p(
           """
             |The units of the `x`, `y` and `z` fields are unspecified and can mean anything the user intends them to mean. This also means that when two cartesian
@@ -129,34 +149,39 @@ class SpatialTest extends DocumentingTest {
             |points, as the _pythagoras_ equation used is generalized to any number of dimensions. However, just as you cannot compare geographic points to cartesian
             |points, you cannot calculate the distance between a 2D point and a 3D point. If you need to do that, explicitly transform the one type into the other.
             |For example:
-          """.stripMargin)
-        query("""WITH
-                #  point({x: 3, y: 0}) AS p2d,
-                #  point({x: 0, y: 4, z: 1}) AS p3d
-                #RETURN
-                #  point.distance(p2d, p3d) AS bad,
-                #  point.distance(p2d, point({x: p3d.x, y: p3d.y})) AS good""".stripMargin('#'),
-        ResultAssertions((r) => {
+          """.stripMargin
+        )
+        query(
+          """WITH
+            #  point({x: 3, y: 0}) AS p2d,
+            #  point({x: 0, y: 4, z: 1}) AS p3d
+            #RETURN
+            #  point.distance(p2d, p3d) AS bad,
+            #  point.distance(p2d, point({x: p3d.x, y: p3d.y})) AS good""".stripMargin('#'),
+          ResultAssertions((r) => {
             withClue("Expect the invalid distance function to return null") {
               (r.head("bad") == null) should be(true)
             }
             withClue("Expect the valid distance function to contain the right value") {
               r.head("good") should be(5)
             }
-          })) {
+          })
+        ) {
           resultTable()
         }
       }
     }
-    section("Spatial instants","cypher-spatial-instants"){
-      section("Creating points","cypher-spatial-specifying-spatial-instants"){
+
+    section("Spatial instants", "cypher-spatial-instants") {
+      section("Creating points", "cypher-spatial-specifying-spatial-instants") {
         p(
           """
             |All point types are created from two components:
             |
             |* The _Coordinate_ containing either 2 or 3 floating point values (64-bit)
             |* The Coordinate Reference System (or CRS) defining the meaning (and possibly units) of the values in the _Coordinate_
-          """.stripMargin)
+          """.stripMargin
+        )
         p(
           """
             |For most use cases it is not necessary to specify the CRS explicitly as it will be deduced from the keys used to specify the coordinate. Two rules
@@ -168,7 +193,8 @@ class SpatialTest extends DocumentingTest {
             |* Number of dimensions:
             |  ** If there are 2 dimensions in the coordinate, `x` & `y` or `longitude` & `latitude` the CRS will be a 2D CRS
             |  ** If there is a third dimensions in the coordinate, `z` or `height` the CRS will be a 3D CRS
-          """.stripMargin)
+          """.stripMargin
+        )
         p(
           """
             |All fields are provided to the `point` function in the form of a map of explicitly named arguments. We specifically do not support an ordered list
@@ -176,13 +202,15 @@ class SpatialTest extends DocumentingTest {
             |list `y` before `x` (`latitude` before `longitude`).
             |See for example the following query which returns points created in each of the four supported CRS. Take particular note of the order and keys
             |of the coordinates in the original `point` function calls, and how those values are displayed in the results:
-          """.stripMargin)
-        query("""RETURN
-                #  point({x: 3, y: 0}) AS cartesian_2d,
-                #  point({x: 0, y: 4, z: 1}) AS cartesian_3d,
-                #  point({latitude: 12, longitude: 56}) AS geo_2d,
-                #  point({latitude: 12, longitude: 56, height: 1000}) AS geo_3d""".stripMargin('#'),
-        ResultAssertions((r) => {
+          """.stripMargin
+        )
+        query(
+          """RETURN
+            #  point({x: 3, y: 0}) AS cartesian_2d,
+            #  point({x: 0, y: 4, z: 1}) AS cartesian_3d,
+            #  point({latitude: 12, longitude: 56}) AS geo_2d,
+            #  point({latitude: 12, longitude: 56, height: 1000}) AS geo_3d""".stripMargin('#'),
+          ResultAssertions((r) => {
             Map("cartesian_3d" -> 9157, "cartesian_2d" -> 7203, "geo_3d" -> 4979, "geo_2d" -> 4326).foreach { entry =>
               val field = entry._1
               val srid = entry._2
@@ -191,7 +219,8 @@ class SpatialTest extends DocumentingTest {
                 p.getCRS.getCode should be(srid)
               }
             }
-          })) {
+          })
+        ) {
           resultTable()
         }
         p(
@@ -203,11 +232,12 @@ class SpatialTest extends DocumentingTest {
           """.stripMargin
         )
       }
-      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instants"){
+      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instants") {
         p(
           """
             |Just as we construct points using a map syntax, we can also access components as properties of the instance.
-          """.stripMargin)
+          """.stripMargin
+        )
         p(
           """
             |.Components of point instances and where they are supported
@@ -224,36 +254,40 @@ class SpatialTest extends DocumentingTest {
             || `instant.srid` | The internal Neo4j ID for the CRS | Integer | One of `4326`, `4979`, `7203`, `9157` | {check-mark} | {check-mark} | {check-mark} | {check-mark}
             ||===
             |
-            |""")
+            |"""
+        )
         p("The following query shows how to extract the components of a _Cartesian 2D_ point value:")
-        query("""WITH point({x: 3, y: 4}) AS p
-                #RETURN
-                #  p.x AS x,
-                #  p.y AS y,
-                #  p.crs AS crs,
-                #  p.srid AS srid""".stripMargin('#'),
-        ResultAssertions((r) => {
+        query(
+          """WITH point({x: 3, y: 4}) AS p
+            #RETURN
+            #  p.x AS x,
+            #  p.y AS y,
+            #  p.crs AS crs,
+            #  p.srid AS srid""".stripMargin('#'),
+          ResultAssertions((r) => {
             withClue("Expect the components to have the right values") {
               r.head("crs") should be("cartesian")
               r.head("srid") should be(7203)
               r.head("x") should be(3)
               r.head("y") should be(4)
             }
-          })) {
+          })
+        ) {
           resultTable()
         }
         p("The following query shows how to extract the components of a _WGS-84 3D_ point value:")
-        query("""WITH point({latitude: 3, longitude: 4, height: 4321}) AS p
-                #RETURN
-                #  p.latitude AS latitude,
-                #  p.longitude AS longitude,
-                #  p.height AS height,
-                #  p.x AS x,
-                #  p.y AS y,
-                #  p.z AS z,
-                #  p.crs AS crs,
-                #  p.srid AS srid""".stripMargin('#'),
-        ResultAssertions((r) => {
+        query(
+          """WITH point({latitude: 3, longitude: 4, height: 4321}) AS p
+            #RETURN
+            #  p.latitude AS latitude,
+            #  p.longitude AS longitude,
+            #  p.height AS height,
+            #  p.x AS x,
+            #  p.y AS y,
+            #  p.z AS z,
+            #  p.crs AS crs,
+            #  p.srid AS srid""".stripMargin('#'),
+          ResultAssertions((r) => {
             withClue("Expect the components to have the right values") {
               r.head("crs") should be("wgs-84-3d")
               r.head("srid") should be(4979)
@@ -264,11 +298,13 @@ class SpatialTest extends DocumentingTest {
               r.head("longitude") should be(r.head("x"))
               r.head("height") should be(r.head("z"))
             }
-          })) {
+          })
+        ) {
           resultTable()
         }
       }
     }
+
     section("Point index", "cypher-spatial-index") {
       p(
         """
@@ -282,8 +318,10 @@ class SpatialTest extends DocumentingTest {
           |<<administration-indexes-spatial-bounding-box-searches-single-property-index, bounding box query>>.
           |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
           |<<administration-indexes-spatial-distance-searches-single-property-index, 'Spatial distance searches'>>.
-        """.stripMargin)
+        """.stripMargin
+      )
     }
+
     section("Comparability and orderability", "cypher-comparability-orderability") {
       p(
         """

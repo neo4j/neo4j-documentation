@@ -25,8 +25,10 @@ import org.scalatest.matchers.Matcher
 
 class UsingTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
+
   override def doc = new DocBuilder {
     doc("Planner hints and the USING keyword", "query-using")
+
     initQueries(
       """FOREACH(i IN range(1, 100) |
         |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->
@@ -44,19 +46,29 @@ class UsingTest extends DocumentingTest {
       "CREATE RANGE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
       "CREATE RANGE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CREATE TEXT INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
-      "CALL db.awaitIndexes",
+      "CALL db.awaitIndexes"
     )
-    synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
+
+    synopsis(
+      "A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword."
+    )
+
     caution {
-      p("Forcing planner behavior is an advanced feature, and should be used with caution by experienced developers and/or database administrators only, as it may cause queries to perform poorly.")
+      p(
+        "Forcing planner behavior is an advanced feature, and should be used with caution by experienced developers and/or database administrators only, as it may cause queries to perform poorly."
+      )
     }
+
     p("""* <<query-using-introduction,Introduction>>
         |* <<query-using-index-hint,Index hints>>
         |* <<query-using-scan-hint,Scan hints>>
         |* <<query-using-join-hint,Join hints>>""")
+
     section("Introduction", "query-using-introduction") {
-      p("""When executing a query, Neo4j needs to decide where in the query graph to start matching.
-          |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points.""")
+      p(
+        """When executing a query, Neo4j needs to decide where in the query graph to start matching.
+          |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points."""
+      )
       p("""However, the selected index might not always be the best choice.
           |Sometimes multiple indexes are possible candidates, and the query planner picks the suboptimal one from a performance point of view.
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
@@ -64,13 +76,17 @@ class UsingTest extends DocumentingTest {
           |There are three types of planner hints: index hints, scan hints and join hints.""")
       query(
         s"""$matchString
-           |RETURN *""", assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))) {
+           |RETURN *""",
+        assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))
+      ) {
         p(
           """The query above will be used in some of the examples on this page.
-            |Without any hints, one index and no join is used.""")
+            |Without any hints, one index and no join is used."""
+        )
         profileExecutionPlan()
       }
     }
+
     section("Index hints", "query-using-index-hint") {
       p("""Index hints are used to specify which index the planner should use as a starting point.
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
@@ -91,12 +107,14 @@ class UsingTest extends DocumentingTest {
       p(
         """When specifying an index type for a hint, e.g. `RANGE`, `TEXT` or `POINT`, the hint can only be fulfilled when an index of the specified type is available.
           |When no index type is specified, the hint can be fulfilled by any index types.
-          |""".stripMargin)
+          |""".stripMargin
+      )
       caution {
         p(
           """Using a hint must never change the result of a query.
             |Therefore, a hint with a specified index type is only fulfillable when the planner knows that using an index of the specified type does not change the results.
-            |Please refer to <<query-tuning-indexes>> for more details.""".stripMargin)
+            |Please refer to <<query-tuning-indexes>> for more details.""".stripMargin
+        )
       }
       p("""It is possible to supply several index hints, but keep in mind that several starting points
           |will require the use of a potentially expensive join later in the query plan.""")
@@ -106,7 +124,8 @@ class UsingTest extends DocumentingTest {
           s"""$matchString
              |USING INDEX p:Pioneer(born)
              |RETURN *""",
-          assertPlan(AND(ShouldUseNodeIndexSeekOn("p"), ShouldNotUseJoins))) {
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("p"), ShouldNotUseJoins))
+        ) {
           profileExecutionPlan()
         }
       }
@@ -117,7 +136,8 @@ class UsingTest extends DocumentingTest {
              |USING TEXT INDEX c:Country(name)
              |WHERE c.name = 'Country7'
              |RETURN *""",
-          assertPlan(AND(ShouldUseNodeIndexSeekOn("c", IndexType.TEXT), ShouldNotUseJoins))) {
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("c", IndexType.TEXT), ShouldNotUseJoins))
+        ) {
           profileExecutionPlan()
         }
       }
@@ -127,7 +147,8 @@ class UsingTest extends DocumentingTest {
           s"""$matchString
              |USING INDEX i:INVENTED_BY(year)
              |RETURN *""",
-          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i"), ShouldNotUseJoins))) {
+          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i"), ShouldNotUseJoins))
+        ) {
           profileExecutionPlan()
         }
       }
@@ -139,7 +160,8 @@ class UsingTest extends DocumentingTest {
              |USING TEXT INDEX i:INVENTED_BY(location)
              |WHERE i.location = 'Location7'
              |RETURN *""",
-          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i", IndexType.TEXT), ShouldNotUseJoins))) {
+          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i", IndexType.TEXT), ShouldNotUseJoins))
+        ) {
           profileExecutionPlan()
         }
       }
@@ -152,14 +174,19 @@ class UsingTest extends DocumentingTest {
              |USING INDEX s:Scientist(born)
              |USING INDEX cc:Country(formed)
              |RETURN *""",
-          assertPlan(AND(AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), NOT(ShouldUseNodeIndexSeekOn("p"))), NOT(ShouldUseJoinOn("p"))))) {
+          assertPlan(AND(
+            AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), NOT(ShouldUseNodeIndexSeekOn("p"))),
+            NOT(ShouldUseJoinOn("p"))
+          ))
+        ) {
           profileExecutionPlan()
         }
       }
       section("Query using multiple index hints with a disjunction") {
         p(
           """Supplying multiple index hints can also be useful if the query contains a disjunction (`OR`) in the `WHERE` clause.
-            |This makes sure that all hinted indexes are used and the results are joined together with a `Union` and a `Distinct` afterwards.""".stripMargin)
+            |This makes sure that all hinted indexes are used and the results are joined together with a `Union` and a `Distinct` afterwards.""".stripMargin
+        )
         query(
           s"""
              |MATCH (country:Country)
@@ -167,16 +194,19 @@ class UsingTest extends DocumentingTest {
              |USING INDEX country:Country(formed)
              |WHERE country.formed = 500 OR country.name STARTS WITH "A"
              |RETURN *""",
-          assertPlan(AND(ShouldUseNodeIndexSeekOn("country"), ShouldUseUnionDistinct("country")))) {
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("country"), ShouldUseUnionDistinct("country")))
+        ) {
           profileExecutionPlan()
         }
         p(
           """Cypher will usually provide a plan that uses all indexes for a disjunction without hints.
             |It may, however, decide to plan a `NodeByLabelScan` instead, if the predicates appear to be not very selective.
             |In this case, the index hints can be useful.
-            |""".stripMargin)
+            |""".stripMargin
+        )
       }
     }
+
     section("Scan hints", "query-using-scan-hint") {
       p("""If your query matches large parts of an index, it might be faster to scan the label or relationship type and filter out rows that do not match.
           |To do this, you can use `USING SCAN variable:Label` after the applicable `MATCH` clause for node indexes,
@@ -188,7 +218,8 @@ class UsingTest extends DocumentingTest {
           s"""$matchString
              |USING SCAN s:Scientist
              |RETURN *""",
-          assertPlan(ShouldUseLabelScanOn("s"))) {
+          assertPlan(ShouldUseLabelScanOn("s"))
+        ) {
           profileExecutionPlan()
         }
       }
@@ -197,14 +228,16 @@ class UsingTest extends DocumentingTest {
           s"""$matchString
              |USING SCAN i:INVENTED_BY
              |RETURN *""",
-          assertPlan(ShouldUseRelationshipTypeScanOn("i"))) {
+          assertPlan(ShouldUseRelationshipTypeScanOn("i"))
+        ) {
           profileExecutionPlan()
         }
       }
       section("Query using multiple scan hints with a disjunction") {
         p(
           """Supplying multiple scan hints can also be useful if the query contains a disjunction (`OR`) in the `WHERE` clause.
-            |This makes sure that all involved label predicates are solved by a `UnionNodeByLabelsScan`.""".stripMargin)
+            |This makes sure that all involved label predicates are solved by a `UnionNodeByLabelsScan`.""".stripMargin
+        )
         query(
           s"""
              |MATCH (person)
@@ -212,52 +245,66 @@ class UsingTest extends DocumentingTest {
              |USING SCAN person:Scientist
              |WHERE person:Pioneer OR person:Scientist
              |RETURN *""",
-          assertPlan(ShouldUseUnionLabelsScanOn("person"))) {
+          assertPlan(ShouldUseUnionLabelsScanOn("person"))
+        ) {
           profileExecutionPlan()
         }
         p(
           """Cypher will usually provide a plan that uses scans for a disjunction without hints.
             |It may, however, decide to plan an `AllNodeScan` followed by a `Filter` instead, if the label predicates appear to be not very selective.
             |In this case, the scan hints can be useful.
-            |""".stripMargin)
+            |""".stripMargin
+        )
       }
     }
+
     section("Join hints", "query-using-join-hint") {
-      p("""Join hints are the most advanced type of hints, and are not used to find starting points for the
+      p(
+        """Join hints are the most advanced type of hints, and are not used to find starting points for the
           |query execution plan, but to enforce that joins are made at specified points. This implies that there
           |has to be more than one starting point (leaf) in the plan, in order for the query to be able to join the two branches ascending
           |from these leaves. Due to this nature, joins, and subsequently join hints, will force
           |the planner to look for additional starting points, and in the case where there are no more good ones,
           |potentially pick a very bad starting point. This will negatively affect query performance. In other cases,
-          |the hint might force the planner to pick a _seemingly_ bad starting point, which in reality proves to be a very good one.""")
+          |the hint might force the planner to pick a _seemingly_ bad starting point, which in reality proves to be a very good one."""
+      )
       section("Hinting a join on a single node") {
-        p("""In the example above using multiple index hints, we saw that the planner chose to do a join, but not on the `p` node.
-            |By supplying a join hint in addition to the index hints, we can enforce the join to happen on the `p` node.""")
-        query(s"""$matchString
+        p(
+          """In the example above using multiple index hints, we saw that the planner chose to do a join, but not on the `p` node.
+            |By supplying a join hint in addition to the index hints, we can enforce the join to happen on the `p` node."""
+        )
+        query(
+          s"""$matchString
               |USING INDEX s:Scientist(born)
               |USING INDEX cc:Country(formed)
               |USING JOIN ON p
               |RETURN *""",
-          assertPlan(AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldUseJoinOn("p")))) {
+          assertPlan(AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldUseJoinOn("p")))
+        ) {
           profileExecutionPlan()
         }
       }
       section("Hinting a join for an OPTIONAL MATCH") {
         p(
           """A join hint can also be used to force the planner to pick a `NodeLeftOuterHashJoin` or `NodeRightOuterHashJoin` to solve an `OPTIONAL MATCH`.
-            |In most cases, the planner will rather use an `OptionalExpand`.""".stripMargin)
-        query(s"""MATCH (s:Scientist {born: 1850})
+            |In most cases, the planner will rather use an `OptionalExpand`.""".stripMargin
+        )
+        query(
+          s"""MATCH (s:Scientist {born: 1850})
                  |OPTIONAL MATCH (s)-[:RESEARCHED]->(sc:Science)
                  |RETURN *""",
-          assertPlan(ShouldNotUseJoins)) {
+          assertPlan(ShouldNotUseJoins)
+        ) {
           p("Without any hint, the planner did not use a join to solve the `OPTIONAL MATCH`.")
           profileExecutionPlan()
         }
-        query(s"""MATCH (s:Scientist {born: 1850})
+        query(
+          s"""MATCH (s:Scientist {born: 1850})
                  |OPTIONAL MATCH (s)-[:RESEARCHED]->(sc:Science)
                  |USING JOIN ON s
                  |RETURN *""",
-          assertPlan(ShouldUseJoinOn("s"))) {
+          assertPlan(ShouldUseJoinOn("s"))
+        ) {
           p("Now the planner uses a join to solve the `OPTIONAL MATCH`.")
           profileExecutionPlan()
         }
@@ -277,11 +324,16 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseNodeIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"NodeIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*$variable".r
+
+    override def matcher: Matcher[String] =
+      include regex s"NodeIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*$variable".r
   }
 
-  case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
+  case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE)
+      extends PlanAssertion {
+
+    override def matcher: Matcher[String] =
+      include regex s"(Undirected|Directed)RelationshipIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
@@ -293,7 +345,9 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseRelationshipTypeScanOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan[ |0-9]+\\(\\w*\\)-\\[$variable".r
+
+    override def matcher: Matcher[String] =
+      include regex s"(Undirected|Directed)RelationshipTypeScan[ |0-9]+\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseJoinOn(variable: String) extends PlanAssertion {

@@ -20,16 +20,19 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class CaseTest extends RefcardTest with QueryStatisticsTestSupport {
+
   def graphDescription = List(
-    "A KNOWS B")
+    "A KNOWS B"
+  )
   val title = "CASE"
   override val linkId = "syntax/expressions"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "simple" =>
         assertStats(result, nodesCreated = 0)
@@ -42,7 +45,8 @@ class CaseTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties = Map(
     "A" -> Map[String, Any]("name" -> "Alice", "age" -> 38, "eyes" -> "brown"),
-    "B" -> Map[String, Any]("name" -> "Beth", "age" -> 38, "eyes" -> "blue"))
+    "B" -> Map[String, Any]("name" -> "Beth", "age" -> 38, "eyes" -> "blue")
+  )
 
   def text = """
 ###assertion=simple

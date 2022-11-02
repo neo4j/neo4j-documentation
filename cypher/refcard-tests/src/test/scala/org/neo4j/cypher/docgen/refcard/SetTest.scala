@@ -20,7 +20,8 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class SetTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -28,7 +29,7 @@ class SetTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "SET"
   override val linkId = "clauses/set"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "set" =>
         assertStats(result, propertiesWritten = 2)
@@ -46,11 +47,12 @@ class SetTest extends RefcardTest with QueryStatisticsTestSupport {
     name match {
       case "parameters=set" => Map("value1" -> "a value", "value2" -> "another value")
       case "parameters=map" => Map("map" -> Map("property" -> "a value"))
-      case "" => Map()
+      case ""               => Map()
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("value" -> 10))
+    "A" -> Map("value" -> 10)
+  )
 
   def text = """
 ###assertion=set parameters=set

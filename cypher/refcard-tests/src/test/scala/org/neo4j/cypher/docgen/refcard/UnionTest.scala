@@ -20,16 +20,20 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 
 class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
+
   def graphDescription = List(
-    "A KNOWS B", "A LOVES B")
+    "A KNOWS B",
+    "A LOVES B"
+  )
   val title = "UNION"
   override val linkId = "clauses/union"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "one" =>
         assertStats(result)
@@ -46,7 +50,8 @@ class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties = Map(
     "A" -> Map("name" -> "Alice"),
-    "B" -> Map("name" -> "Beth"))
+    "B" -> Map("name" -> "Beth")
+  )
 
   def text = """
 ###assertion=one

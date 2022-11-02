@@ -19,14 +19,17 @@
  */
 package org.neo4j.cypher.internal
 
-import java.time._
-import java.time.temporal.TemporalAmount
 import org.neo4j.cypher.internal.runtime.QueryContext
+import org.neo4j.graphdb.Entity
+import org.neo4j.graphdb.Node
+import org.neo4j.graphdb.Path
+import org.neo4j.graphdb.Relationship
 import org.neo4j.graphdb.spatial.Point
-import org.neo4j.graphdb.{Entity, Node, Path, Relationship}
 import org.neo4j.io.pagecache.context.CursorContext
 import org.neo4j.memory.EmptyMemoryTracker
 
+import java.time._
+import java.time.temporal.TemporalAmount
 import scala.collection.Map
 
 trait CypherSerializer {
@@ -36,26 +39,26 @@ trait CypherSerializer {
   Don't use internal types.
    */
   protected def serialize(a: Any, qtx: QueryContext): String = a match {
-    case x: Node                  => x.toString + serializeProperties(x, qtx)
-    case x: Relationship          => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
-    case x: Path                  => x.toString
-    case x: Map[_, _]             => makeString(x.asInstanceOf[Map[String, Any]], qtx)
-    case x: Seq[_]                => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
-    case x: Array[_]              => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
-    case x: String                => "\"" + x + "\""
-    case x: Integer               => x.toString
-    case x: Long                  => x.toString
-    case x: Double                => x.toString
-    case x: Boolean               => x.toString
-    case x: TemporalAmount        => x.toString
-    case x: LocalDate             => x.toString
-    case x: LocalDateTime         => x.toString
-    case x: LocalTime             => x.toString
-    case x: OffsetTime            => x.toString
-    case x: ZonedDateTime         => x.toString
-    case x: Point                 => x.toString
-    case null                     => "<null>"
-    case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explicitly handled.")
+    case x: Node           => x.toString + serializeProperties(x, qtx)
+    case x: Relationship   => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
+    case x: Path           => x.toString
+    case x: Map[_, _]      => makeString(x.asInstanceOf[Map[String, Any]], qtx)
+    case x: Seq[_]         => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: Array[_]       => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: String         => "\"" + x + "\""
+    case x: Integer        => x.toString
+    case x: Long           => x.toString
+    case x: Double         => x.toString
+    case x: Boolean        => x.toString
+    case x: TemporalAmount => x.toString
+    case x: LocalDate      => x.toString
+    case x: LocalDateTime  => x.toString
+    case x: LocalTime      => x.toString
+    case x: OffsetTime     => x.toString
+    case x: ZonedDateTime  => x.toString
+    case x: Point          => x.toString
+    case null              => "<null>"
+    case x                 => throw new IllegalArgumentException(s"Type ${x.getClass} must be explicitly handled.")
   }
 
   protected def serializeProperties(x: Entity, qtx: QueryContext): String = {
@@ -65,17 +68,36 @@ trait CypherSerializer {
       case n: Node =>
         val ops = qtx.nodeReadOps
         val node = cursors.allocateNodeCursor(CursorContext.NULL_CONTEXT)
-        ((id: Long) => ops.propertyKeyIds(id, node, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, node, property, throwOnDeleted = true).asObject(), qtx)),
-          n.getId, qtx.nodeReadOps.isDeletedInThisTx(n.getId))
+        (
+          (id: Long) =>
+            ops.propertyKeyIds(id, node, property).map(pkId =>
+              qtx.getPropertyKeyName(pkId) + ":" + serialize(
+                ops.getProperty(id, pkId, node, property, throwOnDeleted = true).asObject(),
+                qtx
+              )
+            ),
+          n.getId,
+          qtx.nodeReadOps.isDeletedInThisTx(n.getId)
+        )
       case r: Relationship =>
         val ops = qtx.relationshipReadOps
         val rel = cursors.allocateRelationshipScanCursor(CursorContext.NULL_CONTEXT)
-        ((id: Long) => ops.propertyKeyIds(id, rel, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, rel, property, throwOnDeleted = true).asObject(), qtx)),
-          r.getId, qtx.relationshipReadOps.isDeletedInThisTx(r.getId))
+        (
+          (id: Long) =>
+            ops.propertyKeyIds(id, rel, property).map(pkId =>
+              qtx.getPropertyKeyName(pkId) + ":" + serialize(
+                ops.getProperty(id, pkId, rel, property, throwOnDeleted = true).asObject(),
+                qtx
+              )
+            ),
+          r.getId,
+          qtx.relationshipReadOps.isDeletedInThisTx(r.getId)
+        )
     }
 
-    val keyValStrings = if (deleted) Array("deleted")
-    else propertyText(id)
+    val keyValStrings =
+      if (deleted) Array("deleted")
+      else propertyText(id)
 
     keyValStrings.mkString("{", ",", "}")
   }

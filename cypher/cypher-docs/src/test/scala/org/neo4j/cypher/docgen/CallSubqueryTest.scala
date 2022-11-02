@@ -19,9 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling.ClearState
 import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling.Document
 import org.neo4j.cypher.docgen.tooling.DocumentingTest
 import org.neo4j.cypher.docgen.tooling.ErrorAssertions
@@ -34,10 +34,11 @@ class CallSubqueryTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql"
 
-  var nodeId:Long = 1
+  var nodeId: Long = 1
 
   override def doc: Document = new DocBuilder {
     doc("CALL {} (subquery)", "query-call-subquery")
+
     initQueries("""CREATE
                   #  (a:Person:Child {age: 20, name: 'Alice'}),
                   #  (b:Person {age: 27, name: 'Bob'}),
@@ -47,6 +48,7 @@ class CallSubqueryTest extends DocumentingTest {
                   #  CREATE (a)-[:FRIEND_OF]->(b)
                   #  CREATE (a)-[:CHILD_OF]->(c)""".stripMargin('#'))
     synopsis("The `CALL {}` clause evaluates a subquery that returns some values.")
+
     p("""* <<subquery-call-introduction, Introduction>>
         #* <<call-semantics, Semantics>>
         #* <<subquery-correlated-importing, Importing variables into subqueries>>
@@ -55,28 +57,37 @@ class CallSubqueryTest extends DocumentingTest {
         #* <<subquery-unit, Unit subqueries and side-effects>>
         #* <<subquery-correlated-aggregation, Aggregation on imported variables>>
         #* <<subquery-call-in-transactions, Subqueries in transactions>>""".stripMargin('#'))
+
     section("Introduction", "subquery-call-introduction") {
       p("""`CALL` allows to execute subqueries, i.e. queries inside of other queries.
-          #Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.""".stripMargin('#'))
-      tip{
+          #Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.""".stripMargin(
+        '#'
+      ))
+      tip {
         p("""The `CALL` clause is also used for calling procedures.
             #For descriptions of the `CALL` clause in this context, refer to <<query-call>>.""".stripMargin('#'))
       }
 
       p(
         """Subqueries which end in a `RETURN` statement are called _returning subqueries_ while subqueries without such a return statement are called _unit
-          |subqueries_.""".stripMargin)
+          |subqueries_.""".stripMargin
+      )
       p("""A subquery is evaluated for each incoming input row. Every output row of a *returning subquery* is combined with the input row to build the result of
           #the subquery.
           #That means that a returning subquery will influence the number of rows.
-          #If the subquery does not return any rows, there will be no rows available after the subquery.""".stripMargin('#'))
+          #If the subquery does not return any rows, there will be no rows available after the subquery.""".stripMargin(
+        '#'
+      ))
       p(
         """*Unit subqueries* on the other hand are called for their side-effects and not for their results and do therefore not influence
-          #the results of the enclosing query.""".stripMargin('#'))
+          #the results of the enclosing query.""".stripMargin('#')
+      )
       p("There are restrictions on how subqueries interact with the enclosing query:")
       p("""* A subquery can only refer to variables from the enclosing query if they are explicitly imported.
           #* A subquery cannot return variables with the same names as variables in the enclosing query.
-          #* All variables that are returned from a subquery are afterwards available in the enclosing query.""".stripMargin('#'))
+          #* All variables that are returned from a subquery are afterwards available in the enclosing query.""".stripMargin(
+        '#'
+      ))
       p("The following graph is used for the examples below:")
       graphViz()
     }
@@ -85,35 +96,44 @@ class CallSubqueryTest extends DocumentingTest {
       p(
         """A `CALL` clause is executed once for each incoming row.
           #For the query below, the `CALL` clause executes three times.
-          #""".stripMargin('#'))
+          #""".stripMargin('#')
+      )
 
-      query("""UNWIND [0, 1, 2] AS x
-              #CALL {
-              #  RETURN 'hello' AS innerReturn
-              #}
-              #RETURN innerReturn""".stripMargin('#'),
-        ResultAssertions(r => r.toSet should equal(Set(
-          Map("innerReturn" -> "hello"),
-          Map("innerReturn" -> "hello"),
-          Map("innerReturn" -> "hello"),
-        )))) { resultTable() }
+      query(
+        """UNWIND [0, 1, 2] AS x
+          #CALL {
+          #  RETURN 'hello' AS innerReturn
+          #}
+          #RETURN innerReturn""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("innerReturn" -> "hello"),
+            Map("innerReturn" -> "hello"),
+            Map("innerReturn" -> "hello")
+          ))
+        )
+      ) { resultTable() }
 
       p("Each execution of a `CALL` clause can observe changes from previous executions.")
 
-      query("""UNWIND [0, 1, 2] AS x
-              #CALL {
-              #  MATCH (n:Counter)
-              #  SET n.count = n.count + 1
-              #  RETURN n.count AS innerCount
-              #}
-              #WITH innerCount
-              #MATCH (n:Counter)
-              #RETURN innerCount, n.count AS totalCount""".stripMargin('#'),
-        ResultAssertions(r => r.toSet should equal(Set(
-          Map("innerCount" -> 1, "totalCount" -> 3),
-          Map("innerCount" -> 2, "totalCount" -> 3),
-          Map("innerCount" -> 3, "totalCount" -> 3),
-        )))) { resultTable() }
+      query(
+        """UNWIND [0, 1, 2] AS x
+          #CALL {
+          #  MATCH (n:Counter)
+          #  SET n.count = n.count + 1
+          #  RETURN n.count AS innerCount
+          #}
+          #WITH innerCount
+          #MATCH (n:Counter)
+          #RETURN innerCount, n.count AS totalCount""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("innerCount" -> 1, "totalCount" -> 3),
+            Map("innerCount" -> 2, "totalCount" -> 3),
+            Map("innerCount" -> 3, "totalCount" -> 3)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Importing variables into subqueries", "subquery-correlated-importing") {
@@ -121,28 +141,35 @@ class CallSubqueryTest extends DocumentingTest {
           #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each
           #evaluation.""".stripMargin('#'))
 
-      query("""UNWIND [0, 1, 2] AS x
-              #CALL {
-              #  WITH x
-              #  RETURN x * 10 AS y
-              #}
-              #RETURN x, y""".stripMargin('#'),
-      ResultAssertions(r => r.toSet should equal(Set(
-          Map("x" -> 0, "y" -> 0),
-          Map("x" -> 1, "y" -> 10),
-          Map("x" -> 2, "y" -> 20),
-        )))) { resultTable() }
+      query(
+        """UNWIND [0, 1, 2] AS x
+          #CALL {
+          #  WITH x
+          #  RETURN x * 10 AS y
+          #}
+          #RETURN x, y""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("x" -> 0, "y" -> 0),
+            Map("x" -> 1, "y" -> 10),
+            Map("x" -> 2, "y" -> 20)
+          ))
+        )
+      ) { resultTable() }
 
       p("An importing `WITH` clause must:")
       p("""* Consist only of simple references to outside variables - e.g. `WITH x, y, z`. Aliasing or expressions are not supported in importing `WITH`
           #clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.
-          #* Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).""".stripMargin('#'))
+          #* Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).""".stripMargin(
+        '#'
+      ))
 
-      caution{
+      caution {
         p(
           """The order in which subqueries are executed is not defined.
             #If a query result depends on the order of execution of subqueries, an `ORDER BY` clause should precede the `CALL` clause.
-            #""".stripMargin('#'))
+            #""".stripMargin('#')
+        )
       }
 
       p(
@@ -151,108 +178,133 @@ class CallSubqueryTest extends DocumentingTest {
           #""".stripMargin.stripMargin('#')
       )
 
-        query("""MATCH (person: Person)
-                #WITH person ORDER BY person.age ASC LIMIT 1
-                #SET person:ListHead
-                #WITH *
-                #MATCH (next: Person) WHERE NOT next:ListHead
-                #WITH next ORDER BY next.age
-                #CALL {
-                #  WITH next
-                #  MATCH (current:ListHead)
-                #  REMOVE current:ListHead
-                #  SET next:ListHead
-                #  CREATE(current)-[r:IS_YOUNGER_THAN]->(next)
-                #  RETURN current AS from, next AS to
-                #}
-                #RETURN from.name AS name, from.age AS age, to.name AS closestOlderName, to.age AS closestOlderAge
-                #""".stripMargin('#'),
-          ResultAssertions(r => r.toSet should equal(Set(
+      query(
+        """MATCH (person: Person)
+          #WITH person ORDER BY person.age ASC LIMIT 1
+          #SET person:ListHead
+          #WITH *
+          #MATCH (next: Person) WHERE NOT next:ListHead
+          #WITH next ORDER BY next.age
+          #CALL {
+          #  WITH next
+          #  MATCH (current:ListHead)
+          #  REMOVE current:ListHead
+          #  SET next:ListHead
+          #  CREATE(current)-[r:IS_YOUNGER_THAN]->(next)
+          #  RETURN current AS from, next AS to
+          #}
+          #RETURN from.name AS name, from.age AS age, to.name AS closestOlderName, to.age AS closestOlderAge
+          #""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
             Map("name" -> "Alice", "age" -> 20, "closestOlderName" -> "Bob", "closestOlderAge" -> 27),
             Map("name" -> "Bob", "age" -> 27, "closestOlderName" -> "Dora", "closestOlderAge" -> 30),
-            Map("name" -> "Dora", "age" -> 30, "closestOlderName" -> "Charlie", "closestOlderAge" -> 65))
-          ))) { resultTable() }
+            Map("name" -> "Dora", "age" -> 30, "closestOlderName" -> "Charlie", "closestOlderAge" -> 65)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Post-union processing", "subquery-post-union") {
       p("""Subqueries can be used to process the results of a `UNION` query further.
-          #This example query finds the youngest and the oldest person in the database and orders them by name.""".stripMargin('#'))
-      query("""CALL {
-              #  MATCH (p:Person)
-              #  RETURN p
-              #  ORDER BY p.age ASC
-              #  LIMIT 1
-              #UNION
-              #  MATCH (p:Person)
-              #  RETURN p
-              #  ORDER BY p.age DESC
-              #  LIMIT 1
-              #}
-              #RETURN p.name, p.age
-              #ORDER BY p.name""".stripMargin('#'),
-      ResultAssertions(r => r.toList should equal(Seq(
-          Map("p.name" -> "Alice", "p.age" -> 20),
-          Map("p.name" -> "Charlie", "p.age" -> 65)
-        )))) { resultTable() }
+          #This example query finds the youngest and the oldest person in the database and orders them by name.""".stripMargin(
+        '#'
+      ))
+      query(
+        """CALL {
+          #  MATCH (p:Person)
+          #  RETURN p
+          #  ORDER BY p.age ASC
+          #  LIMIT 1
+          #UNION
+          #  MATCH (p:Person)
+          #  RETURN p
+          #  ORDER BY p.age DESC
+          #  LIMIT 1
+          #}
+          #RETURN p.name, p.age
+          #ORDER BY p.name""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toList should equal(Seq(
+            Map("p.name" -> "Alice", "p.age" -> 20),
+            Map("p.name" -> "Charlie", "p.age" -> 65)
+          ))
+        )
+      ) { resultTable() }
 
       p("""If different parts of a result should be matched differently, with some aggregation over the whole results, subqueries need to be used.
           #This example query finds friends and/or parents for each person.
           #Subsequently the number of friends and parents are counted together.""".stripMargin('#'))
-      query("""MATCH (p:Person)
-              #CALL {
-              #  WITH p
-              #  OPTIONAL MATCH (p)-[:FRIEND_OF]->(other:Person)
-              #  RETURN other
-              #UNION
-              #  WITH p
-              #  OPTIONAL MATCH (p)-[:CHILD_OF]->(other:Parent)
-              #  RETURN other
-              #}
-              #RETURN DISTINCT p.name, count(other)""".stripMargin('#'),
-      ResultAssertions(r => r.toSet should equal(Set(
-          Map("p.name" -> "Alice", "count(other)" -> 2),
-          Map("p.name" -> "Bob", "count(other)" -> 0),
-          Map("p.name" -> "Charlie", "count(other)" -> 0),
-          Map("p.name" -> "Dora", "count(other)" -> 0),
-        )))) { resultTable() }
+      query(
+        """MATCH (p:Person)
+          #CALL {
+          #  WITH p
+          #  OPTIONAL MATCH (p)-[:FRIEND_OF]->(other:Person)
+          #  RETURN other
+          #UNION
+          #  WITH p
+          #  OPTIONAL MATCH (p)-[:CHILD_OF]->(other:Parent)
+          #  RETURN other
+          #}
+          #RETURN DISTINCT p.name, count(other)""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("p.name" -> "Alice", "count(other)" -> 2),
+            Map("p.name" -> "Bob", "count(other)" -> 0),
+            Map("p.name" -> "Charlie", "count(other)" -> 0),
+            Map("p.name" -> "Dora", "count(other)" -> 0)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Aggregations", "subquery-aggregation") {
       p(
         """Returning subqueries change the number of results of the query: The result of the `CALL` clause is the combined result of evaluating the subquery
-          |for each input row.""".stripMargin)
+          |for each input row.""".stripMargin
+      )
       p("""The following example finds the name of each person and the names of their friends:""")
-      query("""MATCH (p:Person)
-              #CALL {
-              #  WITH p
-              #  MATCH (p)-[:FRIEND_OF]-(c:Person)
-              #  RETURN c.name AS friend
-              #}
-              #RETURN p.name, friend""".stripMargin('#'),
-      ResultAssertions(r => r.toSet should equal(Set(
-          Map("p.name" -> "Alice", "friend" -> "Bob"),
-          Map("p.name" -> "Bob", "friend" -> "Alice"),
-        )))) { resultTable() }
+      query(
+        """MATCH (p:Person)
+          #CALL {
+          #  WITH p
+          #  MATCH (p)-[:FRIEND_OF]-(c:Person)
+          #  RETURN c.name AS friend
+          #}
+          #RETURN p.name, friend""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("p.name" -> "Alice", "friend" -> "Bob"),
+            Map("p.name" -> "Bob", "friend" -> "Alice")
+          ))
+        )
+      ) { resultTable() }
       p(
         """The number of results of the subquery changed the number of results of the enclosing query: Instead of 4 rows, one for each node), there are
           |now 2 rows which were found for Alice and Bob respectively. No rows are returned for Charlie and Dora since they have no friends in our example
-          |graph.""".stripMargin)
+          |graph.""".stripMargin
+      )
       p(
         """We can also use subqueries to perform isolated aggregations. In this example we count the number of relationships each person has. As we get one row
-          | from each evaluation of the subquery, the number of rows is the same, before and after the `CALL` clause:""".stripMargin)
-      query("""MATCH (p:Person)
-              #CALL {
-              #  WITH p
-              #  MATCH (p)--(c)
-              #  RETURN count(c) AS numberOfConnections
-              #}
-              #RETURN p.name, numberOfConnections""".stripMargin('#'),
-        ResultAssertions(r => r.toSet should equal(Set(
-          Map("p.name" -> "Alice", "numberOfConnections" -> 2),
-          Map("p.name" -> "Bob", "numberOfConnections" -> 1),
-          Map("p.name" -> "Charlie", "numberOfConnections" -> 1),
-          Map("p.name" -> "Dora", "numberOfConnections" -> 0)
-        )))) { resultTable() }
+          | from each evaluation of the subquery, the number of rows is the same, before and after the `CALL` clause:""".stripMargin
+      )
+      query(
+        """MATCH (p:Person)
+          #CALL {
+          #  WITH p
+          #  MATCH (p)--(c)
+          #  RETURN count(c) AS numberOfConnections
+          #}
+          #RETURN p.name, numberOfConnections""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("p.name" -> "Alice", "numberOfConnections" -> 2),
+            Map("p.name" -> "Bob", "numberOfConnections" -> 1),
+            Map("p.name" -> "Charlie", "numberOfConnections" -> 1),
+            Map("p.name" -> "Dora", "numberOfConnections" -> 0)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Unit subqueries and side-effects", "subquery-unit") {
@@ -260,42 +312,53 @@ class CallSubqueryTest extends DocumentingTest {
 
       p(
         """This example query creates five clones of each existing person. As the subquery is a unit subquery, it does not change the number of rows of the
-          |enclosing query.""".stripMargin)
-      query("""MATCH (p:Person)
-              #CALL {
-              #  WITH p
-              #  UNWIND range (1, 5) AS i
-              #  CREATE (:Person {name: p.name})
-              #}
-              #RETURN count(*)""".stripMargin('#'),
-        ResultAssertions(r => r.toSet should equal(Set(
-          Map("count(*)" -> 4),
-        )))) { resultTable() }
+          |enclosing query.""".stripMargin
+      )
+      query(
+        """MATCH (p:Person)
+          #CALL {
+          #  WITH p
+          #  UNWIND range (1, 5) AS i
+          #  CREATE (:Person {name: p.name})
+          #}
+          #RETURN count(*)""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("count(*)" -> 4)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Aggregation on imported variables", "subquery-correlated-aggregation") {
       p("""Aggregations in subqueries are scoped to the subquery evaluation, also for imported variables.
           #The following example counts the number of younger persons for each person in the graph:""".stripMargin('#'))
-      query("""MATCH (p:Person)
-              #CALL {
-              #  WITH p
-              #  MATCH (other:Person)
-              #  WHERE other.age < p.age
-              #  RETURN count(other) AS youngerPersonsCount
-              #}
-              #RETURN p.name, youngerPersonsCount""".stripMargin('#'),
-      ResultAssertions(r => r.toSet should equal(Set(
-          Map("p.name" -> "Alice", "youngerPersonsCount" -> 0),
-          Map("p.name" -> "Bob", "youngerPersonsCount" -> 1),
-          Map("p.name" -> "Charlie", "youngerPersonsCount" -> 3),
-          Map("p.name" -> "Dora", "youngerPersonsCount" -> 2)
-        )))) { resultTable() }
+      query(
+        """MATCH (p:Person)
+          #CALL {
+          #  WITH p
+          #  MATCH (other:Person)
+          #  WHERE other.age < p.age
+          #  RETURN count(other) AS youngerPersonsCount
+          #}
+          #RETURN p.name, youngerPersonsCount""".stripMargin('#'),
+        ResultAssertions(r =>
+          r.toSet should equal(Set(
+            Map("p.name" -> "Alice", "youngerPersonsCount" -> 0),
+            Map("p.name" -> "Bob", "youngerPersonsCount" -> 1),
+            Map("p.name" -> "Charlie", "youngerPersonsCount" -> 3),
+            Map("p.name" -> "Dora", "youngerPersonsCount" -> 2)
+          ))
+        )
+      ) { resultTable() }
     }
 
     section("Subqueries in transactions", "subquery-call-in-transactions") {
       p("""Subqueries can be made to execute in separate, inner transactions, producing intermediate commits.
           #This can come in handy when doing large write operations, like batch updates, imports, and deletes.
-          #To execute a subquery in separate transactions, you add the modifier `IN TRANSACTIONS` after the subquery.""".stripMargin('#'))
+          #To execute a subquery in separate transactions, you add the modifier `IN TRANSACTIONS` after the subquery.""".stripMargin(
+        '#'
+      ))
 
       implicit val csvFilesDir: File = createDir("csv-files")
       val friendsCsvPath = new CsvFile("friends.csv").withContents(
@@ -303,7 +366,7 @@ class CallSubqueryTest extends DocumentingTest {
         Seq("2", "Max", "27"),
         Seq("3", "Anna", "22"),
         Seq("4", "Gladys", "29"),
-        Seq("5", "Summer", "24"),
+        Seq("5", "Summer", "24")
       )
       p("""The following example uses a CSV file and the `LOAD CSV` clause to import more data to the example graph.
           # It creates nodes in separate transactions using `CALL {} IN TRANSACTIONS`:
@@ -334,12 +397,15 @@ class CallSubqueryTest extends DocumentingTest {
             #  DETACH DELETE n
             #} IN TRANSACTIONS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
-          databaseStateBehavior = ClearState,
+          databaseStateBehavior = ClearState
         ) { resultTable() }
         important(p(
           """The `CALL { } IN TRANSACTIONS` subquery is handled by the database so as to ensure optimal performance.
-            |Modifying the subquery may result in `OutOfMemory` exceptions for sufficiently large datasets.""".stripMargin))
-        p("""While the `CALL { } IN TRANSACTIONS` subquery should not be rewritten, any necessary filtering can be done before the subquery:""".stripMargin)
+            |Modifying the subquery may result in `OutOfMemory` exceptions for sufficiently large datasets.""".stripMargin
+        ))
+        p(
+          """While the `CALL { } IN TRANSACTIONS` subquery should not be rewritten, any necessary filtering can be done before the subquery:""".stripMargin
+        )
         addQuery(
           """MATCH (n:Label) WHERE n.prop > 100
             #CALL {
@@ -347,7 +413,7 @@ class CallSubqueryTest extends DocumentingTest {
             #  DETACH DELETE n
             #} IN TRANSACTIONS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
-          databaseStateBehavior = ClearState,
+          databaseStateBehavior = ClearState
         ) { resultTable() }
       }
       section("Batching") {
@@ -364,7 +430,7 @@ class CallSubqueryTest extends DocumentingTest {
             #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
           replacements = Seq(QueryTextReplacement("@csvFile", "file:///friends.csv", friendsCsvPath)),
-          databaseStateBehavior = KeepState, 
+          databaseStateBehavior = KeepState
         ) { resultTable() }
         p("""The query now starts and commits three separate transactions:""")
         p(""". The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
@@ -375,7 +441,7 @@ class CallSubqueryTest extends DocumentingTest {
             |. The third transaction is committed.
             |""".stripMargin)
         p("""You can also use `CALL { …​ } IN TRANSACTIONS of n ROWS` to delete all your data in batches in order to avoid a huge garbage collection or an `OutOfMemory` exception.
-        |For example:""".stripMargin)
+            |For example:""".stripMargin)
         addQuery(
           """MATCH (n)
             #CALL {
@@ -383,18 +449,22 @@ class CallSubqueryTest extends DocumentingTest {
             #  DETACH DELETE n
             #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
-          databaseStateBehavior = ClearState,
+          databaseStateBehavior = ClearState
         ) { resultTable() }
-        note{
-          p("""Up to a point, using a larger batch size will be more performant. 
-             #The batch size of `2 ROWS` is an example given the small data set used here. 
-             #For larger data sets, you might want to use larger batch sizes, such as `10000 ROWS`.""".stripMargin('#'))
+        note {
+          p(
+            """Up to a point, using a larger batch size will be more performant. 
+              #The batch size of `2 ROWS` is an example given the small data set used here. 
+              #For larger data sets, you might want to use larger batch sizes, such as `10000 ROWS`.""".stripMargin('#')
+          )
         }
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
             |both the current inner transaction and the outer transaction are rolled back.""".stripMargin)
-        important(p("""On error, any previously committed inner transactions remain committed, and are not rolled back."""))
+        important(
+          p("""On error, any previously committed inner transactions remain committed, and are not rolled back.""")
+        )
         p("""In the following example, the last subquery execution in the second inner transaction fails
             |due to division by zero.
             |""".stripMargin)
@@ -406,28 +476,33 @@ class CallSubqueryTest extends DocumentingTest {
             #} IN TRANSACTIONS OF 2 ROWS
             #RETURN i""".stripMargin('#'),
           assertions = ErrorAssertions(t => t.getMessage should (include("/ by zero"))),
-          databaseStateBehavior = KeepState,
+          databaseStateBehavior = KeepState
         ) { errorOnlyResultTable() }
-        p("""When the failure occurred, the first transaction had already been committed, so the database contains two example nodes""")
+        p(
+          """When the failure occurred, the first transaction had already been committed, so the database contains two example nodes"""
+        )
         addQuery(
           """MATCH (e:Example)
             #RETURN e.num""".stripMargin('#'),
-          assertions = ResultAssertions(r => r.toSet should equal(Set(
-            Map("e.num" -> 25),
-            Map("e.num" -> 50)
-          ))),
-          databaseStateBehavior = ClearState,
+          assertions = ResultAssertions(r =>
+            r.toSet should equal(Set(
+              Map("e.num" -> 25),
+              Map("e.num" -> 50)
+            ))
+          ),
+          databaseStateBehavior = ClearState
         ) { resultTable() }
       }
       section("Restrictions") {
         p("These are the restrictions on queries that use `CALL { ... } IN TRANSACTIONS`:")
         p("""* A nested `CALL { ... } IN TRANSACTIONS` inside a `CALL { ... }` clause is not supported.
             #* A `CALL { ... } IN TRANSACTIONS` in a `UNION` is not supported.
-            #* A `CALL { ... } IN TRANSACTIONS` after a write clause is not supported, unless that write clause is inside a `CALL { ... } IN TRANSACTIONS`.""".stripMargin('#'))
+            #* A `CALL { ... } IN TRANSACTIONS` after a write clause is not supported, unless that write clause is inside a `CALL { ... } IN TRANSACTIONS`.""".stripMargin(
+          '#'
+        ))
       }
 
     }
 
   }.build()
 }
-
