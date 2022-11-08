@@ -55,7 +55,7 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
 
     // ensure that the result/graph is actually printed to the file and not empty.
 
-    val resultSource = io.Source.fromFile(
+    val resultSource = scala.io.Source.fromFile(
       "target/docs/dev/ql/internaltesting/includes/internaltesting-test-documentationtestbase.result.asciidoc",
       "utf-8"
     )
@@ -65,7 +65,10 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     assert(resultLines.contains("otherPerson"))
 
     val graphSource =
-      io.Source.fromFile("target/docs/dev/ql/internaltesting/includes/cypher-documentationbase-graph.asciidoc", "utf-8")
+      scala.io.Source.fromFile(
+        "target/docs/dev/ql/internaltesting/includes/cypher-documentationbase-graph.asciidoc",
+        "utf-8"
+      )
     val graphLines = graphSource.mkString
     graphSource.close()
     assert(graphLines.contains("Anders"))
@@ -94,7 +97,7 @@ Use `UNWIND` to create multiple nodes from a parameter.
     )
 
     // ensure that the parameters are printed
-    val resultSource = io.Source.fromFile(
+    val resultSource = scala.io.Source.fromFile(
       "target/docs/dev/ql/internaltesting/create-multiple-nodes-with-parameters-for-properties.asciidoc",
       "utf-8"
     )

@@ -7,7 +7,7 @@
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-manual-parent</artifactId>
         <version>5.2.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>functionDescription-documentation</artifactId>
