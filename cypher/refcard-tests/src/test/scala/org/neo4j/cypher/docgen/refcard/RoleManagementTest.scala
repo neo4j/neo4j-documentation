@@ -24,7 +24,7 @@ class RoleManagementTest extends AdministrationCommandTestBase {
   override val linkId = "administration/security/users-and-roles/#administration-security-roles"
 
   private def setup() = graph.withTx { tx =>
-    tx.execute("CREATE USER alice SET PASSWORD 'secret' CHANGE NOT REQUIRED")
+    tx.execute("CREATE USER alice SET PASSWORD 'secret00' CHANGE NOT REQUIRED")
   }
 
   def text: String = {
