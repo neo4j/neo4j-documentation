@@ -174,11 +174,8 @@ class ScalarFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-
-    section("[deprecated]#id()", "functions-id") {
-      p(
-        """The `id()` function will be removed in the next major release. It is recommended to use <<functions-element-id, `elementId()`>> instead."""
-      )
+    section("id() label:deprecated[]", "functions-id") {
+      p("""The `id()` function will be removed in the next major release. It is recommended to use <<functions-element-id, `elementId()`>> instead.""")
       p("""The function `id()` returns a node or a relationship identifier, unique by an object type and a database.
           #Therefore, it is perfectly allowable for `id()` to return the same value for both nodes and relationships in the same database.
           #For examples on how to get a node and a relationship by ID, see <<get-node-rel-by-id>>.""".stripMargin('#'))
