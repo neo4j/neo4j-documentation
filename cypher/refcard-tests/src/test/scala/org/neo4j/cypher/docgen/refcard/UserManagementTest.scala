@@ -26,9 +26,9 @@ class UserManagementTest extends AdministrationCommandTestBase {
   override def parameters(name: String): Map[String, Any] =
     name match {
       case "parameters=create" =>
-        Map("password" -> "secret")
+        Map("password" -> "secretpassword")
       case "parameters=update" =>
-        Map("password" -> "new_secret")
+        Map("password" -> "new_secretpassword")
       case _ =>
         Map.empty
     }
