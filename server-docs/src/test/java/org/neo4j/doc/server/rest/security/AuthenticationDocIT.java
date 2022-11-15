@@ -77,7 +77,7 @@ class AuthenticationDocIT extends CommunityServerTestBase {
         // Given
         startServerWithConfiguredUser();
 
-        HTTP.Response response = HTTP.withBasicAuth("neo4j", "secret").POST(txCommitURL("system"), query("SHOW USERS"));
+        HTTP.Response response = HTTP.withBasicAuth("neo4j", "secret00").POST(txCommitURL("system"), query("SHOW USERS"));
 
         assertThat(response.status()).isEqualTo(200);
 
@@ -134,13 +134,13 @@ class AuthenticationDocIT extends CommunityServerTestBase {
         // When
         // Changing the user password
         HTTP.Response response =
-                HTTP.withBasicAuth("neo4j", "neo4j").POST(txCommitURL("system"), query("ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret'"));
+                HTTP.withBasicAuth("neo4j", "neo4j").POST(txCommitURL("system"), query("ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret00'"));
         // Then
         assertThat(response.status()).isEqualTo(200);
         assertThat(response.get("errors")).as("Should have no errors").isEmpty();
 
         // When
-        HTTP.Response responseAfterPasswordChange = HTTP.withBasicAuth("neo4j", "secret").POST(txCommitURL("system"), query("SHOW USERS"));
+        HTTP.Response responseAfterPasswordChange = HTTP.withBasicAuth("neo4j", "secret00").POST(txCommitURL("system"), query("SHOW USERS"));
 
         // Then
         assertThat(responseAfterPasswordChange.status()).isEqualTo(200);
@@ -184,7 +184,7 @@ class AuthenticationDocIT extends CommunityServerTestBase {
         setupGen();
         // Set the password
         HTTP.Response post = HTTP.withBasicAuth("neo4j", "neo4j").POST(txCommitURL("system"),
-                query("ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret'"));
+                query("ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret00'"));
         assertEquals(200, post.status());
     }
 

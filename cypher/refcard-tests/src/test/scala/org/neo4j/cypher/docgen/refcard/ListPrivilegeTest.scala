@@ -28,7 +28,7 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
     tx.execute("CREATE ROLE my_second_role")
     tx.execute("GRANT IMMUTABLE ACCESS ON DATABASE * TO my_role")
     tx.execute("GRANT TRAVERSE ON GRAPH * NODES * TO my_second_role")
-    tx.execute("CREATE USER alice SET PASSWORD 'secret'")
+    tx.execute("CREATE USER alice SET PASSWORD 'secret00'")
     tx.execute("GRANT ROLE my_role TO alice")
   }
 
