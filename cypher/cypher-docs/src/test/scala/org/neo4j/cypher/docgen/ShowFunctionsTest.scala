@@ -168,7 +168,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
     section("Listing functions with other filtering") {
       database("system")
       initQueries(
-        "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED"
+        "CREATE USER jake SET PASSWORD 'abcd1234' CHANGE NOT REQUIRED"
       )
       database("neo4j")
       p(
@@ -182,7 +182,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
         """There are two options, how to use the `EXECUTABLE` clause.
           #The first option, is to filter for the current user:""".stripMargin('#')
       )
-      login("jake", "abc123")
+      login("jake", "abcd1234")
       query(
         "SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *",
         ResultAssertions(p => {
