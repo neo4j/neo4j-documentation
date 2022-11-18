@@ -29,7 +29,7 @@ import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
 import org.neo4j.kernel.api.Kernel
-import org.neo4j.kernel.api.ResourceTracker
+import org.neo4j.kernel.api.ResourceMonitor
 import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.procedure.Context
 import org.neo4j.values.AnyValue
@@ -53,7 +53,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
       override def apply(
         ctx: Context,
         input: Array[AnyValue],
-        resourceTracker: ResourceTracker
+        resourceMonitor: ResourceMonitor
       ): RawIterator[Array[AnyValue], ProcedureException] =
         RawIterator.of[Array[AnyValue], ProcedureException](input)
     }
