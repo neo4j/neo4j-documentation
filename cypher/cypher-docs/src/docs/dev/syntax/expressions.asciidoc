@@ -136,7 +136,7 @@ The following table displays whether the label expression matches the node:
 | `(:A&%)` | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
 | `(:A\|%)` | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
 | `(:(A&B)&!(B&C))` | | | | | {check-mark} | | |
-| `(:!(A&%)&%))` | | | {check-mark} | {check-mark} | | | {check-mark} |
+| `(:!(A&%)&%)` | | | {check-mark} | {check-mark} | | | {check-mark} |
 |===
 
 
