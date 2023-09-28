@@ -6,7 +6,7 @@
 
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
-    <version>5.3.0-SNAPSHOT</version>
+    <version>5.13.0-SNAPSHOT</version>
 
     <name>Neo4j - Reference Manual Build</name>
     <description>Neo4j Reference Manual Build.</description>
@@ -42,21 +42,21 @@
 
     <modules>
         <module>config-docs</module>
-        <module>cypher</module>
-        <module>neo4j-harness-test</module>
-        <module>neo4j-harness-enterprise-test</module>
-        <module>embedded-examples</module>
-        <module>server-examples</module>
-        <module>server-docs</module>
-        <module>kernel</module>
+        <!-- <module>cypher</module> -->
+        <!-- <module>neo4j-harness-test</module> -->
+        <!-- <module>neo4j-harness-enterprise-test</module> -->
+        <!-- <module>embedded-examples</module> -->
+        <!-- <module>server-examples</module> -->
+        <!-- <module>server-docs</module> -->
+        <!-- <module>kernel</module> -->
         <module>metrics-docs</module>
-        <module>doctools</module>
-        <module>graphviz</module>
-        <module>procedures</module>
-        <module>functions</module>
-        <module>jmx</module>
-        <module>test-framework</module>
-        <module>server-test-utils</module>
+        <!-- <module>doctools</module> -->
+        <!-- <module>graphviz</module> -->
+        <!-- <module>procedures</module> -->
+        <!-- <module>functions</module> -->
+        <!-- <module>jmx</module> -->
+        <!-- <module>test-framework</module> -->
+        <!-- <module>server-test-utils</module> -->
     </modules>
 
     <scm>
